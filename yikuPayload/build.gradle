@@ -41,28 +41,14 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.83'
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.release
-            groupId = 'io.github.log114' // 替换为你的 Group ID
-            artifactId = 'yikupayload' // 替换为你的 Artifact ID
-            version = '0.8.0' // 替换为你的版本号
-
-            pom {
-                name = 'yikupayload'
-                description = '郑州易酷航空科技有限公司智慧负载SDK'
-                url = 'https://github.com/your-repo-url' // 替换为你的项目地址
-            }
-        }
-    }
-
-    repositories {
-        maven {
-            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-            credentials {
-                username = findProperty("mavenUser") // 从 gradle.properties 中读取用户名
-                password = findProperty("mavenPassword") // 从 gradle.properties 中读取密码
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.log114' // 替换为你的 GitHub 用户名
+                artifactId = 'yikupayload' // 替换为你的库名称
+                version = '0.8.0' // 替换为你的版本号
             }
         }
     }
