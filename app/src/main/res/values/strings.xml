@@ -1,0 +1,217 @@
+<resources>
+    <string name="app_name">智慧负载（SDK版）</string>
+    <string name="close">关</string>
+    <string name="shout">喊话</string>
+    <string name="light">照明</string>
+    <string name="yk_shout">智慧负载（SDK版）</string>
+    <string name="yk_light">照明</string>
+    <string name="start_speak">开始喊话</string>
+    <string name="staring_speak">连接中…</string>
+    <string name="stop_speak">停止喊话</string>`
+    <string name="place_input_text">请输入文字……</string>
+    <string name="tts_play">播放</string>
+    <string name="title_activity_add_record">AddRecordActivity</string>
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="adjust_volume">调整音量</string>
+    <string name="play_alarm">播放警报</string>
+    <string name="loop_playback">循环播放</string>
+    <string name="title_activity_siyi_test">SiyiTest</string>
+    <string name="please_select_file">请选择文件</string>
+    <string name="select_file">选择文件</string>
+    <string name="file_name">文件名:</string>
+    <string name="uploading">正在上传:</string>
+    <string name="upload">上传</string>
+    <string name="Record">开始录音</string>
+    <string name="play">播放</string>
+    <string name="loop_play">循环播放</string>
+    <string name="add_video">添加</string>
+    <string name="del_video">删除</string>
+    <string name="stop_audio">停止</string>
+    <string name="male_voice">男声</string>
+    <string name="female_voice">女声</string>
+    <string name="yiku_shout">智慧负载（SDK版）</string>
+    <string name="start_radio">开始录音</string>
+    <string name="unitree_control">智慧负载系统</string>
+    <string name="connection_status_notconnected">连接状态: 未连接</string>
+    <string name="empty_text">当前未连接到任何设备</string>
+    <string name="servo_control_text">俯仰控制</string>
+    <string name="connection_status_connected">连接状态: 已连接</string>
+    <string name="connection_successful">连接成功</string>
+    <string name="file_upload_prompt">注意: 请勿将文件放置在『下载』目录进行上传，可能会出现意外情况。文件名不能包含下述特殊符号[:, $,\\,/,#,@,%]</string>
+    <string name="floating_window_opened">悬浮窗已开启</string>
+    <string name="safety_switch">"安全开关: "</string>
+    <string name="launch">发射</string>
+    <string name="brightness_adjustment">亮度调节</string>
+    <string name="turn_on_the_light">开灯</string>
+    <string name="explosive_flashing">开爆闪</string>
+    <string name="open_the_pod_to_follow">开启吊舱跟随</string>
+    <string name="pan_tilt_control">云台控制</string>
+    <string name="switching_modes">切换模式</string>
+    <string name="turn_off_red_and_blue">关闭红蓝</string>
+    <string name="red_and_blue_not_turned_on">红蓝未开启</string>
+    <string name="mode">模式</string>
+    <string name="turn_off_the_light">关灯</string>
+    <string name="turn_off_explosion_flash">关爆闪</string>
+    <string name="stop_playing">停止播放</string>
+    <string name="start_listening">开始收音</string>
+    <string name="stop_listening">停止收音</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="setting">设置</string>
+    <string name="ShoutHost_name">喊话器ip:</string>
+    <string name="LightHost_name">探照灯ip:</string>
+    <string name="CacheNetHost_name">捕捉网ip:</string>
+    <string name="EmitterHost_name">38毫米ip:</string>
+    <string name="YA3Host_name">四合一ip:</string>
+    <string name="save_name">保存</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
+        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
+        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
+        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
+        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
+        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
+        bibendum, vel congue leo egestas.\n\n
+        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
+        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
+        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
+        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
+        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
+        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
+        est.\n\n
+        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
+        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
+        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
+        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
+        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
+        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
+        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
+        convallis.\n\n
+        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
+        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
+        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
+        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
+        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+    </string>
+    <string name="not_supported_for_pitch_control">该版本设备不支持app控制俯仰</string>
+    <string name="host_not_initialized">host未初始化</string>
+    <string name="select_file_to_be_delete">请选择要删除的录音文件</string>
+    <string name="need_to_open_safety_switch">请先打开安全开关！</string>
+    <string name="launch_command_executed">发射命令已执行！</string>
+    <string name="launch_failed">发射失败！</string>
+    <string name="drive_temperature">驱动温度</string>
+    <string name="lamp_head_temperature">灯头温度</string>
+    <string name="pitch">俯仰</string>
+    <string name="course">航向</string>
+    <string name="max_course">航向已到最大范围</string>
+    <string name="max_pitch">俯仰已到最大范围</string>
+    <string name="turn_off_power_saving_mode">请先关闭省电模式!</string>
+    <string name="permission_required">需要授予权限!</string>
+    <string name="lack_of_permissions">缺少权限！</string>
+    <string name="thrower">抛投器</string>
+    <string name="slow_descent_device">缓降器</string>
+    <string name="open">开</string>
+    <string name="passageway">通道</string>
+    <string name="line_length">当前放线长度：</string>
+    <string name="state">状态：</string>
+    <string name="not_reaching_the_limit">未到限位</string>
+    <string name="reached_the_top">已到达顶部</string>
+    <string name="reached_the_bottom">已到达底部</string>
+    <string name="line_retraction_and_release_method">收放线方式</string>
+    <string name="by_speed">按速度</string>
+    <string name="by_length">按长度</string>
+    <string name="rise">上升</string>
+    <string name="decline">下降</string>
+    <string name="fuse">紧急熔断</string>
+    <string name="stop">停止</string>
+    <string name="emergency_stop">紧急制动</string>
+    <string name="operation_failed">操作失败！</string>
+    <string name="ThrowerHost_name">抛投器ip:</string>
+    <string name="SlowDescentDeviceHost_name">缓降器ip:</string>
+    <string name="stuck">卡住了！</string>
+    <string name="short_position">空仓</string>
+    <string name="launching">发射中</string>
+    <string name="opening">正在打开</string>
+    <string name="open_all">全开</string>
+    <string name="closing">正在关闭</string>
+    <string name="zero">0</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+    <string name="target_length">目标长度:</string>
+    <string name="pulse_on">启动</string>
+    <string name="current_location">当前位置：</string>
+    <string name="weight">载重：</string>
+    <string name="release_emergency">解除紧急状态</string>
+    <string name="need_relesase_emergency">请先解除紧急状态！</string>
+    <string name="confirm_fuse">请确认使用一键熔断</string>
+    <string name="fuse_prompt">熔断后需要返厂处理后才能继续使用!</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="temperature">"温度: "</string>
+    <string name="excessive_temperature">温度过高！</string>
+    <string name="status_normal">正常</string>
+    <string name="throwBomb">投弹</string>
+    <string name="open_inverted_mode">开启倒装模式</string>
+    <string name="charging_switch">"充电开关: "</string>
+    <string name="allow_detonation">"允许起爆: "</string>
+    <string name="height">"高度: "</string>
+    <string name="charging_failed">充电失败！</string>
+    <string name="discharge_failed">放电失败！</string>
+    <string name="allow_detonation_failed">允许引爆失败！</string>
+    <string name="failed_to_cancel_detonation">取消引爆失败！</string>
+    <string name="close_all">全关</string>
+    <string name="radio_disable">喊话时禁用收音</string>
+    <string name="detonation_settings">起爆设置</string>
+    <string name="cannot_detonate">无法引爆</string>
+    <string name="can_detonate">可以引爆</string>
+    <string name="detonate_height">"引爆高度: "</string>
+    <string name="confirm_open">当前不可引爆，确认要打开？</string>
+    <string name="center">中间</string>
+    <string name="left">左侧</string>
+    <string name="right">右侧</string>
+    <string name="update">程序更新</string>
+    <string name="isUpdate">警告：点击确定之后会擦除现有程序进入升级流程，升级完成之前将无法使用负载，请务必在了解升级流程的情况下进行升级！</string>
+    <string name="grab">抓取</string>
+    <string name="release">松开</string>
+    <string name="GripperHost_name">机械爪ip:</string>
+    <string name="emergency_brake">紧急制动</string>
+    <string name="cannot_detonate_uncharged">无法引爆，未充电</string>
+    <string name="cannot_detonate_notAllow">无法引爆，未允许</string>
+    <string name="cannot_detonate_tooLow">无法引爆，高度太低</string>
+    <string name="gripper">机械爪</string>
+    <string name="resqme">破窗器</string>
+    <string name="current_height">"当前高度: "</string>
+    <string name="ResqmeHost_name">"破窗器IP: "</string>
+    <string name="launch_all">全部发射</string>
+    <string name="number_1">1号：</string>
+    <string name="number_2">2号：</string>
+    <string name="can_be_launched">可发射</string>
+    <string name="window_locked">窗口已锁住</string>
+    <string name="window_unlocked">窗口已解锁</string>
+    <string name="reboot_device">重启设备</string>
+    <string name="extinguisher">灭火罐</string>
+    <string name="ExtinguisherHost_name">"灭火罐IP: "</string>
+    <string name="closed">已关闭</string>
+    <string name="opened">已打开</string>
+    <string name="not_detected">未检测</string>
+</resources>

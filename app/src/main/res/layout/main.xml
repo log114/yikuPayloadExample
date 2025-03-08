@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10" />
+
+        <ImageView
+            android:id="@+id/setting_btn"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:src="@drawable/setting" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/star_main_view"
+        android:layout_width="match_parent"
+        android:layout_height="274dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/yk_shout_btn">
+            <ImageView
+                android:id="@+id/open_h16_view"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/siyi"
+                android:background="@drawable/siyi_btn_backgound"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="4">
+
+        <TextView
+            android:id="@+id/app_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="version"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+</LinearLayout>

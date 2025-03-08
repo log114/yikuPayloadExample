@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/record_checkbox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#fff"
+        android:theme="@style/RecordListCheckBox" />
+
+    <TextView
+        android:id="@+id/record_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:textColor="#fff" />
+
+    <ImageView
+        android:id="@+id/play_audio"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/yk_shout_record_list_btn"
+        android:contentDescription="@string/play"
+        android:src="@drawable/play" />
+
+    <ImageView
+        android:id="@+id/loop_play_audio"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/yk_shout_record_list_btn"
+        android:contentDescription="@string/loop_play"
+        android:src="@drawable/xunhuan" />
+</LinearLayout>

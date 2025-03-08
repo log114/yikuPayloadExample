@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ya3_light"
+    android:layout_width="300dp"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/ya3_light_view"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/shout_view_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lightConnectYA3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/connection_status_notconnected"
+                    android:textColor="@color/white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/open_light_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/turn_on_the_light"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/sharp_flash_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/explosive_flashing"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/brightness_adjustment"
+                    android:textColor="@color/white" />
+
+                <SeekBar
+                    android:id="@+id/luminance_change_seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:minHeight="2dp"
+                    android:maxHeight="2dp"
+                    android:progressDrawable="@drawable/bg_adjust_seek_bar"
+                    android:thumb="@drawable/bg_seek_bar_thumb"
+                    android:max="30"
+                    android:min="0"
+                    android:progress="0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/close_rb_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/turn_off_red_and_blue"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/open_rb_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/switching_modes"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/rb_model_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/red_and_blue_not_turned_on"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/servo_control_text"
+                    android:textColor="@color/white" />
+                <SeekBar
+                    android:id="@+id/luminance_change_pitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:minHeight="2dp"
+                    android:maxHeight="2dp"
+                    android:progressDrawable="@drawable/bg_adjust_seek_bar"
+                    android:thumb="@drawable/bg_seek_bar_thumb"
+                    android:max="100"
+                    android:min="0"
+                    android:progress="30" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
