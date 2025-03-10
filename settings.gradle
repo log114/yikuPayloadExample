@@ -16,4 +16,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "yikuPayloadExample"
-include ':app', ':yikuPayload'
+include ':app'
