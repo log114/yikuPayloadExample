@@ -8,8 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
-import com.yiku.yikupayload.service.EmitterService
-import com.yiku.yikupayload.util.MsgCallback
+import com.yiku.yikupayload_sdk.service.EmitterService
+import com.yiku.yikupayload_sdk.util.MsgCallback
 import java.lang.Exception
 import java.util.Timer
 import java.util.TimerTask

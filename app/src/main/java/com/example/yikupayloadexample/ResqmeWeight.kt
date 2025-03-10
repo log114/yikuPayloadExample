@@ -13,9 +13,9 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import com.yiku.yikupayload.protocol.RESQME_STATUS
-import com.yiku.yikupayload.service.ResqmeService
-import com.yiku.yikupayload.util.MsgCallback
+import com.yiku.yikupayload_sdk.protocol.RESQME_STATUS
+import com.yiku.yikupayload_sdk.service.ResqmeService
+import com.yiku.yikupayload_sdk.util.MsgCallback
 import java.util.Date
 import java.util.Timer
 import java.util.TimerTask

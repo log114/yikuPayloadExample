@@ -22,8 +22,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.yiku.yikupayload.service.BaseMegaphoneService
-import com.yiku.yikupayload.service.MegaphoneService
+import com.yiku.yikupayload_sdk.service.BaseMegaphoneService
+import com.yiku.yikupayload_sdk.service.MegaphoneService
 
 var megaphoneService: BaseMegaphoneService? = null
 var preferences: SharedPreferences? = null

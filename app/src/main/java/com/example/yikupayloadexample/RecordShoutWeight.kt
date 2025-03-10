@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
-import com.yiku.yikupayload.util.MsgCallback
+import com.yiku.yikupayload_sdk.util.MsgCallback
 import kotlin.concurrent.thread
 
 val audioPlayingStatusMap = HashMap<String, Boolean>()

@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.yiku.yikupayload.service.GripperService
+import com.yiku.yikupayload_sdk.service.GripperService
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread

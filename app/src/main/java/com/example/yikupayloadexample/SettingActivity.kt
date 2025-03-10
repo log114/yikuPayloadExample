@@ -5,17 +5,17 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import com.yiku.yikupayload.service.MegaphoneService
-import com.yiku.yikupayload.util.CacheNetHost
-import com.yiku.yikupayload.util.EmitterHost
-import com.yiku.yikupayload.util.ExtinguisherHost
-import com.yiku.yikupayload.util.GripperHost
-import com.yiku.yikupayload.util.LightHost
-import com.yiku.yikupayload.util.ResqmeHost
-import com.yiku.yikupayload.util.ShoutHost
-import com.yiku.yikupayload.util.SlowDescentDeviceHost
-import com.yiku.yikupayload.util.ThrowerHost
-import com.yiku.yikupayload.util.YA3Host
+import com.yiku.yikupayload_sdk.service.MegaphoneService
+import com.yiku.yikupayload_sdk.util.CacheNetHost
+import com.yiku.yikupayload_sdk.util.EmitterHost
+import com.yiku.yikupayload_sdk.util.ExtinguisherHost
+import com.yiku.yikupayload_sdk.util.GripperHost
+import com.yiku.yikupayload_sdk.util.LightHost
+import com.yiku.yikupayload_sdk.util.ResqmeHost
+import com.yiku.yikupayload_sdk.util.ShoutHost
+import com.yiku.yikupayload_sdk.util.SlowDescentDeviceHost
+import com.yiku.yikupayload_sdk.util.ThrowerHost
+import com.yiku.yikupayload_sdk.util.YA3Host
 
 class SettingActivity : AppCompatActivity() {
 

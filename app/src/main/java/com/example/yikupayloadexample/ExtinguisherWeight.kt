@@ -12,9 +12,9 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import com.yiku.yikupayload.protocol.EXTINGUISHER_STATE_RECEIVE
-import com.yiku.yikupayload.service.ExtinguisherService
-import com.yiku.yikupayload.util.MsgCallback
+import com.yiku.yikupayload_sdk.protocol.EXTINGUISHER_STATE_RECEIVE
+import com.yiku.yikupayload_sdk.service.ExtinguisherService
+import com.yiku.yikupayload_sdk.util.MsgCallback
 import java.util.Date
 import java.util.Timer
 import java.util.TimerTask

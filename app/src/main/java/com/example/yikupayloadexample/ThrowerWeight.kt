@@ -13,9 +13,9 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import com.yiku.yikupayload.protocol.THROWER_STATE
-import com.yiku.yikupayload.service.ThrowerService
-import com.yiku.yikupayload.util.MsgCallback
+import com.yiku.yikupayload_sdk.protocol.THROWER_STATE
+import com.yiku.yikupayload_sdk.service.ThrowerService
+import com.yiku.yikupayload_sdk.util.MsgCallback
 import java.lang.Exception
 import java.util.Date
 import java.util.Timer

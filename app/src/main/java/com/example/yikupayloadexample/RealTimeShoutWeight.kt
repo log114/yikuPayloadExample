@@ -13,11 +13,11 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.*
-import com.yiku.yikupayload.service.BaseMegaphoneService
-import com.yiku.yikupayload.service.FourInOneService
-import com.yiku.yikupayload.service.MegaphoneService
-import com.yiku.yikupayload.util.MsgCallback
-import com.yiku.yikupayload.util.OpusUtils
+import com.yiku.yikupayload_sdk.service.BaseMegaphoneService
+import com.yiku.yikupayload_sdk.service.FourInOneService
+import com.yiku.yikupayload_sdk.service.MegaphoneService
+import com.yiku.yikupayload_sdk.util.MsgCallback
+import com.yiku.yikupayload_sdk.util.OpusUtils
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
