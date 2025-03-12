@@ -107,5 +107,4 @@ dependencies {
     implementation 'io.github.libpd.android:pd-core:1.2.1-rc6'
     implementation 'org.apache.commons:commons-math3:3.6.1'
     implementation 'com.github.log114:yikupayload:0.8.10'
-//    implementation files('libs/yikupayloadSDK.aar')
 }
