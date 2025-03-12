@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
-import com.yiku.yikupayload_sdk.util.MsgCallback
+import com.yiku.yikupayloadSDK.util.MsgCallback
 
 import java.util.Timer
 import java.util.TimerTask

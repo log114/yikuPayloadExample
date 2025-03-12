@@ -5,17 +5,18 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import com.yiku.yikupayload_sdk.service.MegaphoneService
-import com.yiku.yikupayload_sdk.util.CacheNetHost
-import com.yiku.yikupayload_sdk.util.EmitterHost
-import com.yiku.yikupayload_sdk.util.ExtinguisherHost
-import com.yiku.yikupayload_sdk.util.GripperHost
-import com.yiku.yikupayload_sdk.util.LightHost
-import com.yiku.yikupayload_sdk.util.ResqmeHost
-import com.yiku.yikupayload_sdk.util.ShoutHost
-import com.yiku.yikupayload_sdk.util.SlowDescentDeviceHost
-import com.yiku.yikupayload_sdk.util.ThrowerHost
-import com.yiku.yikupayload_sdk.util.YA3Host
+import com.yiku.yikupayloadSDK.service.MegaphoneService
+import com.yiku.yikupayloadSDK.util.CacheNetHost
+import com.yiku.yikupayloadSDK.util.EmitterHost
+import com.yiku.yikupayloadSDK.util.ExtinguisherHost
+import com.yiku.yikupayloadSDK.util.GripperHost
+import com.yiku.yikupayloadSDK.util.LightHost
+import com.yiku.yikupayloadSDK.util.ResqmeHost
+import com.yiku.yikupayloadSDK.util.ShoutHost
+import com.yiku.yikupayloadSDK.util.SlowDescentDeviceHost
+import com.yiku.yikupayloadSDK.util.ThrowerHost
+import com.yiku.yikupayloadSDK.util.WaterGunHost
+import com.yiku.yikupayloadSDK.util.YA3Host
 
 class SettingActivity : AppCompatActivity() {
 
@@ -37,6 +38,7 @@ class SettingActivity : AppCompatActivity() {
         val gripper = findViewById<EditText>(R.id.GripperHostIP)
         val resqme = findViewById<EditText>(R.id.ResqmeHostIP)
         val extinguisher = findViewById<EditText>(R.id.ExtinguisherHostIP)
+        val waterGun = findViewById<EditText>(R.id.WaterGunHostIP)
 
         //        获取了 SharedPreferences 对象
 //        preferences = getSharedPreferences("myPreferences", MODE_PRIVATE)
@@ -51,6 +53,7 @@ class SettingActivity : AppCompatActivity() {
         val valueGripperHost = preferences?.getString("GripperHost", "")//机械爪
         val valueResqmeHost = preferences?.getString("ResqmeHost", "")//破窗器
         val valueExtinguisherHost = preferences?.getString("ExtinguisherHost", "")//灭火罐
+        val valueWaterGunHost = preferences?.getString("WaterGunHost", "")//水枪
         // 当未设置过ip时，ip显示为Host.kt里面的值，否则显示设置后的值
         if (valueShoutHost == "") {
             shout.setText(ShoutHost)
@@ -113,6 +116,12 @@ class SettingActivity : AppCompatActivity() {
             extinguisher.setText(valueExtinguisherHost)
         }
 
+        if (valueWaterGunHost == "") {
+            waterGun.setText(WaterGunHost)
+        } else {
+            waterGun.setText(valueWaterGunHost)
+        }
+
         save.setOnClickListener {
             val textShoutHost = shout.text.toString()
             val textLightHost = light.text.toString()
@@ -124,6 +133,7 @@ class SettingActivity : AppCompatActivity() {
             val textGripperHost = gripper.text.toString()
             val textResqmeHost = resqme.text.toString()
             val textExtinguisherHost = extinguisher.text.toString()
+            val textWaterGunHost = waterGun.text.toString()
             // 将修改后的值存储到 SharedPreferences 中
             val editer = preferences!!.edit()
             editer.putString("ShoutHost", textShoutHost)
@@ -136,6 +146,7 @@ class SettingActivity : AppCompatActivity() {
             editer.putString("GripperHost", textGripperHost)
             editer.putString("ResqmeHost", textResqmeHost)
             editer.putString("ExtinguisherHost", textExtinguisherHost)
+            editer.putString("WaterGunHost", textWaterGunHost)
             editer.apply()
             finish();  //直接关闭当前页面
         }

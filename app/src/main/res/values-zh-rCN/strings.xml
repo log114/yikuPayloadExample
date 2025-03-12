@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">智慧负载（SDK版）</string>
+    <string name="app_name">智慧负载</string>
     <string name="close">关</string>
     <string name="shout">喊话</string>
     <string name="light">照明</string>
-    <string name="yk_shout">智慧负载（SDK版）</string>
+    <string name="yk_shout">智慧负载</string>
     <string name="yk_light">照明</string>
     <string name="start_speak">开始喊话</string>
     <string name="staring_speak">连接中…</string>
@@ -29,7 +29,7 @@
     <string name="stop_audio">停止</string>
     <string name="male_voice">男声</string>
     <string name="female_voice">女声</string>
-    <string name="yiku_shout">智慧负载（SDK版）</string>
+    <string name="yiku_shout">智慧负载</string>
     <string name="start_radio">开始录音</string>
     <string name="unitree_control">智慧负载系统</string>
     <string name="connection_status_notconnected">连接状态: 未连接</string>
@@ -170,4 +170,6 @@
     <string name="closed">已关闭</string>
     <string name="opened">已打开</string>
     <string name="not_detected">未检测</string>
+    <string name="waterGun">水枪</string>
+    <string name="WaterGunHost_name">"水枪IP: "</string>
 </resources>

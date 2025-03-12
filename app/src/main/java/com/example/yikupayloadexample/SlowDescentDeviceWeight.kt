@@ -17,11 +17,11 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
-import com.yiku.yikupayload_sdk.protocol.DESCENT_STATE_GET
-import com.yiku.yikupayload_sdk.service.SlowDescentDeviceService
-import com.yiku.yikupayload_sdk.util.MaxFValueInputFilter
-import com.yiku.yikupayload_sdk.util.MaxValueInputFilter
-import com.yiku.yikupayload_sdk.util.MsgCallback
+import com.yiku.yikupayloadSDK.protocol.DESCENT_STATE_GET
+import com.yiku.yikupayloadSDK.service.SlowDescentDeviceService
+import com.yiku.yikupayloadSDK.util.MaxFValueInputFilter
+import com.yiku.yikupayloadSDK.util.MaxValueInputFilter
+import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.util.Timer
 import java.util.TimerTask
 

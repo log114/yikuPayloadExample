@@ -17,8 +17,8 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import com.example.yikupayloadexample.component.RoundMenuView
-import com.yiku.yikupayload_sdk.service.LightService
-import com.yiku.yikupayload_sdk.util.MsgCallback
+import com.yiku.yikupayloadSDK.service.LightService
+import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.util.Date
 import java.util.Timer
 import java.util.TimerTask

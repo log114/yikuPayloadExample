@@ -170,4 +170,6 @@
     <string name="closed">Closed</string>
     <string name="opened">Opened</string>
     <string name="not_detected">Not detected</string>
+    <string name="waterGun">water gun</string>
+    <string name="WaterGunHost_name">"WaterGunHost IP: "</string>
 </resources>

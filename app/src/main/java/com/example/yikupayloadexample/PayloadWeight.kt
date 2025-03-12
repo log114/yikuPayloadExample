@@ -43,6 +43,7 @@ class PayloadWeight : Service() {
     private lateinit var gripperWeight: GripperWeight
     private lateinit var resqmeWeight: ResqmeWeight
     private lateinit var extinguisherWeight: ExtinguisherWeight
+    private lateinit var waterGunWeight: WaterGunWeight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -60,6 +61,7 @@ class PayloadWeight : Service() {
     private lateinit var gripperBtn: ImageView
     private lateinit var resqmeBtn: ImageView
     private lateinit var extinguisherBtn: ImageView
+    private lateinit var waterGunBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
     private var isVideoWindowInit = false
@@ -85,6 +87,7 @@ class PayloadWeight : Service() {
         gripperBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         resqmeBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         extinguisherBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        waterGunBtn.setBackgroundResource(R.drawable.yk_shout_btn)
     }
 
     private fun openFloatingWindow() {
@@ -108,6 +111,7 @@ class PayloadWeight : Service() {
                     gripperBtn = it.findViewById(R.id.gripperBtn)
                     resqmeBtn = it.findViewById(R.id.resqmeBtn)
                     extinguisherBtn = it.findViewById(R.id.extinguisherBtn)
+                    waterGunBtn = it.findViewById(R.id.waterGunBtn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -189,6 +193,12 @@ class PayloadWeight : Service() {
                             extinguisherBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
                         }
                     }
+                    waterGunBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(13, waterGunBtn)) {
+                            waterGunBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                        }
+                    }
                 }
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -262,6 +272,12 @@ class PayloadWeight : Service() {
         }
         try {
             if (mShoutView.visibility == VISIBLE) {
+                if (type == 13) {
+                    opened = 13
+                    mShoutViewContent.removeAllViews()
+                    mShoutViewContent.addView(waterGunWeight)
+                    EasyFloat.show("yk_payload_weight_op")
+                }
                 if (type == 12) {
                     opened = 12
                     mShoutViewContent.removeAllViews()
@@ -449,6 +465,7 @@ class PayloadWeight : Service() {
         gripperWeight = GripperWeight(this)
         resqmeWeight = ResqmeWeight(this)
         extinguisherWeight = ExtinguisherWeight(this)
+        waterGunWeight = WaterGunWeight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -586,27 +603,29 @@ class PayloadWeight : Service() {
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
             override fun run() {
-                val isConnectedMegaphone = (megaphoneService?.getIsConnected() == true);// 喊话器
-                val isConnectedYA3 = (megaphoneService?.getIsConnectedYA3() == true); // 四合一
-                val isConnectedCacheNet = cacheNetWeight.cacheNetService.getIsConnected(); // 网枪
-                val isConnectedEmitter = emitterWeight.emitterService.getIsConnected(); // 38mm发射器
-                val isConnectedLightYl300 = lightYl300Weight.lightService.getIsConnected(); // 探照灯
-                val isConnectedThrower = throwerweight.throwerService.getIsConnected(); // 抛投器
-                val isConnectedSlowDescentDevice = slowDescentDeviceWeight.slowDescentDeviceService.getIsConnected(); // 缓降器
-                val isConnectedGripper = gripperWeight.gripperService.getIsConnected(); // 机械爪
-                val isConnectedResqme = resqmeWeight.resqmeService.getIsConnected(); // 破窗器
-                val isConnectedExtinguisher = extinguisherWeight.extinguisherService.getIsConnected(); // 灭火罐
+//                val isConnectedMegaphone = (megaphoneService?.getIsConnected() == true);// 喊话器
+//                val isConnectedYA3 = (megaphoneService?.getIsConnectedYA3() == true); // 四合一
+//                val isConnectedCacheNet = cacheNetWeight.cacheNetService.getIsConnected(); // 网枪
+//                val isConnectedEmitter = emitterWeight.emitterService.getIsConnected(); // 38mm发射器
+//                val isConnectedLightYl300 = lightYl300Weight.lightService.getIsConnected(); // 探照灯
+//                val isConnectedThrower = throwerweight.throwerService.getIsConnected(); // 抛投器
+//                val isConnectedSlowDescentDevice = slowDescentDeviceWeight.slowDescentDeviceService.getIsConnected(); // 缓降器
+//                val isConnectedGripper = gripperWeight.gripperService.getIsConnected(); // 机械爪
+//                val isConnectedResqme = resqmeWeight.resqmeService.getIsConnected(); // 破窗器
+//                val isConnectedExtinguisher = extinguisherWeight.extinguisherService.getIsConnected(); // 灭火罐
+//                val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 水枪
 
-//                val isConnectedMegaphone = true;// 喊话器
-//                val isConnectedYA3 = true; // 四合一
-//                val isConnectedCacheNet = true; // 网枪
-//                val isConnectedEmitter = true; // 38mm发射器
-//                val isConnectedLightYl300 = true; // 探照灯
-//                val isConnectedThrower = true; // 抛投器
-//                val isConnectedSlowDescentDevice = true; // 缓降器
-//                val isConnectedGripper = true; // 机械爪
-//                val isConnectedResqme = true; // 破窗器
-//                val isConnectedExtinguisher = true; // 灭火罐
+                val isConnectedMegaphone = true;// 喊话器
+                val isConnectedYA3 = true; // 四合一
+                val isConnectedCacheNet = true; // 网枪
+                val isConnectedEmitter = true; // 38mm发射器
+                val isConnectedLightYl300 = true; // 探照灯
+                val isConnectedThrower = true; // 抛投器
+                val isConnectedSlowDescentDevice = true; // 缓降器
+                val isConnectedGripper = true; // 机械爪
+                val isConnectedResqme = true; // 破窗器
+                val isConnectedExtinguisher = true; // 灭火罐
+                val isConnectedWaterGun = true; // 水枪
                     // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示
@@ -670,6 +689,13 @@ class PayloadWeight : Service() {
                 if(isConnectedExtinguisher){
                     handler.post {
                         extinguisherBtn.visibility = VISIBLE;
+                        emptyText.visibility = View.GONE;
+                    }
+                }
+                // 水枪
+                if(isConnectedWaterGun){
+                    handler.post {
+                        waterGunBtn.visibility = VISIBLE;
                         emptyText.visibility = View.GONE;
                     }
                 }
