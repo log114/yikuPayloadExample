@@ -49,13 +49,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:textSize="14dp"
         android:theme="@style/My_CheckBox">
         <RadioButton
             android:id="@+id/btn_man_voice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:textSize="16sp"
             android:text="@string/male_voice"
             android:checked="true"/>
 
@@ -64,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:textSize="16sp"
             android:text="@string/female_voice"/>
     </RadioGroup>
     <CheckBox
