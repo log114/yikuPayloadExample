@@ -603,29 +603,29 @@ class PayloadWeight : Service() {
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
             override fun run() {
-//                val isConnectedMegaphone = (megaphoneService?.getIsConnected() == true);// 喊话器
-//                val isConnectedYA3 = (megaphoneService?.getIsConnectedYA3() == true); // 四合一
-//                val isConnectedCacheNet = cacheNetWeight.cacheNetService.getIsConnected(); // 网枪
-//                val isConnectedEmitter = emitterWeight.emitterService.getIsConnected(); // 38mm发射器
-//                val isConnectedLightYl300 = lightYl300Weight.lightService.getIsConnected(); // 探照灯
-//                val isConnectedThrower = throwerweight.throwerService.getIsConnected(); // 抛投器
-//                val isConnectedSlowDescentDevice = slowDescentDeviceWeight.slowDescentDeviceService.getIsConnected(); // 缓降器
-//                val isConnectedGripper = gripperWeight.gripperService.getIsConnected(); // 机械爪
-//                val isConnectedResqme = resqmeWeight.resqmeService.getIsConnected(); // 破窗器
-//                val isConnectedExtinguisher = extinguisherWeight.extinguisherService.getIsConnected(); // 灭火罐
-//                val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 水枪
+                val isConnectedMegaphone = (megaphoneService?.getIsConnected() == true);// 喊话器
+                val isConnectedYA3 = (megaphoneService?.getIsConnectedYA3() == true); // 四合一
+                val isConnectedCacheNet = cacheNetWeight.cacheNetService.getIsConnected(); // 网枪
+                val isConnectedEmitter = emitterWeight.emitterService.getIsConnected(); // 38mm发射器
+                val isConnectedLightYl300 = lightYl300Weight.lightService.getIsConnected(); // 探照灯
+                val isConnectedThrower = throwerweight.throwerService.getIsConnected(); // 抛投器
+                val isConnectedSlowDescentDevice = slowDescentDeviceWeight.slowDescentDeviceService.getIsConnected(); // 缓降器
+                val isConnectedGripper = gripperWeight.gripperService.getIsConnected(); // 机械爪
+                val isConnectedResqme = resqmeWeight.resqmeService.getIsConnected(); // 破窗器
+                val isConnectedExtinguisher = extinguisherWeight.extinguisherService.getIsConnected(); // 灭火罐
+                val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 水枪
 
-                val isConnectedMegaphone = true;// 喊话器
-                val isConnectedYA3 = true; // 四合一
-                val isConnectedCacheNet = true; // 网枪
-                val isConnectedEmitter = true; // 38mm发射器
-                val isConnectedLightYl300 = true; // 探照灯
-                val isConnectedThrower = true; // 抛投器
-                val isConnectedSlowDescentDevice = true; // 缓降器
-                val isConnectedGripper = true; // 机械爪
-                val isConnectedResqme = true; // 破窗器
-                val isConnectedExtinguisher = true; // 灭火罐
-                val isConnectedWaterGun = true; // 水枪
+//                val isConnectedMegaphone = true;// 喊话器
+//                val isConnectedYA3 = true; // 四合一
+//                val isConnectedCacheNet = true; // 网枪
+//                val isConnectedEmitter = true; // 38mm发射器
+//                val isConnectedLightYl300 = true; // 探照灯
+//                val isConnectedThrower = true; // 抛投器
+//                val isConnectedSlowDescentDevice = true; // 缓降器
+//                val isConnectedGripper = true; // 机械爪
+//                val isConnectedResqme = true; // 破窗器
+//                val isConnectedExtinguisher = true; // 灭火罐
+//                val isConnectedWaterGun = true; // 水枪
                     // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示
