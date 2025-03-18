@@ -119,8 +119,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         }
     }
 
-    fun initAudioTrack() {
-//        bufferSizeInBytes = AudioTrack.getMinBufferSize(8000, 1, AudioFormat.ENCODING_PCM_16BIT);
+    private fun initAudioTrack() {
         val mMinBufferSize = AudioTrack.getMinBufferSize(
             sampleRate, channelsConfig, AudioFormat.ENCODING_PCM_16BIT
         );//计算最小缓冲区
@@ -186,25 +185,11 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                     }
 
                     override fun onMsg(msg: ByteArray) {
-                        //                        Log.i(TAG, "header:${String(msg.slice(0..3).toByteArray())}")
                         if (msg.size > 4 && String(msg.slice(0..3).toByteArray()) == "[40]") {
                             val data = ShortArray(frameSize)
                             val rc = opusUtils.decode(
                                 createDecoder, msg.slice(4 until msg.size).toByteArray(), data
                             )
-                            // 接收到的是PCM音频
-
-                            // 持续写入到一个文件中
-
-                            // 转存 当点击停止收音，对保存的PCM音频文件进行wav编码
-
-                            // 转存结束后删除原始PCM音频
-
-                            // 新增一个按钮，可以打开保存音频文件路径
-
-                            //                            Log.i(TAG, "data: size:${data.size} data:${data.asList()}")
-                            //                            data = butterworthBandpassFilter.applyFilter(data)
-                            //                            Log.i(TAG, "decode: size:${data.size} data:${data.asList()}")
                             audioTrack.write(data, 0, rc)
                         }
                     }

@@ -71,7 +71,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             throwerService.setIp(host)
         }
         initView(context)
-        throwerService.msgCallbacks += object : MsgCallback {
+        throwerService.registMsgCallback(object : MsgCallback {
             override fun getId(): String {
                 return "ThrowerWeightCallback"
             }
@@ -88,7 +88,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 }
             }
 
-        }
+        })
     }
 
 

@@ -47,7 +47,7 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             resqmeService.setIp(host)
         }
         initView(context)
-        resqmeService.msgCallbacks += object : MsgCallback {
+        resqmeService.registMsgCallback(object : MsgCallback {
             override fun getId(): String {
                 return "ResqmeWeightCallback"
             }
@@ -67,7 +67,7 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 }
             }
 
-        }
+        })
     }
 
     fun updateStatus(msg: ByteArray) {

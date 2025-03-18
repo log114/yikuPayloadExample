@@ -41,7 +41,7 @@ class ExtinguisherWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
             extinguisherService.setIp(host)
         }
         initView(context)
-        extinguisherService.msgCallbacks += object : MsgCallback {
+        extinguisherService.registMsgCallback(object : MsgCallback {
             override fun getId(): String {
                 return "ExtinguisherServiceCallback"
             }
@@ -57,7 +57,7 @@ class ExtinguisherWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
                 }
             }
 
-        }
+        })
     }
 
     private fun updateState(msg: ByteArray) {

@@ -41,7 +41,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 waterGunService.setIp(host)
             }
             initView(context)
-            waterGunService.msgCallbacks += object : MsgCallback {
+            waterGunService.registMsgCallback(object : MsgCallback {
                 override fun getId(): String {
                     return "WaterGunServiceCallback"
                 }
@@ -57,7 +57,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     }
                 }
 
-            }
+            })
         }
 
         private fun updateState(msg: ByteArray) {

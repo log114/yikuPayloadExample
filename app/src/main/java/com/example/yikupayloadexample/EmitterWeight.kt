@@ -40,7 +40,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         if(host != null && "" != host) {
             emitterService.setIp(host)
         }
-        emitterService.msgCallbacks += object : MsgCallback {
+        emitterService.registMsgCallback(object : MsgCallback {
             override fun getId(): String {
                 return "EmitterWeightCallback"
             }
@@ -59,7 +59,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 }
             }
 
-        }
+        })
     }
 
 

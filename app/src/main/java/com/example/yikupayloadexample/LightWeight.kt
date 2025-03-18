@@ -91,9 +91,6 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             Log.i(TAG, "recv: ${msg.asList()}")
             if (msg[2] == 0x04.toByte()) {
                 lastRecvTime = Date().time
-//                Log.i(TAG, "查询温度: ${msg.asList()} ")
-//                val ledLuminance = msg[3].toInt() - 50
-//                val driverLuminance = msg[4].toInt() - 50
                 if (mLuminanceText != null) {
 //                    Log.i(TAG, "修改温度...")
                     mLuminanceText.post(Runnable {
