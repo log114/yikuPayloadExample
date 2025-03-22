@@ -27,9 +27,12 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         var waterGunService: WaterGunService
         private lateinit var mSafetySwitchSwitch: Switch
         private lateinit var mOpenState: TextView
+        private lateinit var mOperateBtn: Button
         private var isConnecting: Boolean = false
         private var isFirstConnect: Boolean = true
         private var updateTime = Date().time
+        // 0关，1开
+        private var operate: Int = 1
 
         constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
         constructor(context: Context) : this(context, null, 0)
@@ -65,8 +68,10 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             handler.post {
                 if (0x00 == msg[0 + 3].toInt()) {
                     mOpenState.setText(R.string.closed)
+                    operate = 1
                 } else {
                     mOpenState.setText(R.string.opened)
+                    operate = 0
                 }
             }
         }
@@ -76,24 +81,24 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             mLightView = findViewById(R.id.waterGun_view)
             mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
             mOpenState = findViewById(R.id.openState)
-            val mOperateBtn = findViewById<Button>(R.id.operateBtn)
+            mOperateBtn = findViewById<Button>(R.id.operateBtn)
             setConnectState()
 
             mOperateBtn.setOnClickListener {
                 try {
-                    if (!mSafetySwitchSwitch.isChecked) {
+                    if(operate==1 && !mSafetySwitchSwitch.isChecked) {
                         showToast(R.string.need_to_open_safety_switch)
-                    } else {
-                        waterGunService.operate(1)// 开
-                        mOperateBtn.setText(R.string.opening)
-                        mOperateBtn.isEnabled = false
-                        thread {
-                            Thread.sleep(2000)
-                            val handler = Handler(Looper.getMainLooper())
-                            handler.post {
-                                mOperateBtn.setText(R.string.open)
-                                mOperateBtn.isEnabled = true
-                            }
+                        return@setOnClickListener
+                    }
+                    waterGunService.operate(operate)
+                    mOperateBtn.setText( if(operate==1) R.string.opening else R.string.closing )
+                    mOperateBtn.isEnabled = false
+                    thread {
+                        Thread.sleep(2000)
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            mOperateBtn.isEnabled = true
+                            mOperateBtn.setText( if(operate==1) R.string.open else R.string.close )
                         }
                     }
                 } catch (e: Exception) {
@@ -125,8 +130,10 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             val task = object : TimerTask(){
                 override fun run() {
                     if(waterGunService.getIsConnected()){
-                        handler.post {
-                            connectText.setText(R.string.connection_status_connected)
+                        if (Date().time - updateTime < 3000) {
+                            handler.post {
+                                connectText.setText(R.string.connection_status_connected)
+                            }
                         }
                         waterGunService.heartbeat()
                         // 3秒没收到信息，显示未连接
