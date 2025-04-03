@@ -32,9 +32,6 @@ class GripperWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.gripper_weight, this, true)
         mGripperView = findViewById(R.id.gripper_view)
-        val mGripperRiseBtn = findViewById<Button>(R.id.gripperRiseBtn)
-        val mGripperDeclineBtn = findViewById<Button>(R.id.gripperDeclineBtn)
-        val mGripperStopBtn = findViewById<Button>(R.id.gripperStop)
         val mGripperGrabBtn = findViewById<Button>(R.id.gripperGrabBtn)
         val mGripperReleaseBtn = findViewById<Button>(R.id.gripperReleaseBtn)
         gripperService = GripperService()
@@ -43,29 +40,12 @@ class GripperWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             gripperService.setIp(host)
         }
         setConnectState()
-
-        // 上升
-        mGripperRiseBtn.setOnClickListener {
-            gripperService.gripperRise()
-        }
-        // 下降
-        mGripperDeclineBtn.setOnClickListener {
-            gripperService.gripperDecline()
-        }
-        // 紧急制动
-        mGripperStopBtn.setOnClickListener {
-            gripperService.gripperStop()
-        }
         // 抓取
         mGripperGrabBtn.setOnClickListener {
             gripperService.gripperGrab()
         }
         // 释放
         mGripperReleaseBtn.setOnClickListener {
-            // 先解锁
-            gripperService.gripperStop()
-            Thread.sleep(100)
-            // 再释放
             gripperService.gripperRelease()
         }
     }
