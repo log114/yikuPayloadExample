@@ -33,6 +33,8 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private var isStartSpeak = false
     private var isPlayAlarm = false;
     private lateinit var mServoControlSeekbar: SeekBar // 舵机控制
+    private var isConnecting_1 = false; // 喊话器是否正在连接
+    private var isConnecting_2 = false; // 四合一是否正在连接
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -321,29 +323,40 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
                     }
-                    // 尝试重连
-                    val megaphoneService1: BaseMegaphoneService = MegaphoneService()// 喊话器
-                    val host1 = preferences?.getString("ShoutHost", "")
-                    if(host1 != null && "" != host1) {
-                        megaphoneService1.setIp(host1)
-                    }
-                    val megaphoneService2: BaseMegaphoneService = FourInOneService()// 四合一
-                    val host2 = preferences?.getString("YA3Host", "")
-                    if(host2 != null && "" != host2) {
-                        megaphoneService1.setIp(host2)
-                    }
-                    thread {
-                        megaphoneService1.connect()
-                        if (megaphoneService1.getIsConnected()) {
-                            megaphoneService = megaphoneService1;
-                            setCallbacks()
+                    if(!isConnecting_1) {
+                        isConnecting_1 = true
+                        // 尝试重连
+                        val megaphoneService1: BaseMegaphoneService = MegaphoneService()// 喊话器
+                        val host1 = preferences?.getString("ShoutHost", "")
+                        if(host1 != null && "" != host1) {
+                            megaphoneService1.setIp(host1)
                         }
+                        thread {
+                            Log.i(TAG, "喊话器连接："+ megaphoneService1.getIp())
+                            megaphoneService1.connect()
+                            if (megaphoneService1.getIsConnected()) {
+                                megaphoneService = megaphoneService1;
+                                setCallbacks()
+                            }
+                            isConnecting_1 = false
+                        }
+
                     }
-                    thread {
-                        megaphoneService2.connect()
-                        if (megaphoneService2.getIsConnectedYA3()) {
-                            megaphoneService = megaphoneService2;
-                            setCallbacks()
+                    if(!isConnecting_2) {
+                        isConnecting_2 = true
+                        val megaphoneService2: BaseMegaphoneService = FourInOneService()// 四合一
+                        val host2 = preferences?.getString("YA3Host", "")
+                        if (host2 != null && "" != host2) {
+                            megaphoneService2.setIp(host2)
+                        }
+                        thread {
+                            Log.i(TAG, "四合一连接：" + megaphoneService2.getIp())
+                            megaphoneService2.connect()
+                            if (megaphoneService2.getIsConnectedYA3()) {
+                                megaphoneService = megaphoneService2;
+                                setCallbacks()
+                            }
+                            isConnecting_2 = false
                         }
                     }
                 }
