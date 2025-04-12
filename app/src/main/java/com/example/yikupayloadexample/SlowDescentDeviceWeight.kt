@@ -22,8 +22,10 @@ import com.yiku.yikupayloadSDK.service.SlowDescentDeviceService
 import com.yiku.yikupayloadSDK.util.MaxFValueInputFilter
 import com.yiku.yikupayloadSDK.util.MaxValueInputFilter
 import com.yiku.yikupayloadSDK.util.MsgCallback
+import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.concurrent.thread
 
 class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
@@ -33,6 +35,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
     //    private lateinit var mDescentSafetySwitchSwitch: Switch
     private lateinit var mBtnOpen: Button
     private lateinit var mBtnClose: Button
+    private lateinit var mConnectState: TextView
 
     //    private lateinit var mIsEnable: TextView
     private lateinit var mSlowDescentDeviceView: View
@@ -61,6 +64,8 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
 
     private lateinit var mBtnOk: Button
     private lateinit var mBtnCancel: Button
+    private var updateTime = Date().time
+    private var isConnecting = false;
 
     private var isEnable = false
     private var isEmergency = false
@@ -101,6 +106,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
     // 更新缓降器状态
     fun updateStatus(msg: ByteArray) {
         Log.i(TAG, "缓降器msg:${msg.toHex()}")
+        updateTime = Date().time
         val enableType = msg[0 + 3]                 // 0: 缓降器已Disable, 1: 缓降器已Enable
         val mode = msg[1 + 3]                       // 0: 长度控制模式, 1: 速度控制模式
         val speed = msg[2 + 3]                      // 当前速度 m/min
@@ -112,6 +118,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
             TAG,
             "缓降器，isEnable:${enableType}, mode:${mode}, speed:${speed}, length:${length}, state:${state}, 载重:${weight}"
         )
+        mConnectState.setText(R.string.connection_status_connected)
         // 安全开关状态
         isEnable = (enableType != 0x00.toByte())
         if (isEnable) {
@@ -163,6 +170,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
 //        mDescentSafetySwitchSwitch = findViewById(R.id.descentSafetySwitchSwitch)
         mBtnOpen = findViewById(R.id.btn_open)
         mBtnClose = findViewById(R.id.btn_close)
+        mConnectState = findViewById(R.id.connectState)
 //        mIsEnable = findViewById(R.id.isEnable)
         mCurrentLineLength = findViewById(R.id.currentLineLength)
 //        mWeight = findViewById(R.id.weight)
@@ -350,8 +358,31 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
         val task = object : TimerTask() {
             override fun run() {
                 if (!slowDescentDeviceService.getIsConnected()) {
-                    // 尝试重连
-                    slowDescentDeviceService.connect()
+                    if(!isConnecting){
+                        isConnecting = true
+                        thread {
+                            Thread.sleep(5000)// 先等待5s，防止刚断连就重连，报错
+                            while (!slowDescentDeviceService.connect()) {
+                                Thread.sleep(1000)
+                            }
+                            isConnecting = false
+                            updateTime = Date().time
+                        }
+                    }
+                }
+                else {
+                    // 3秒没收到信息，显示未连接
+                    if (Date().time - updateTime > 3000) {
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            mConnectState.setText(R.string.connection_status_notconnected)
+                        }
+                    }
+                    // 如果超过10s没收到消息，主动断开连接，等待重连
+                    if (Date().time - updateTime > 10000) {
+                        // 断连
+                        slowDescentDeviceService.disConnect()
+                    }
                 }
             }
         }
