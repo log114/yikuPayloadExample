@@ -62,13 +62,13 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/radio_btn"
+            android:id="@+id/play_alarm"
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="10dp"
-            android:background="@color/light_blue_600"
-            android:text="@string/start_listening"
+            android:background="@color/red"
+            android:text="@string/play_alarm"
             android:textColor="@color/white" />
     </LinearLayout>
 
@@ -78,15 +78,16 @@
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/play_alarm"
+            android:id="@+id/radio_btn"
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="24dp"
-            android:background="@color/red"
-            android:text="@string/play_alarm"
-            android:textColor="@color/white" />
+            android:background="@color/light_blue_600"
+            android:text="@string/start_listening"
+            android:textColor="@color/white"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <LinearLayout

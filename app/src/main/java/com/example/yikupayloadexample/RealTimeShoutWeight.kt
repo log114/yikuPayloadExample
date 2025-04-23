@@ -360,8 +360,12 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                         }
                     }
                 }
-//                Log.i(TAG, "喊话器连接状态: ${megaphoneService?.getIsConnected()}")
-//                Log.i(TAG, "四合一连接状态: ${megaphoneService?.getIsConnectedYA3()}")
+                if(megaphoneService?.getIsConnectedYA3() == true) {
+                    mRadioBtn.visibility = VISIBLE;
+                }
+                else if(megaphoneService?.getIsConnected() == true) {
+                    mRadioBtn.visibility = GONE;
+                }
             }
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
