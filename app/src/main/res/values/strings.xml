@@ -216,4 +216,8 @@
     <string name="not_detected">未检测</string>
     <string name="waterGun">水枪</string>
     <string name="WaterGunHost_name">"水枪IP: "</string>
+    <string name="BucketHost_name">"吊桶IP: "</string>
+    <string name="bucket">吊桶</string>
+    <string name="barrelControl">"水桶控制: "</string>
+    <string name="hookControl">"挂钩控制: "</string>
 </resources>

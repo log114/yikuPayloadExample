@@ -171,6 +171,18 @@
         app:layout_constraintStart_toEndOf="@id/extinguisherBtn"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/bucketBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/yk_shout_btn"
+        android:contentDescription="@string/bucket"
+        android:src="@drawable/bucket"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/waterGunBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/emptyText"

@@ -22,9 +22,9 @@ import kotlin.concurrent.thread
 
 class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
-        private val TAG = "ExtinguisherWeight"
+        private val TAG = "WaterGunWeight"
         private lateinit var mLightView: View
-        var waterGunService: WaterGunService
+        var waterGunService: WaterGunService = WaterGunService()
         private lateinit var mSafetySwitchSwitch: Switch
         private lateinit var mOpenState: TextView
         private lateinit var mOperateBtn: Button
@@ -38,7 +38,6 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         constructor(context: Context) : this(context, null, 0)
 
         init {
-            waterGunService = WaterGunService()
             val host = preferences?.getString("WaterGunHost", "")
             if(host != null && "" != host) {
                 waterGunService.setIp(host)

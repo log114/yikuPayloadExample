@@ -44,6 +44,7 @@ class PayloadWeight : Service() {
     private lateinit var resqmeWeight: ResqmeWeight
     private lateinit var extinguisherWeight: ExtinguisherWeight
     private lateinit var waterGunWeight: WaterGunWeight
+    private lateinit var bucketWeight: BucketWeight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -62,6 +63,7 @@ class PayloadWeight : Service() {
     private lateinit var resqmeBtn: ImageView
     private lateinit var extinguisherBtn: ImageView
     private lateinit var waterGunBtn: ImageView
+    private lateinit var bucketBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
     private var isVideoWindowInit = false
@@ -88,6 +90,7 @@ class PayloadWeight : Service() {
         resqmeBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         extinguisherBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         waterGunBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        bucketBtn.setBackgroundResource(R.drawable.yk_shout_btn)
     }
 
     private fun openFloatingWindow() {
@@ -112,6 +115,7 @@ class PayloadWeight : Service() {
                     resqmeBtn = it.findViewById(R.id.resqmeBtn)
                     extinguisherBtn = it.findViewById(R.id.extinguisherBtn)
                     waterGunBtn = it.findViewById(R.id.waterGunBtn)
+                    bucketBtn = it.findViewById(R.id.bucketBtn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -199,6 +203,12 @@ class PayloadWeight : Service() {
                             waterGunBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
                         }
                     }
+                    bucketBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(14, bucketBtn)) {
+                            bucketBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                        }
+                    }
                 }
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -272,6 +282,12 @@ class PayloadWeight : Service() {
         }
         try {
             if (mShoutView.visibility == VISIBLE) {
+                if (type == 14) {
+                    opened = 14
+                    mShoutViewContent.removeAllViews()
+                    mShoutViewContent.addView(bucketWeight)
+                    EasyFloat.show("yk_payload_weight_op")
+                }
                 if (type == 13) {
                     opened = 13
                     mShoutViewContent.removeAllViews()
@@ -466,6 +482,7 @@ class PayloadWeight : Service() {
         resqmeWeight = ResqmeWeight(this)
         extinguisherWeight = ExtinguisherWeight(this)
         waterGunWeight = WaterGunWeight(this)
+        bucketWeight = BucketWeight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -614,6 +631,7 @@ class PayloadWeight : Service() {
                 val isConnectedResqme = resqmeWeight.resqmeService.getIsConnected(); // 破窗器
                 val isConnectedExtinguisher = extinguisherWeight.extinguisherService.getIsConnected(); // 灭火罐
                 val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 水枪
+                val isConnectedBucket = bucketWeight.bucketService.getIsConnected(); // 吊桶
 
 //                val isConnectedMegaphone = true;// 喊话器
 //                val isConnectedYA3 = true; // 四合一
@@ -626,6 +644,7 @@ class PayloadWeight : Service() {
 //                val isConnectedResqme = true; // 破窗器
 //                val isConnectedExtinguisher = true; // 灭火罐
 //                val isConnectedWaterGun = true; // 水枪
+//                val isConnectedBucket = true; // 吊桶
                     // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示
@@ -696,6 +715,13 @@ class PayloadWeight : Service() {
                 if(isConnectedWaterGun){
                     handler.post {
                         waterGunBtn.visibility = VISIBLE;
+                        emptyText.visibility = View.GONE;
+                    }
+                }
+                // 吊桶
+                if(isConnectedBucket){
+                    handler.post {
+                        bucketBtn.visibility = VISIBLE;
                         emptyText.visibility = View.GONE;
                     }
                 }
