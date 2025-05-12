@@ -117,6 +117,16 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         // 水桶停止
         mBarrelStopBtn.setOnClickListener {
             bucketService.barrelControl(0)
+            mBarrelStopBtn.isEnabled = false
+            mBarrelStopBtn.setText(R.string.executing )
+            thread {
+                Thread.sleep(2000)
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    mBarrelStopBtn.isEnabled = true
+                    mBarrelStopBtn.setText(R.string.stop )
+                }
+            }
         }
         // 挂钩开
         mHookOpenBtn.setOnClickListener {
