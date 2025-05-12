@@ -649,7 +649,7 @@ class PayloadWeight : Service() {
                 val isConnectedExtinguisher = extinguisherWeight.extinguisherService.getIsConnected(); // 灭火罐
                 val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 水枪
                 val isConnectedBucket = bucketWeight.bucketService.getIsConnected(); // 吊桶
-                val isConnectedWaterBranch = waterBranchWeight.waterBranchService.getIsConnected(); // 消防水枪
+//                val isConnectedWaterBranch = waterBranchWeight.waterBranchService.getIsConnected(); // 消防水枪
 
 //                val isConnectedMegaphone = true;// 喊话器
 //                val isConnectedYA3 = true; // 四合一
@@ -663,7 +663,7 @@ class PayloadWeight : Service() {
 //                val isConnectedExtinguisher = true; // 灭火罐
 //                val isConnectedWaterGun = true; // 水枪
 //                val isConnectedBucket = true; // 吊桶
-//                val isConnectedWaterBranch = true; // 消防水枪
+                val isConnectedWaterBranch = true; // 消防水枪
                     // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示

@@ -1,5 +1,6 @@
 package com.example.yikupayloadexample
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -28,13 +29,15 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private lateinit var mSafetySwitchSwitch: Switch
     private lateinit var mOpenState: TextView
     private lateinit var mOperateBtn: Button
-    private lateinit var mHoseReleaseBtn: Button
-    private lateinit var mHoseDetachmentBtn: Button
+    private lateinit var mHoseReleaseSwitch: Switch
+    private lateinit var mHoseDetachmentSwitch: Switch
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
     private var updateTime = Date().time
     // 0关，1开
     private var operate: Int = 1
+    private var isHoseRelease: Boolean = false
+    private var isHoseDetachment: Boolean = false
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -74,6 +77,10 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                 mOpenState.setText(R.string.opened)
                 operate = 0
             }
+            isHoseRelease = 0x01 == msg[0 + 4].toInt()
+            mHoseReleaseSwitch.isChecked = isHoseRelease
+            isHoseDetachment = 0x01 == msg[0 + 5].toInt()
+            mHoseDetachmentSwitch.isChecked = isHoseDetachment
         }
     }
 
@@ -82,10 +89,15 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         mLightView = findViewById(R.id.waterBranch_view)
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
         mOpenState = findViewById(R.id.openState)
-        mOperateBtn = findViewById<Button>(R.id.operateBtn)
-        mHoseReleaseBtn = findViewById<Button>(R.id.hoseReleaseBtn)
-        mHoseDetachmentBtn = findViewById<Button>(R.id.hoseDetachmentBtn)
+        mOperateBtn = findViewById(R.id.operateBtn)
+        mHoseReleaseSwitch = findViewById(R.id.hoseReleaseSwitch)
+        mHoseDetachmentSwitch = findViewById(R.id.hoseDetachmentSwitch)
         setConnectState()
+
+        mSafetySwitchSwitch.setOnClickListener {
+            mHoseReleaseSwitch.isEnabled = mSafetySwitchSwitch.isChecked
+            mHoseDetachmentSwitch.isEnabled = mSafetySwitchSwitch.isChecked
+        }
 
         mOperateBtn.setOnClickListener {
             try {
@@ -110,40 +122,32 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             }
 
         }
-
-        mHoseReleaseBtn.setOnClickListener {
+        // 释放水带
+        mHoseReleaseSwitch.setOnClickListener {
             if(!mSafetySwitchSwitch.isChecked) {
                 showToast(R.string.need_to_open_safety_switch)
                 return@setOnClickListener
             }
-            waterBranchService.hoseRelease()
-            mHoseReleaseBtn.isEnabled = false
-            mHoseReleaseBtn.setText(R.string.executing )
-            thread {
-                Thread.sleep(2000)
-                val handler = Handler(Looper.getMainLooper())
-                handler.post {
-                    mHoseReleaseBtn.isEnabled = true
-                    mHoseReleaseBtn.setText(R.string.hoseRelease )
-                }
+            // 如果当前是打开状态，关闭
+            if(isHoseRelease) {
+                waterBranchService.hoseRelease(0)
+            }
+            else {
+                waterBranchService.hoseRelease(1)
             }
         }
-
-        mHoseDetachmentBtn.setOnClickListener {
+        // 水带脱困
+        mHoseDetachmentSwitch.setOnClickListener {
             if(!mSafetySwitchSwitch.isChecked) {
                 showToast(R.string.need_to_open_safety_switch)
                 return@setOnClickListener
             }
-            waterBranchService.hoseDetachment()
-            mHoseDetachmentBtn.isEnabled = false
-            mHoseDetachmentBtn.setText(R.string.executing )
-            thread {
-                Thread.sleep(2000)
-                val handler = Handler(Looper.getMainLooper())
-                handler.post {
-                    mHoseDetachmentBtn.isEnabled = true
-                    mHoseDetachmentBtn.setText(R.string.hoseRelease )
-                }
+            // 如果当前水带已脱困，关闭
+            if(isHoseDetachment) {
+                waterBranchService.hoseDetachment(0)
+            }
+            else {
+                waterBranchService.hoseDetachment(1)
             }
         }
     }

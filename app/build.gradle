@@ -92,7 +92,6 @@ dependencies {
     implementation 'com.amap.api:location:4.9.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -106,5 +105,5 @@ dependencies {
     implementation 'io.github.controlwear:virtualjoystick:1.10.1'
     implementation 'io.github.libpd.android:pd-core:1.2.1-rc6'
     implementation 'org.apache.commons:commons-math3:3.6.1'
-    implementation 'com.github.log114:yikupayload:0.10.0'
+    implementation 'com.github.log114:yikupayload:0.10.1'
 }
