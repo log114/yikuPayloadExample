@@ -222,7 +222,7 @@
     <string name="hookControl">"挂钩控制: "</string>
     <string name="WaterBranchHost_name">"消防水枪IP: "</string>
     <string name="waterBranch">消防水枪</string>
-    <string name="hoseRelease">"释放水带: "</string>
-    <string name="hoseDetachment">"水带脱困: "</string>
+    <string name="hoseRelease">释放水带</string>
+    <string name="hoseDetachment">水带脱困</string>
     <string name="executing">正在执行</string>
 </resources>

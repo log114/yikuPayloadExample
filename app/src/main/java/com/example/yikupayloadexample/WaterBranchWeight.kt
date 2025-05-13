@@ -27,10 +27,8 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private lateinit var mLightView: View
     var waterBranchService: WaterBranchService = WaterBranchService()
     private lateinit var mSafetySwitchSwitch: Switch
-    private lateinit var mOpenState: TextView
-    private lateinit var mOperateBtn: Button
-    private lateinit var mHoseReleaseSwitch: Switch
-    private lateinit var mHoseDetachmentSwitch: Switch
+    private lateinit var mHoseReleaseBtn: Button
+    private lateinit var mHoseDetachmentBtn: Button
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
     private var updateTime = Date().time
@@ -70,17 +68,8 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private fun updateState(msg: ByteArray) {
         val handler = Handler(Looper.getMainLooper())
         handler.post {
-            if (0x00 == msg[0 + 3].toInt()) {
-                mOpenState.setText(R.string.closed)
-                operate = 1
-            } else {
-                mOpenState.setText(R.string.opened)
-                operate = 0
-            }
             isHoseRelease = 0x01 == msg[0 + 4].toInt()
-            mHoseReleaseSwitch.isChecked = isHoseRelease
             isHoseDetachment = 0x01 == msg[0 + 5].toInt()
-            mHoseDetachmentSwitch.isChecked = isHoseDetachment
         }
     }
 
@@ -88,66 +77,56 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         LayoutInflater.from(context).inflate(R.layout.water_branch_weight, this, true)
         mLightView = findViewById(R.id.waterBranch_view)
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
-        mOpenState = findViewById(R.id.openState)
-        mOperateBtn = findViewById(R.id.operateBtn)
-        mHoseReleaseSwitch = findViewById(R.id.hoseReleaseSwitch)
-        mHoseDetachmentSwitch = findViewById(R.id.hoseDetachmentSwitch)
+        mHoseReleaseBtn = findViewById(R.id.hoseReleaseBtn)
+        mHoseDetachmentBtn = findViewById(R.id.hoseDetachmentBtn)
         setConnectState()
 
         mSafetySwitchSwitch.setOnClickListener {
-            mHoseReleaseSwitch.isEnabled = mSafetySwitchSwitch.isChecked
-            mHoseDetachmentSwitch.isEnabled = mSafetySwitchSwitch.isChecked
-        }
-
-        mOperateBtn.setOnClickListener {
-            try {
-                if(operate==1 && !mSafetySwitchSwitch.isChecked) {
-                    showToast(R.string.need_to_open_safety_switch)
-                    return@setOnClickListener
-                }
-                waterBranchService.operate(operate)
-                mOperateBtn.setText( if(operate==1) R.string.opening else R.string.closing )
-                mOperateBtn.isEnabled = false
-                thread {
-                    Thread.sleep(2000)
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post {
-                        mOperateBtn.isEnabled = true
-                        mOperateBtn.setText( if(operate==1) R.string.open else R.string.close )
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                showToast(R.string.operation_failed)
-            }
-
+            mHoseReleaseBtn.isEnabled = mSafetySwitchSwitch.isChecked
+            mHoseDetachmentBtn.isEnabled = mSafetySwitchSwitch.isChecked
         }
         // 释放水带
-        mHoseReleaseSwitch.setOnClickListener {
+        mHoseReleaseBtn.setOnClickListener {
             if(!mSafetySwitchSwitch.isChecked) {
                 showToast(R.string.need_to_open_safety_switch)
                 return@setOnClickListener
             }
             // 如果当前是打开状态，关闭
-            if(isHoseRelease) {
-                waterBranchService.hoseRelease(0)
-            }
-            else {
-                waterBranchService.hoseRelease(1)
+//            if(isHoseRelease) {
+//                waterBranchService.hoseRelease(0)
+//            }
+//            else {
+//                waterBranchService.hoseRelease(1)
+//            }
+            waterBranchService.hoseRelease(1)
+            mHoseReleaseBtn.setText( R.string.executing )
+            mHoseReleaseBtn.isEnabled = false
+            thread {
+                Thread.sleep(3000)
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    mHoseReleaseBtn.isEnabled = true
+                    mHoseReleaseBtn.setText(R.string.hoseRelease )
+                }
             }
         }
         // 水带脱困
-        mHoseDetachmentSwitch.setOnClickListener {
+        mHoseDetachmentBtn.setOnClickListener {
             if(!mSafetySwitchSwitch.isChecked) {
                 showToast(R.string.need_to_open_safety_switch)
                 return@setOnClickListener
             }
-            // 如果当前水带已脱困，关闭
-            if(isHoseDetachment) {
-                waterBranchService.hoseDetachment(0)
-            }
-            else {
-                waterBranchService.hoseDetachment(1)
+            waterBranchService.hoseDetachment(1)
+
+            mHoseDetachmentBtn.setText( R.string.executing )
+            mHoseDetachmentBtn.isEnabled = false
+            thread {
+                Thread.sleep(3000)
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    mHoseDetachmentBtn.isEnabled = true
+                    mHoseDetachmentBtn.setText(R.string.hoseDetachment )
+                }
             }
         }
     }

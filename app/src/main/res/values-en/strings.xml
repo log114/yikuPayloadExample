@@ -178,7 +178,7 @@
     <string name="hookControl">"hook control: "</string>
     <string name="WaterBranchHost_name">"WaterBranchHost IP: "</string>
     <string name="waterBranch">water branch</string>
-    <string name="hoseRelease">"release hose: "</string>
-    <string name="hoseDetachment">"detach hose: "</string>
+    <string name="hoseRelease">release hose</string>
+    <string name="hoseDetachment">detach hose</string>
     <string name="executing">executing</string>
 </resources>
