@@ -181,4 +181,14 @@
     <string name="hoseRelease">release hose</string>
     <string name="hoseDetachment">detach hose</string>
     <string name="executing">executing</string>
+    <string name="directionControl">"Direction control: "</string>
+    <string name="to_left">to left</string>
+    <string name="to_right">to right</string>
+    <string name="preparing">Preparing</string>
+    <string name="beReady">Be ready</string>
+    <string name="autoMode">Auto mode</string>
+    <string name="switching">Switching</string>
+    <string name="manualMode">Manual mode</string>
+    <string name="stopped">Stopped</string>
+    <string name="notManualMode">Currently not in manual mode, unavailable</string>
 </resources>

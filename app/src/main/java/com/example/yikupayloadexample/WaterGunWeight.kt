@@ -1,11 +1,13 @@
 package com.example.yikupayloadexample
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -26,13 +28,18 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         private lateinit var mLightView: View
         var waterGunService: WaterGunService = WaterGunService()
         private lateinit var mSafetySwitchSwitch: Switch
-        private lateinit var mOpenState: TextView
+        private lateinit var mState: TextView
         private lateinit var mOperateBtn: Button
+        private lateinit var mToLeftBtn: Button
+        private lateinit var mToRightBtn: Button
         private var isConnecting: Boolean = false
         private var isFirstConnect: Boolean = true
         private var updateTime = Date().time
+        private var timerToLeft: Timer? = null
+        private var timerToRight: Timer? = null
+
         // 0关，1开
-        private var operate: Int = 1
+        private var state: Int = 0
 
         constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
         constructor(context: Context) : this(context, null, 0)
@@ -63,51 +70,171 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         }
 
         private fun updateState(msg: ByteArray) {
+            state = msg[0 + 3].toInt()
+            var locationStatus = msg[0 + 4].toInt()
             val handler = Handler(Looper.getMainLooper())
             handler.post {
-                if (0x00 == msg[0 + 3].toInt()) {
-                    mOpenState.setText(R.string.closed)
-                    operate = 1
-                } else {
-                    mOpenState.setText(R.string.opened)
-                    operate = 0
+                when(state) {
+                    0 -> {
+                        mState.setText(R.string.preparing)
+                        mState.setTextColor(resources.getColor(R.color.red))
+                        mOperateBtn.isEnabled = false
+                        mToLeftBtn.isEnabled = false
+                        mToRightBtn.isEnabled = false
+                    }
+                    1 -> {
+                        mState.setText(R.string.beReady)
+                        mState.setTextColor(resources.getColor(R.color.green))
+                        mOperateBtn.isEnabled = true
+                        mOperateBtn.setText(R.string.pulse_on)
+                        mToLeftBtn.isEnabled = false
+                        mToRightBtn.isEnabled = false
+                    }
+                    2 -> {
+                        mState.setText(R.string.autoMode)
+                        mState.setTextColor(resources.getColor(R.color.green))
+                        mOperateBtn.isEnabled = true
+                        mOperateBtn.setText(R.string.switching_modes)
+                        mToLeftBtn.isEnabled = false
+                        mToRightBtn.isEnabled = false
+                    }
+                    3 -> {
+                        mState.setText(R.string.switching)
+                        mState.setTextColor(resources.getColor(R.color.green))
+                        mOperateBtn.isEnabled = false
+                        mToLeftBtn.isEnabled = false
+                        mToRightBtn.isEnabled = false
+                    }
+                    4 -> {
+                        mState.setText(R.string.manualMode)
+                        mState.setTextColor(resources.getColor(R.color.green))
+                        mOperateBtn.isEnabled = true
+                        mOperateBtn.setText(R.string.stop)
+                        mToLeftBtn.isEnabled = true
+                        mToRightBtn.isEnabled = true
+                    }
+                    5 -> {
+                        mState.setText(R.string.stopped)
+                        mState.setTextColor(resources.getColor(R.color.green))
+                        mOperateBtn.isEnabled = true
+                        mOperateBtn.setText(R.string.pulse_on)
+                        mToLeftBtn.isEnabled = false
+                        mToRightBtn.isEnabled = false
+                    }
+                }
+
+                Log.i(TAG, "locationStatus=${locationStatus}")
+                when(locationStatus) {
+                    1 -> {
+                        stopToLeft()
+                    }
+                    2 -> {
+                        stopToRight()
+                    }
                 }
             }
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         private fun initView(context: Context?) {
             LayoutInflater.from(context).inflate(R.layout.water_gun_weight, this, true)
             mLightView = findViewById(R.id.waterGun_view)
             mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
-            mOpenState = findViewById(R.id.openState)
+            mState = findViewById(R.id.state)
             mOperateBtn = findViewById<Button>(R.id.operateBtn)
+            mToLeftBtn = findViewById<Button>(R.id.toLeftBtn)
+            mToRightBtn = findViewById<Button>(R.id.toRightBtn)
             setConnectState()
 
             mOperateBtn.setOnClickListener {
                 try {
-                    if(operate==1 && !mSafetySwitchSwitch.isChecked) {
+                    if(!mSafetySwitchSwitch.isChecked) {
                         showToast(R.string.need_to_open_safety_switch)
                         return@setOnClickListener
                     }
-                    waterGunService.operate(operate)
-                    mOperateBtn.setText( if(operate==1) R.string.opening else R.string.closing )
+                    waterGunService.modeSwitch()
+                    mOperateBtn.setText( R.string.executing )
                     mOperateBtn.isEnabled = false
-                    thread {
-                        Thread.sleep(2000)
-                        val handler = Handler(Looper.getMainLooper())
-                        handler.post {
-                            mOperateBtn.isEnabled = true
-                            mOperateBtn.setText( if(operate==1) R.string.open else R.string.close )
-                        }
-                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                     showToast(R.string.operation_failed)
                 }
 
             }
+            mToLeftBtn.setOnTouchListener { view, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        if(timerToLeft == null) {
+                            if(!mSafetySwitchSwitch.isChecked) {
+                                showToast(R.string.need_to_open_safety_switch)
+                                return@setOnTouchListener false
+                            }
+                            if(state != 4) {
+                                showToast(R.string.notManualMode)
+                                return@setOnTouchListener false
+                            }
+                            stopToRight()
+                            timerToLeft = Timer()
+                            val task = object : TimerTask(){
+                                override fun run() {
+                                    Log.i(TAG, "向左")
+                                    waterGunService.toLeft()
+                                }
+                            }
+                            // 定时器
+                            timerToLeft?.schedule(task, 0, 100)
+                        }
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        Log.i(TAG, "向左松开")
+                        stopToLeft()
+                    }
+                }
+                true
+            }
+            mToRightBtn.setOnTouchListener { view, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        if(timerToRight == null) {
+                            if(!mSafetySwitchSwitch.isChecked) {
+                                showToast(R.string.need_to_open_safety_switch)
+                                return@setOnTouchListener false
+                            }
+                            if(state != 4) {
+                                showToast(R.string.notManualMode)
+                                return@setOnTouchListener false
+                            }
+                            stopToLeft()
+                            timerToRight = Timer();
+                            val task = object : TimerTask(){
+                                override fun run() {
+                                    Log.i(TAG, "向右")
+                                    waterGunService.toRight()
+                                }
+                            }
+                            // 定时器
+                            timerToRight?.schedule(task, 0, 100)
+                        }
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        Log.i(TAG, "向右松开")
+                        stopToRight()
+                    }
+                }
+                true
+            }
         }
 
+        private fun stopToLeft() {
+            timerToLeft?.cancel()
+            timerToLeft?.purge()
+            timerToLeft = null
+        }
+        private fun stopToRight() {
+            timerToRight?.cancel()
+            timerToRight?.purge()
+            timerToRight = null
+        }
         fun ByteArray.toHex(): String =
             joinToString(separator = "") { eachByte -> "%02x ".format(eachByte) }
 

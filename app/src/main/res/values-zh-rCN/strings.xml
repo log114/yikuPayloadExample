@@ -181,4 +181,14 @@
     <string name="hoseRelease">释放水带</string>
     <string name="hoseDetachment">水带脱困</string>
     <string name="executing">正在执行</string>
+    <string name="directionControl">"方向控制: "</string>
+    <string name="to_left">向左</string>
+    <string name="to_right">向右</string>
+    <string name="preparing">正在准备</string>
+    <string name="beReady">准备就绪</string>
+    <string name="autoMode">自动模式</string>
+    <string name="switching">正在切换</string>
+    <string name="manualMode">手动模式</string>
+    <string name="stopped">已停止</string>
+    <string name="notManualMode">当前不是手动模式，不可用！</string>
 </resources>

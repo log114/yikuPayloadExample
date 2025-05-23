@@ -42,21 +42,59 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/play_btn"
-                android:text="@string/open"
-                android:textColor="@color/white" />
+                android:text="@string/pulse_on"
+                android:textColor="@color/white"
+                android:enabled="false"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="@string/state"
                 android:textColor="@color/white" />
             <TextView
-                android:id="@+id/openState"
+                android:id="@+id/state"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_weight="1"
-                android:text="@string/closed"
+                android:text="@string/preparing"
+                android:textColor="@color/red" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="visible">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_marginStart="10dp"
+                android:text="@string/directionControl"
                 android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:visibility="visible">
+            <Button
+                android:id="@+id/toLeftBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/play_btn"
+                android:text="@string/to_left"
+                android:textColor="@color/white"
+                android:enabled="false"/>
+            <Button
+                android:id="@+id/toRightBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/play_btn"
+                android:text="@string/to_right"
+                android:textColor="@color/white"
+                android:enabled="false"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

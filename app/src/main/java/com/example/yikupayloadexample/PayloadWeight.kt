@@ -647,7 +647,7 @@ class PayloadWeight : Service() {
                 val isConnectedGripper = gripperWeight.gripperService.getIsConnected(); // 机械爪
                 val isConnectedResqme = resqmeWeight.resqmeService.getIsConnected(); // 破窗器
                 val isConnectedExtinguisher = extinguisherWeight.extinguisherService.getIsConnected(); // 灭火罐
-                val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 水枪
+                val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 清洗水枪
                 val isConnectedBucket = bucketWeight.bucketService.getIsConnected(); // 吊桶
                 val isConnectedWaterBranch = waterBranchWeight.waterBranchService.getIsConnected(); // 消防水枪
 
@@ -661,7 +661,7 @@ class PayloadWeight : Service() {
 //                val isConnectedGripper = true; // 机械爪
 //                val isConnectedResqme = true; // 破窗器
 //                val isConnectedExtinguisher = true; // 灭火罐
-//                val isConnectedWaterGun = true; // 水枪
+//                val isConnectedWaterGun = true; // 清洗水枪
 //                val isConnectedBucket = true; // 吊桶
 //                val isConnectedWaterBranch = true; // 消防水枪
                     // 喊话器
