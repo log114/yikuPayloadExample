@@ -191,4 +191,21 @@
     <string name="manualMode">Manual mode</string>
     <string name="stopped">Stopped</string>
     <string name="notManualMode">Currently not in manual mode, unavailable</string>
+    <string name="thrower_ordinary">Ordinary</string>
+    <string name="thrower_bombing">Bombing</string>
+    <string name="bomb_1">Bomb 1</string>
+    <string name="bomb_2">Bomb 2</string>
+    <string name="bomb_3">Bomb 3</string>
+    <string name="bomb_4">Bomb 4</string>
+    <string name="throw_btn">Throw</string>
+    <string name="throwing_btn">Throwing</string>
+    <string name="reset">Reset</string>
+    <string name="reseting">Reseting</string>
+    <string name="throwAll_btn">Throw All</string>
+    <string name="height_mode">"Height mode: "</string>
+    <string name="auto_obtain">Auto obtain</string>
+    <string name="manual_input">Manual input</string>
+    <string name="resetAll_btn">Reset All</string>
+    <string name="not_set_pass">Corresponding channel not set</string>
+    <string name="not_set">Not set</string>
 </resources>

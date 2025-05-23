@@ -29,8 +29,10 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     var throwerService: ThrowerService
     private lateinit var mThrowerSafetySwitch: Switch
     private lateinit var mDetonationSettingsBtn: Button
-    private lateinit var mThrowerChargingSwitch: Switch
-    private lateinit var mThrowerAllowDetonationSwitch: Switch
+    private lateinit var mThrowerAllowDetonationSwitch_1: Switch
+    private lateinit var mThrowerAllowDetonationSwitch_2: Switch
+    private lateinit var mThrowerAllowDetonationSwitch_3: Switch
+    private lateinit var mThrowerAllowDetonationSwitch_4: Switch
 //    private lateinit var mTemperature: TextView
     private lateinit var mConnectState: TextView
     private lateinit var mHeight: TextView
@@ -104,8 +106,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
             mConnectState.setText(R.string.connection_status_connected)
 
-            mThrowerAllowDetonationSwitch.isChecked = msg[1 + 3] !== 0x00.toByte()// 起爆状态
-            mThrowerChargingSwitch.isChecked = msg[2 + 3] !== 0x00.toByte()// 充电状态
+            mThrowerAllowDetonationSwitch_1.isChecked = msg[1 + 3] !== 0x00.toByte()// 起爆状态
             if (msg[4 + 3] !== 0x00.toByte()) { // 可以引爆
                 canDetonate = true
                 mBombState1.setText(R.string.can_detonate)
@@ -256,8 +257,10 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mPromptView = findViewById(R.id.promptView)
         mThrowerSafetySwitch = findViewById(R.id.throwerSafetySwitch)
         mDetonationSettingsBtn = findViewById(R.id.detonationSettingsBtn)
-        mThrowerChargingSwitch = findViewById(R.id.throwerChargingSwitch)
-        mThrowerAllowDetonationSwitch = findViewById(R.id.throwerAllowDetonationSwitch)
+        mThrowerAllowDetonationSwitch_1 = findViewById(R.id.throwerAllowDetonationSwitch_1)
+        mThrowerAllowDetonationSwitch_2 = findViewById(R.id.throwerAllowDetonationSwitch_2)
+        mThrowerAllowDetonationSwitch_3 = findViewById(R.id.throwerAllowDetonationSwitch_3)
+        mThrowerAllowDetonationSwitch_4 = findViewById(R.id.throwerAllowDetonationSwitch_4)
 //        mTemperature = findViewById(R.id.temperature)
         mConnectState = findViewById(R.id.connectState)
         mHeight = findViewById(R.id.height)
@@ -374,13 +377,9 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             mUpdateView.visibility = GONE
             mThrowerView.visibility = VISIBLE
         }
-        // 充电放电
-        mThrowerChargingSwitch.setOnClickListener {
-            throwerService.charging(mThrowerChargingSwitch.isChecked)
-        }
         // 允许起爆
-        mThrowerAllowDetonationSwitch.setOnClickListener {
-            throwerService.allowDetonation(mThrowerAllowDetonationSwitch.isChecked)
+        mThrowerAllowDetonationSwitch_1.setOnClickListener {
+            throwerService.allowDetonation(mThrowerAllowDetonationSwitch_1.isChecked)
         }
         setConnectState()
     }
@@ -831,8 +830,10 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     if (Date().time - updateTime > 3000) {
                         val handler = Handler(Looper.getMainLooper())
                         handler.post {
-                            mThrowerChargingSwitch.isChecked = false
-                            mThrowerAllowDetonationSwitch.isChecked = false
+                            mThrowerAllowDetonationSwitch_1.isChecked = false
+                            mThrowerAllowDetonationSwitch_2.isChecked = false
+                            mThrowerAllowDetonationSwitch_3.isChecked = false
+                            mThrowerAllowDetonationSwitch_4.isChecked = false
 //                        mTemperature.text = "0°C"
                             mConnectState.setText(R.string.connection_status_notconnected)
                             mHeight.text = "0m"
