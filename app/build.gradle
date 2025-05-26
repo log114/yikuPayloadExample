@@ -73,6 +73,11 @@ android {
     buildFeatures {
         viewBinding true
     }
+    sourceSets{
+        main{
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
 }
 
 dependencies {
@@ -106,4 +111,5 @@ dependencies {
     implementation 'io.github.libpd.android:pd-core:1.2.1-rc6'
     implementation 'org.apache.commons:commons-math3:3.6.1'
     implementation 'com.github.log114:yikupayload:0.10.3'
+    implementation group: 'net.java.dev.jna', name: 'jna', version: '5.13.0'
 }

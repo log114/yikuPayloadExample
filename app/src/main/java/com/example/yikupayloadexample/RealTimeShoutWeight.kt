@@ -13,15 +13,19 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.*
+import com.example.yikupayloadexample.util.NET_TRADIO_DEVICEINFO
+import com.example.yikupayloadexample.util.TradioLibrary
 import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
 import com.yiku.yikupayloadSDK.service.FourInOneService
 import com.yiku.yikupayloadSDK.service.MegaphoneService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.OpusUtils
+import java.nio.LongBuffer
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
 
+@Suppress("DEPRECATED_IDENTITY_EQUALS")
 class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "RealTimeShoutWeight"
@@ -43,11 +47,11 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var audioTrack: AudioTrack
     private lateinit var mRadioDisable: Switch
     private var isRadio = false;
-    private val sampleRate = 48000
-    private val channels = 1
-    private val frameSize = 960
-    private val channelsConfig =
-        AudioFormat.CHANNEL_OUT_MONO  // CHANNEL_OUT_MONO 单声道 CHANNEL_OUT_STEREO双声道
+    private var played = false;
+    private var isInitRadio = false;
+
+    private var hd_buf_: LongBuffer? = null
+    private var sdk_: TradioLibrary = TradioLibrary.INSTANCE
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -123,28 +127,72 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 
     private fun initAudioTrack() {
         val mMinBufferSize = AudioTrack.getMinBufferSize(
-            sampleRate, channelsConfig, AudioFormat.ENCODING_PCM_16BIT
+            16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT
         );//计算最小缓冲区
         Log.i(TAG, "mMinBufferSize:${mMinBufferSize}")
 
         val audioFormat = AudioFormat.Builder().setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-            .setSampleRate(sampleRate).setChannelMask(channelsConfig).build()
+            .setSampleRate(16000).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build()
 
         audioTrack =
-            AudioTrack.Builder().setAudioFormat(audioFormat).setBufferSizeInBytes(mMinBufferSize)
-                .setTransferMode(MODE_STREAM).build()
+            AudioTrack
+                .Builder()
+                .setAudioFormat(audioFormat)
+                .setBufferSizeInBytes(mMinBufferSize * 4)
+                .setTransferMode(MODE_STREAM)
+                .build()
 
 
+    }
+
+    private fun playRadio(){
+        try {
+            if(audioTrack.playState != 3){
+                audioTrack.play()
+            }
+            played = true
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
     private fun stopRadio() {
         isRadio = false
-        megaphoneService?.unRegistMsgCallback("radioCallback")
-        audioTrack.stop()
-//        audioTrack.release()
-        megaphoneService?.stopRadio()
+        if (played) {
+            try {
+//                audioTrack.flush()
+//                audioTrack.stop()  // 确保播放停止
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                played = false
+//                audioTrack.release()  // 释放资源
+            }
+        }
+        played = false
         mRadioBtn.setText(R.string.start_listening)
     }
+
+    private var cb_: TradioLibrary.PRtpCallback =
+        TradioLibrary.PRtpCallback { data, size, channel, db, sample_rate, seq, cookie ->
+            try {
+//                Log.i(
+//                    TAG,
+//                    "收到数据：size=" + bdata.size + "，channel=" + channel + "，db=" + db
+//                            + "，rate=" + sample_rate
+//                            + "，seq=" + seq + " bdata: ${bdata.toHex()}"
+//                )
+//                lock.lock()
+                if (played) {
+                    val bdata = data.getByteArray(0, size)
+                    audioTrack.write(bdata, 0, bdata.size)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+//                lock.unlock()
+            }
+        }
 
     private fun initView(context: Context?) {
 
@@ -159,6 +207,8 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         setConnectState()
         setDefaultVolume()
 
+        initAudioTrack()
+
         mRadioDisable.setOnClickListener{
             if (mRadioDisable.isChecked) {
                 megaphoneService?.disableRadio()
@@ -167,38 +217,56 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
         }
         mRadioBtn.setOnClickListener {
-            if (!isRadio) {
+            var hd = 0L
+            try {
+                if (!isRadio) {
 //                megaphoneService?.stopRealTimeShout()
 //                if (isRadio) {
 //                    megaphoneService?.stopRadio()
 //                }
-                isRadio = true
-                mRadioBtn.setText(R.string.stop_listening)
-
-                initAudioTrack()
-                audioTrack.play()
-                megaphoneService?.registMsgCallback(object : MsgCallback {
-                    private val buffer = ByteArray(1024) // 创建一个缓冲区，大小根据实际情况调整
-                    private var bufferIndex = 0
-                    val opusUtils = OpusUtils.getInstant()
-                    val createDecoder = opusUtils.createDecoder(sampleRate, channels)
-                    override fun getId(): String {
-                        return "radioCallback"
+                    isRadio = true
+                    mRadioBtn.setText(R.string.stop_listening)
+                    hd_buf_ = LongBuffer.allocate(1)
+                    if (sdk_.NET_TRADIO_Init() == 0) {
+                        Log.i(TAG, "SDK初始化成功")
+                    } else {
+                        Log.i(TAG, "SDK初始化失败")
                     }
 
-                    override fun onMsg(msg: ByteArray) {
-                        if (msg.size > 4 && String(msg.slice(0..3).toByteArray()) == "[40]") {
-                            val data = ShortArray(frameSize)
-                            val rc = opusUtils.decode(
-                                createDecoder, msg.slice(4 until msg.size).toByteArray(), data
-                            )
-                            audioTrack.write(data, 0, rc)
-                        }
+                    if (sdk_.NET_TRADIO_CreateDevice(hd_buf_) == 0) {
+                        Log.i(TAG, "创建设备成功")
+                    } else {
+                        Log.i(TAG, "创建设备失败")
                     }
-                })
-                megaphoneService?.startRadio()
-            } else {
-                stopRadio()
+                    hd = hd_buf_!!.get()
+                    if (!isInitRadio){
+                        sdk_.NET_TRADIO_SetRtpCallback(hd, cb_, 0)
+                        isInitRadio = true
+                    }
+
+                    val dev = NET_TRADIO_DEVICEINFO()
+
+                    if (sdk_.NET_TRADIO_Login(
+                            hd,
+                            "192.168.144.127",
+                            38000,
+                            "admin",
+                            "123456",
+                            dev
+                        ) === 0
+                    ) {
+                        Log.i(TAG, "注册成功")
+                        playRadio()
+                    } else {
+                        Log.i(TAG, "注册失败")
+                    }
+                } else {
+                    stopRadio()
+                    sdk_.NET_TRADIO_Logout(hd);
+
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
