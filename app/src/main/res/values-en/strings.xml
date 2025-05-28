@@ -190,5 +190,5 @@
     <string name="switching">Switching</string>
     <string name="manualMode">Manual mode</string>
     <string name="stopped">Stopped</string>
-    <string name="notManualMode">Currently not in manual mode, unavailable</string>
+    <string name="notManualMode">Currently not in manual mode, unavailable!</string>
 </resources>
