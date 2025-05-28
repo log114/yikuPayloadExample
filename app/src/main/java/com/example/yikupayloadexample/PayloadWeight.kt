@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.view.*
+import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.*
@@ -281,10 +282,10 @@ class PayloadWeight : Service() {
      */
     fun setSVVisibility(type: Int, view: View): Boolean {
         Log.i(TAG, "mShoutView. setSVVisibility:${mShoutView.visibility}, opened:${opened}")
-        if (mShoutView.visibility == INVISIBLE || opened != type) {
+        if (mShoutView.visibility == GONE || opened != type) {
             mShoutView.visibility = VISIBLE
         } else {
-            mShoutView.visibility = INVISIBLE
+            mShoutView.visibility = GONE
             EasyFloat.hide("yk_payload_weight_op")
             EasyFloat.hide("video_window")
 //            popupWindow.dismiss()
