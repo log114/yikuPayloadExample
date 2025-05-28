@@ -71,7 +71,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
         private fun updateState(msg: ByteArray) {
             state = msg[0 + 3].toInt()
-            var locationStatus = msg[0 + 4].toInt()
+            val locationStatus = msg[0 + 4].toInt()
             val handler = Handler(Looper.getMainLooper())
             handler.post {
                 when(state) {
