@@ -377,10 +377,22 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             mUpdateView.visibility = GONE
             mThrowerView.visibility = VISIBLE
         }
-        // 允许起爆
-        mThrowerAllowDetonationSwitch_1.setOnClickListener {
-            throwerService.allowDetonation(mThrowerAllowDetonationSwitch_1.isChecked)
-        }
+//        // 允许起爆和充电
+//        mThrowerAllowDetonationSwitch_1.setOnClickListener {
+//            throwerService.chargingAndAllowDetonation(1, mThrowerAllowDetonationSwitch_1.isChecked)
+//        }
+//        // 允许起爆和充电
+//        mThrowerAllowDetonationSwitch_2.setOnClickListener {
+//            throwerService.chargingAndAllowDetonation(2, mThrowerAllowDetonationSwitch_1.isChecked)
+//        }
+//        // 允许起爆和充电
+//        mThrowerAllowDetonationSwitch_3.setOnClickListener {
+//            throwerService.chargingAndAllowDetonation(3, mThrowerAllowDetonationSwitch_1.isChecked)
+//        }
+//        // 允许起爆和充电
+//        mThrowerAllowDetonationSwitch_4.setOnClickListener {
+//            throwerService.chargingAndAllowDetonation(4, mThrowerAllowDetonationSwitch_1.isChecked)
+//        }
         setConnectState()
     }
 
