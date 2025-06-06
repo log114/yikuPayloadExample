@@ -114,10 +114,19 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             mPlayAlarm.setText(R.string.stop_playing)
         }
 
-
+        // 如果缓存里的状态是正在喊话
         if (sharedPreferences.getBoolean("record", false)) {
-            isStartSpeak = true
-            mRealTimeSpeakBtn.setText(R.string.stop_speak)
+            // 如果megaphoneService里的状态是未在喊话，可能是在喊话未关闭的情况下关闭了APP，停止喊话同步状态
+            if(megaphoneService?.isRecording == true){
+                isStartSpeak = true
+                mRealTimeSpeakBtn.setText(R.string.stop_speak)
+            }
+            else {
+                megaphoneService?.stopRealTimeShout()
+                val edit = sharedPreferences.edit()
+                edit.putBoolean("record", false)
+                edit.apply()
+            }
         }
     }
 

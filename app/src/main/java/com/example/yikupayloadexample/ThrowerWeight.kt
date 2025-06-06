@@ -1,6 +1,7 @@
 package com.example.yikupayloadexample
 
 import android.content.Context
+import android.media.AudioRecord
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -13,9 +14,12 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import com.yiku.yikupayloadSDK.protocol.REAL_TIME_SHOUT
 import com.yiku.yikupayloadSDK.protocol.THROWER_STATE
 import com.yiku.yikupayloadSDK.service.ThrowerService
 import com.yiku.yikupayloadSDK.util.MsgCallback
+import com.yiku.yikupayloadSDK.util.Uilts
+import java.io.IOException
 import java.lang.Exception
 import java.util.Date
 import java.util.Timer
@@ -54,6 +58,8 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mRightBtn: Button
     private var mPassagewayBoxArr = arrayOfNulls<LinearLayout>(6)
     private var updateTime = Date().time
+    private var isAllowDetonation = false // 是否允许引爆
+    private var isCharging = false // 是否在充电
     private var canDetonate = false // 是否可以引爆
 
     private var detonateHeight = 0;
@@ -104,8 +110,8 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
             mConnectState.setText(R.string.connection_status_connected)
 
-            mThrowerAllowDetonationSwitch.isChecked = msg[1 + 3] !== 0x00.toByte()// 起爆状态
-            mThrowerChargingSwitch.isChecked = msg[2 + 3] !== 0x00.toByte()// 充电状态
+            isAllowDetonation = msg[1 + 3] !== 0x00.toByte()// 起爆状态
+            isCharging = msg[2 + 3] !== 0x00.toByte()// 充电状态
             if (msg[4 + 3] !== 0x00.toByte()) { // 可以引爆
                 canDetonate = true
                 mBombState1.setText(R.string.can_detonate)
@@ -377,10 +383,34 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         // 充电放电
         mThrowerChargingSwitch.setOnClickListener {
             throwerService.charging(mThrowerChargingSwitch.isChecked)
+            mThrowerChargingSwitch.isEnabled = false
+            thread {
+                Thread.sleep(3000)
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    if (mThrowerChargingSwitch.isChecked != isCharging) {
+                        showToast(R.string.operation_failed)
+                        mThrowerChargingSwitch.isChecked = isCharging
+                    }
+                    mThrowerChargingSwitch.isEnabled = true
+                }
+            }
         }
         // 允许起爆
         mThrowerAllowDetonationSwitch.setOnClickListener {
             throwerService.allowDetonation(mThrowerAllowDetonationSwitch.isChecked)
+            mThrowerAllowDetonationSwitch.isEnabled = false
+            thread {
+                Thread.sleep(3000)
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    if (mThrowerAllowDetonationSwitch.isChecked != isAllowDetonation) {
+                        showToast(R.string.operation_failed)
+                        mThrowerAllowDetonationSwitch.isChecked = isAllowDetonation
+                    }
+                    mThrowerAllowDetonationSwitch.isEnabled = true
+                }
+            }
         }
         setConnectState()
     }
