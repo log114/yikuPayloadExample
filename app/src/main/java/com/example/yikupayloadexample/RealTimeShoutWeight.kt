@@ -43,9 +43,9 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var audioTrack: AudioTrack
     private lateinit var mRadioDisable: Switch
     private var isRadio = false;
-    private val sampleRate = 48000
+    private val radioRate = 16000 // 新版收音麦opus编码采样率是16000
     private val channels = 1
-    private val frameSize = 960
+    private val frameSize = 320
     private val channelsConfig =
         AudioFormat.CHANNEL_OUT_MONO  // CHANNEL_OUT_MONO 单声道 CHANNEL_OUT_STEREO双声道
 
@@ -132,12 +132,12 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 
     private fun initAudioTrack() {
         val mMinBufferSize = AudioTrack.getMinBufferSize(
-            sampleRate, channelsConfig, AudioFormat.ENCODING_PCM_16BIT
+            radioRate, channelsConfig, AudioFormat.ENCODING_PCM_16BIT
         );//计算最小缓冲区
         Log.i(TAG, "mMinBufferSize:${mMinBufferSize}")
 
         val audioFormat = AudioFormat.Builder().setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-            .setSampleRate(sampleRate).setChannelMask(channelsConfig).build()
+            .setSampleRate(radioRate).setChannelMask(channelsConfig).build()
 
         audioTrack =
             AudioTrack.Builder().setAudioFormat(audioFormat).setBufferSizeInBytes(mMinBufferSize)
@@ -187,15 +187,14 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                 initAudioTrack()
                 audioTrack.play()
                 megaphoneService?.registMsgCallback(object : MsgCallback {
-                    private val buffer = ByteArray(1024) // 创建一个缓冲区，大小根据实际情况调整
-                    private var bufferIndex = 0
                     val opusUtils = OpusUtils.getInstant()
-                    val createDecoder = opusUtils.createDecoder(sampleRate, channels)
+                    val createDecoder = opusUtils.createDecoder(radioRate, channels)// 新收音麦的数据opus编码使用的是16000采样率
                     override fun getId(): String {
                         return "radioCallback"
                     }
 
                     override fun onMsg(msg: ByteArray) {
+                        Log.i(TAG, "收音数据长度："+ msg.size)
                         if (msg.size > 4 && String(msg.slice(0..3).toByteArray()) == "[40]") {
                             val data = ShortArray(frameSize)
                             val rc = opusUtils.decode(
