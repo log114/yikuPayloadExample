@@ -43,9 +43,9 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var audioTrack: AudioTrack
     private lateinit var mRadioDisable: Switch
     private var isRadio = false;
-    private val radioRate = 16000 // 新版收音麦opus编码采样率是16000
+    private val radioRate = 48000 // 新版收音麦opus编码采样率是16000
     private val channels = 1
-    private val frameSize = 320
+    private val frameSize = 960
     private val channelsConfig =
         AudioFormat.CHANNEL_OUT_MONO  // CHANNEL_OUT_MONO 单声道 CHANNEL_OUT_STEREO双声道
 
@@ -135,14 +135,12 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             radioRate, channelsConfig, AudioFormat.ENCODING_PCM_16BIT
         );//计算最小缓冲区
         Log.i(TAG, "mMinBufferSize:${mMinBufferSize}")
-        // 使用更大的缓冲区大小（4倍最小缓冲区）
-        val bufferSize = mMinBufferSize * 4
 
         val audioFormat = AudioFormat.Builder().setEncoding(AudioFormat.ENCODING_PCM_16BIT)
             .setSampleRate(radioRate).setChannelMask(channelsConfig).build()
 
         audioTrack =
-            AudioTrack.Builder().setAudioFormat(audioFormat).setBufferSizeInBytes(bufferSize)
+            AudioTrack.Builder().setAudioFormat(audioFormat).setBufferSizeInBytes(mMinBufferSize)
                 .setTransferMode(MODE_STREAM).build()
 
 
