@@ -141,7 +141,7 @@
     <string name="cannot_detonate">Cannot detonate</string>
     <string name="can_detonate">Can detonate</string>
     <string name="detonate_height">"Detonate height: "</string>
-    <string name="confirm_open">Currently unable to detonate, are you sure you want to open it?</string>
+    <string name="confirm_open">The current part of the bomb cannot be detonated. Are you sure you want to open it?</string>
     <string name="center">center</string>
     <string name="left">left</string>
     <string name="right">right</string>
@@ -208,4 +208,5 @@
     <string name="resetAll_btn">Reset All</string>
     <string name="not_set_pass">Corresponding channel not set</string>
     <string name="not_set">Not set</string>
+    <string name="charging">charging</string>
 </resources>
