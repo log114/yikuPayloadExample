@@ -195,6 +195,18 @@
         app:layout_constraintStart_toEndOf="@id/bucketBtn"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/gasMonitoringBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/yk_shout_btn"
+        android:contentDescription="@string/gasMonitoring"
+        android:src="@drawable/gas_monitoring"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/waterBranchBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/emptyText"

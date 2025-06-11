@@ -43,6 +43,7 @@ class SettingActivity : AppCompatActivity() {
         val waterGun = findViewById<EditText>(R.id.WaterGunHostIP)
         val bucket = findViewById<EditText>(R.id.BucketHostIP)
         val waterBranch = findViewById<EditText>(R.id.WaterBranchHostIP)
+        val gasMonitoring = findViewById<EditText>(R.id.GasMonitoringHostIP)
 
         //        获取了 SharedPreferences 对象
 //        preferences = getSharedPreferences("myPreferences", MODE_PRIVATE)
@@ -60,6 +61,7 @@ class SettingActivity : AppCompatActivity() {
         val valueWaterGunHost = preferences?.getString("WaterGunHost", "")//水枪
         val valueBucketHost = preferences?.getString("BucketHost", "")// 吊桶
         val valueWaterBranchHost = preferences?.getString("WaterBranchHost", "")// 消防水枪
+        val valueGasMonitoringHost = preferences?.getString("GasMonitoringHost", "")// 气体监测
         // 当未设置过ip时，ip显示为Host.kt里面的值，否则显示设置后的值
         if (valueShoutHost == "") {
             shout.setText(ShoutHost)
@@ -140,6 +142,12 @@ class SettingActivity : AppCompatActivity() {
             waterBranch.setText(valueWaterBranchHost)
         }
 
+        if (valueGasMonitoringHost == "") {
+            gasMonitoring.setText("192.168.144.211")
+        } else {
+            gasMonitoring.setText(valueGasMonitoringHost)
+        }
+
         save.setOnClickListener {
             val textShoutHost = shout.text.toString()
             val textLightHost = light.text.toString()
@@ -154,6 +162,7 @@ class SettingActivity : AppCompatActivity() {
             val textWaterGunHost = waterGun.text.toString()
             val textBucketHost = bucket.text.toString()
             val textWaterBranchHost = waterBranch.text.toString()
+            val textGasMonitoringHost = gasMonitoring.text.toString()
             // 将修改后的值存储到 SharedPreferences 中
             val editer = preferences!!.edit()
             editer.putString("ShoutHost", textShoutHost)
@@ -169,6 +178,7 @@ class SettingActivity : AppCompatActivity() {
             editer.putString("WaterGunHost", textWaterGunHost)
             editer.putString("BucketHost", textBucketHost)
             editer.putString("WaterBranchHost", textWaterBranchHost)
+            editer.putString("GasMonitoringHost", textGasMonitoringHost)
             editer.apply()
             finish();  //直接关闭当前页面
         }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 1. 保留原有边框（若需圆角/颜色在此定义） -->
+    <item>
+        <shape>
+            <stroke android:width="1dp" android:color="#D5D5D5" />
+            <corners android:radius="4dp" />
+            <solid android:color="#FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- 2. 关键：用透明区块覆盖三角区域 -->
+    <item android:right="10dp"> <!-- 右侧留空避免遮挡文本 -->
+        <shape>
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</layer-list>

@@ -191,4 +191,17 @@
     <string name="manualMode">Manual mode</string>
     <string name="stopped">Stopped</string>
     <string name="notManualMode">Currently not in manual mode, unavailable!</string>
+    <string name="gasMonitoring">gas monitoring</string>
+    <string name="GasMonitoringHost_name">"GasMonitoringHost IP: "</string>
+    <string name="alarm_settings">alarm settings</string>
+    <string name="gas_monitoring">"Gas monitoring: "</string>
+    <string name="normal">Normal</string>
+    <string name="too_high">Too high</string>
+    <string name="too_low">Too low</string>
+    <string name="standard_not_set">Standard not set</string>
+    <string name="setting_exceptions">Setting exceptions</string>
+    <string name="lower_than">lower than</string>
+    <string name="higher_than">higher than</string>
+    <string name="alarm_switch">"alarm: "</string>
+    <string name="gas_concentration_is_abnormal">Please note that the gas concentration is abnormal!</string>
 </resources>

@@ -191,4 +191,17 @@
     <string name="manualMode">手动模式</string>
     <string name="stopped">已停止</string>
     <string name="notManualMode">当前不是手动模式，不可用！</string>
+    <string name="gasMonitoring">气体监测</string>
+    <string name="GasMonitoringHost_name">"气体监测IP: "</string>
+    <string name="alarm_settings">报警设置</string>
+    <string name="gas_monitoring">气体监测：</string>
+    <string name="normal">正常</string>
+    <string name="too_high">过高</string>
+    <string name="too_low">过低</string>
+    <string name="standard_not_set">未设置标准</string>
+    <string name="setting_exceptions">设置异常</string>
+    <string name="lower_than">低于</string>
+    <string name="higher_than">高于</string>
+    <string name="alarm_switch">"警报开关: "</string>
+    <string name="gas_concentration_is_abnormal">请注意，气体浓度异常！</string>
 </resources>

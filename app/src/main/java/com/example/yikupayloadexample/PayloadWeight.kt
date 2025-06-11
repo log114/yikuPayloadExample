@@ -12,6 +12,7 @@ import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.*
+import com.example.yikupayloadexample.service.GasMonitoringService
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.ShowPattern
@@ -47,6 +48,7 @@ class PayloadWeight : Service() {
     private lateinit var waterGunWeight: WaterGunWeight
     private lateinit var bucketWeight: BucketWeight
     private lateinit var waterBranchWeight: WaterBranchWeight
+    private lateinit var gasMonitoringWeight: GasMonitoringWeight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -67,6 +69,7 @@ class PayloadWeight : Service() {
     private lateinit var waterGunBtn: ImageView
     private lateinit var bucketBtn: ImageView
     private lateinit var waterBranchBtn: ImageView
+    private lateinit var gasMonitoringBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
     private var isVideoWindowInit = false
@@ -95,6 +98,7 @@ class PayloadWeight : Service() {
         waterGunBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         bucketBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         waterBranchBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        gasMonitoringBtn.setBackgroundResource(R.drawable.yk_shout_btn)
     }
 
     private fun openFloatingWindow() {
@@ -121,6 +125,7 @@ class PayloadWeight : Service() {
                     waterGunBtn = it.findViewById(R.id.waterGunBtn)
                     bucketBtn = it.findViewById(R.id.bucketBtn)
                     waterBranchBtn = it.findViewById(R.id.waterBranchBtn)
+                    gasMonitoringBtn = it.findViewById(R.id.gasMonitoringBtn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -220,6 +225,12 @@ class PayloadWeight : Service() {
                             waterBranchBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
                         }
                     }
+                    gasMonitoringBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(16, gasMonitoringBtn)) {
+                            gasMonitoringBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                        }
+                    }
                 }
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -293,6 +304,12 @@ class PayloadWeight : Service() {
         }
         try {
             if (mShoutView.visibility == VISIBLE) {
+                if (type == 16) {
+                    opened = 16
+                    mShoutViewContent.removeAllViews()
+                    mShoutViewContent.addView(gasMonitoringWeight)
+                    EasyFloat.show("yk_payload_weight_op")
+                }
                 if (type == 15) {
                     opened = 15
                     mShoutViewContent.removeAllViews()
@@ -501,6 +518,7 @@ class PayloadWeight : Service() {
         waterGunWeight = WaterGunWeight(this)
         bucketWeight = BucketWeight(this)
         waterBranchWeight = WaterBranchWeight(this)
+        gasMonitoringWeight = GasMonitoringWeight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -651,6 +669,7 @@ class PayloadWeight : Service() {
                 val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 清洗水枪
                 val isConnectedBucket = bucketWeight.bucketService.getIsConnected(); // 吊桶
                 val isConnectedWaterBranch = waterBranchWeight.waterBranchService.getIsConnected(); // 消防水枪
+                val isConnectedGasMonitoring = gasMonitoringWeight.gasMonitoringService.getIsConnected(); // 气体监测
 
 //                val isConnectedMegaphone = true;// 喊话器
 //                val isConnectedYA3 = true; // 四合一
@@ -749,6 +768,13 @@ class PayloadWeight : Service() {
                 if(isConnectedWaterBranch){
                     handler.post {
                         waterBranchBtn.visibility = VISIBLE;
+                        emptyText.visibility = View.GONE;
+                    }
+                }
+                // 气体监测
+                if(isConnectedGasMonitoring) {
+                    handler.post {
+                        gasMonitoringBtn.visibility = VISIBLE;
                         emptyText.visibility = View.GONE;
                     }
                 }
