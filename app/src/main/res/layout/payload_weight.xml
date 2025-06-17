@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/shoutView"
         android:layout_width="400dp"
-        android:layout_height="360dp"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:background="@drawable/yk_shout_model"
         android:orientation="vertical"

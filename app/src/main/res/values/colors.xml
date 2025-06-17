@@ -15,8 +15,10 @@
     <color name="shout_background">#B0000000</color>
     <color name="shout_background_clicked">#FFC35F35</color>
     <color name="red">#FFFF1717</color>
+    <color name="light_red">#FFFF4E4E</color>
     <color name="green">#FF17FF17</color>
     <color name="shout_font_color">#FFFFFFFF</color>
     <color name="gray_9999">#99999999</color>
+    <color name="gray">#FF666666</color>
     <color name="siyi_background">#AAFFFFFF</color>
 </resources>

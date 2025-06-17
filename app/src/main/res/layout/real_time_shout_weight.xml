@@ -57,7 +57,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="24dp"
             android:layout_marginBottom="8dp"
-            android:background="@color/light_blue_600"
+            android:background="@drawable/play_btn"
             android:text="@string/start_speak"
             android:textColor="@color/white" />
 
@@ -67,7 +67,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="10dp"
-            android:background="@color/red"
+            android:background="@drawable/danger_btn"
             android:text="@string/play_alarm"
             android:textColor="@color/white" />
     </LinearLayout>
@@ -84,7 +84,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="24dp"
-            android:background="@color/light_blue_600"
+            android:background="@drawable/play_btn"
             android:text="@string/start_listening"
             android:textColor="@color/white"
             android:visibility="gone"/>
