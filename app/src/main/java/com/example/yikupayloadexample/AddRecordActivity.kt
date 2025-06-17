@@ -160,6 +160,16 @@ class AddRecordActivity : AppCompatActivity() {
 //        runOnUiThread { MsgRecv("MsgRecv").start() }
 //        runOnUiThread { getBoardEMMCStorageSpace() }
         mUploadBtn.setOnClickListener {
+            // 如果uploadFile未被初始化，说明没有选择文件，先跳转到选择文件页面
+            if(!::uploadFile.isInitialized) {
+                EasyFloat.hide("yk_shout_weight_op")
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                //任意类型文件
+                intent.type = "audio/*"
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
+                startActivityForResult(this, intent, 100, null)
+                return@setOnClickListener
+            }
             // 针对大疆因速率限制无法使用http上传，上传会导致超时，在此限制使用socket 方式上传。
             if (megaphoneService?.platform == VehiclePlatform.M300) {
                 socketUploadFile()
