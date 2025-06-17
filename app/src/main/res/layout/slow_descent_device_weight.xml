@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:background="@color/light_blue_600"
+                android:background="@drawable/play_btn"
                 android:text="@string/open"
                 android:textColor="@color/white"
                 android:visibility="visible"/>
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:background="@color/red"
+                android:background="@drawable/danger_btn"
                 android:text="@string/close"
                 android:textColor="@color/white"
                 android:visibility="gone"/>

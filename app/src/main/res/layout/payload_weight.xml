@@ -2,18 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shoutComp"
-    android:layout_width="540dp"
+    android:layout_width="300dp"
     android:layout_height="match_parent">
 
 
     <LinearLayout
         android:id="@+id/shoutView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="400dp"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:background="@drawable/yk_shout_model"
-        android:minWidth="300dp"
-        android:minHeight="364dp"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -29,23 +27,21 @@
                 android:gravity="center"
                 android:text="@string/unitree_control"
                 android:textColor="@color/shout_font_color" />
-
             <ImageView
                 android:id="@+id/lockBtn"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/unlock" />
+                android:background="@drawable/unlock"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/shout_view_content"
-            android:layout_width="wrap_content"
-            android:layout_height="340dp"
-            android:gravity="center_vertical"
-            android:minWidth="300dp"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="horizontal">
 
         </LinearLayout>
