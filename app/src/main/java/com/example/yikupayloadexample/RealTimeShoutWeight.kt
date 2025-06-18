@@ -135,14 +135,12 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             radioRate, channelsConfig, AudioFormat.ENCODING_PCM_16BIT
         );//计算最小缓冲区
         Log.i(TAG, "mMinBufferSize:${mMinBufferSize}")
-        // 使用更大的缓冲区大小（4倍最小缓冲区）
-        val bufferSize = mMinBufferSize * 4
 
         val audioFormat = AudioFormat.Builder().setEncoding(AudioFormat.ENCODING_PCM_16BIT)
             .setSampleRate(radioRate).setChannelMask(channelsConfig).build()
 
         audioTrack =
-            AudioTrack.Builder().setAudioFormat(audioFormat).setBufferSizeInBytes(bufferSize)
+            AudioTrack.Builder().setAudioFormat(audioFormat).setBufferSizeInBytes(mMinBufferSize)
                 .setTransferMode(MODE_STREAM).build()
 
 
