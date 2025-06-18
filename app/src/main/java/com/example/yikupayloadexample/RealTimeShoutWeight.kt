@@ -369,10 +369,14 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                     }
                 }
                 if(megaphoneService?.getIsConnectedYA3() == true) {
-                    mRadioBtn.visibility = VISIBLE;
+                    handler.post {
+                        mRadioBtn.visibility = VISIBLE;
+                    }
                 }
                 else if(megaphoneService?.getIsConnected() == true) {
-                    mRadioBtn.visibility = GONE;
+                    handler.post {
+                        mRadioBtn.visibility = GONE;
+                    }
                 }
             }
         }
