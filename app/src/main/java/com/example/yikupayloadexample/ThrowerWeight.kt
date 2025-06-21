@@ -160,7 +160,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 mBombState.setText(R.string.charging)
             }
             // 未充电
-            else if(stateData[0] == 0x127.toByte()) {
+            else if(stateData[0] == 127.toByte()) {
                 mBombState.setText(R.string.connection_status_notconnected)
             }
             // 高度不够，飞机高度-引爆高度<=22米
