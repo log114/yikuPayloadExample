@@ -122,53 +122,68 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         }
     }
 
-    fun updateBombStateText(bombIndex: Int, stateData: ByteArray) {
+    private fun updateBombStateText(bombIndex: Int, stateData: ByteArray) {
         val canDetonate = stateData[4] !== 0x00.toByte()
-        lateinit var mBombState: TextView
-        when(bombIndex) {
-            1 -> { // 1号弹
-                canDetonate_1 = canDetonate
-                mBombState = mBombState_1
-            }
-            2 -> { // 2号弹
-                canDetonate_2 = canDetonate
-                mBombState = mBombState_2
-            }
-            3 -> { // 3号弹
-                canDetonate_3 = canDetonate
-                mBombState = mBombState_3
-            }
-            4 -> { // 4号弹
-                canDetonate_4 = canDetonate
-                mBombState = mBombState_4
-            }
-        }
-
-
+        val stateText: String
+        val stateTextColor: Int
+        val isCharging: Boolean
 
         if (canDetonate) { // 可以引爆
-            mBombState.setText(R.string.can_detonate)
-            mBombState.setTextColor(resources.getColor(R.color.green))
+            stateText = resources.getString(R.string.can_detonate)
+            isCharging = true
+            stateTextColor = resources.getColor(R.color.green)
         } else { // 无法引爆
-            mBombState.setTextColor(resources.getColor(R.color.red))
+            stateTextColor = resources.getColor(R.color.red)
             // 未允许引爆
             if(stateData[0] == 0x00.toByte()) {
-                mBombState.setText(R.string.cannot_detonate_notAllow)
+                stateText = resources.getString(R.string.cannot_detonate_notAllow)
+                isCharging = false
             }
             // 正在充电
             else if(stateData[0] == 0x02.toByte()) {
-                mBombState.setText(R.string.charging)
+                stateText = resources.getString(R.string.charging)
+                isCharging = true
             }
             // 未充电
             else if(stateData[0] == 127.toByte()) {
-                mBombState.setText(R.string.connection_status_notconnected)
+                stateText = resources.getString(R.string.connection_status_notconnected)
+                isCharging = false
             }
             // 高度不够，飞机高度-引爆高度<=22米
             else if(stateData[1] == 0x00.toByte()) {
-                mBombState.setText(R.string.cannot_detonate_tooLow)
+                stateText = resources.getString(R.string.cannot_detonate_tooLow)
+                isCharging = true
             }
             else {
-                mBombState.setText(R.string.cannot_detonate)
+                stateText = resources.getString(R.string.cannot_detonate)
+                isCharging = true
+            }
+        }
+
+        when(bombIndex) {
+            1 -> { // 1号弹
+                canDetonate_1 = canDetonate
+                mBombState_1.text = stateText
+                mBombState_1.setTextColor(stateTextColor)
+                isCharging_1 = isCharging
+            }
+            2 -> { // 2号弹
+                canDetonate_2 = canDetonate
+                mBombState_2.text = stateText
+                mBombState_2.setTextColor(stateTextColor)
+                isCharging_2 = isCharging
+            }
+            3 -> { // 3号弹
+                canDetonate_3 = canDetonate
+                mBombState_3.text = stateText
+                mBombState_3.setTextColor(stateTextColor)
+                isCharging_3 = isCharging
+            }
+            4 -> { // 4号弹
+                canDetonate_4 = canDetonate
+                mBombState_4.text = stateText
+                mBombState_4.setTextColor(stateTextColor)
+                isCharging_4 = isCharging
             }
         }
     }
@@ -414,7 +429,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             throwerService.chargingAndAllowDetonation(1, mThrowerAllowDetonationSwitch_1.isChecked)
             mThrowerAllowDetonationSwitch_1.isEnabled = false
             thread {
-                Thread.sleep(3000)
+                Thread.sleep(8000)
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
                     if (mThrowerAllowDetonationSwitch_1.isChecked != isCharging_1) {
@@ -430,7 +445,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             throwerService.chargingAndAllowDetonation(2, mThrowerAllowDetonationSwitch_2.isChecked)
             mThrowerAllowDetonationSwitch_2.isEnabled = false
             thread {
-                Thread.sleep(3000)
+                Thread.sleep(8000)
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
                     if (mThrowerAllowDetonationSwitch_2.isChecked != isCharging_2) {
@@ -446,7 +461,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             throwerService.chargingAndAllowDetonation(3, mThrowerAllowDetonationSwitch_3.isChecked)
             mThrowerAllowDetonationSwitch_3.isEnabled = false
             thread {
-                Thread.sleep(3000)
+                Thread.sleep(8000)
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
                     if (mThrowerAllowDetonationSwitch_3.isChecked != isCharging_3) {
@@ -462,7 +477,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             throwerService.chargingAndAllowDetonation(4, mThrowerAllowDetonationSwitch_4.isChecked)
             mThrowerAllowDetonationSwitch_4.isEnabled = false
             thread {
-                Thread.sleep(3000)
+                Thread.sleep(8000)
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
                     if (mThrowerAllowDetonationSwitch_4.isChecked != isCharging_4) {
