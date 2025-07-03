@@ -185,7 +185,7 @@
     <string name="cannot_detonate">无法引爆</string>
     <string name="can_detonate">可以引爆</string>
     <string name="detonate_height">"引爆高度: "</string>
-    <string name="confirm_open">当前不可引爆，确认要打开？</string>
+    <string name="confirm_open">当前部分弹不可引爆，确认要打开？</string>
     <string name="center">中间</string>
     <string name="left">左侧</string>
     <string name="right">右侧</string>
@@ -235,4 +235,22 @@
     <string name="manualMode">手动模式</string>
     <string name="stopped">已停止</string>
     <string name="notManualMode">当前不是手动模式，不可用！</string>
+    <string name="thrower_ordinary">普通抛投</string>
+    <string name="thrower_bombing">投弹抛投</string>
+    <string name="bomb_1">1号弹</string>
+    <string name="bomb_2">2号弹</string>
+    <string name="bomb_3">3号弹</string>
+    <string name="bomb_4">4号弹</string>
+    <string name="throw_btn">投放</string>
+    <string name="throwing_btn">投放中</string>
+    <string name="reset">复位</string>
+    <string name="reseting">复位中</string>
+    <string name="throwAll_btn">全部投放</string>
+    <string name="height_mode">高度模式：</string>
+    <string name="auto_obtain">自动获取</string>
+    <string name="manual_input">手动输入</string>
+    <string name="resetAll_btn">全部复位</string>
+    <string name="not_set_pass">未设置对应通道</string>
+    <string name="not_set">未设置</string>
+    <string name="charging">正在充电</string>
 </resources>

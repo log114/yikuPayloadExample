@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/thWeight"
-    android:layout_width="300dp"
+    android:layout_width="500dp"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -20,9 +20,9 @@
 
             <TextView
                 android:id="@+id/connectState"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="24dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:gravity="left"
                 android:text="@string/connection_status_notconnected"
@@ -47,9 +47,9 @@
                 android:textColor="@color/white" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:gravity="end">
 
@@ -71,37 +71,118 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:visibility="visible">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/bomb_1"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="10dp"
+                    android:text=":"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:id="@+id/bombState_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/cannot_detonate"
+                    android:textColor="@color/red"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:gravity="left"
-                android:text="@string/state"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
-
-            <TextView
-                android:id="@+id/bombState_1"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="@string/cannot_detonate"
-                android:textColor="@color/red"
-                android:textSize="16dp" />
+                android:gravity="end"
+                android:visibility="visible">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/bomb_2"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="10dp"
+                    android:text=":"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:id="@+id/bombState_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/cannot_detonate"
+                    android:textColor="@color/red"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:visibility="visible">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/bomb_3"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="10dp"
+                    android:text=":"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:id="@+id/bombState_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/cannot_detonate"
+                    android:textColor="@color/red"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:visibility="visible">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/bomb_4"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="10dp"
+                    android:text=":"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:id="@+id/bombState_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/cannot_detonate"
+                    android:textColor="@color/red"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -114,26 +195,17 @@
                     android:id="@+id/detonationSettingsBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:padding="0dp"
                     android:text="@string/detonation_settings"
                     android:textColor="@color/white" />
 
                 <Button
-                    android:id="@+id/openAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open_all"
-                    android:textColor="@color/white" />
-
-                <Button
                     android:id="@+id/throwerUpdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:padding="0dp"
                     android:text="@string/update"
@@ -146,10 +218,19 @@
                 android:layout_marginTop="8dp">
 
                 <Button
+                    android:id="@+id/openAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/play_btn"
+                    android:text="@string/open_all"
+                    android:textColor="@color/white" />
+
+                <Button
                     android:id="@+id/switchLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/open"
                     android:textColor="@color/white" />
@@ -158,7 +239,7 @@
                     android:id="@+id/switchCenter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/open"
                     android:textColor="@color/white" />
@@ -167,7 +248,16 @@
                     android:id="@+id/switchRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/play_btn"
+                    android:text="@string/open"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/switch1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/open"
                     android:textColor="@color/white" />
@@ -179,19 +269,10 @@
                 android:layout_marginTop="8dp">
 
                 <Button
-                    android:id="@+id/switch1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
-
-                <Button
                     android:id="@+id/switch2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/open"
                     android:textColor="@color/white" />
@@ -200,22 +281,16 @@
                     android:id="@+id/switch3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/open"
                     android:textColor="@color/white" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
 
                 <Button
                     android:id="@+id/switch4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/open"
                     android:textColor="@color/white" />
@@ -224,7 +299,7 @@
                     android:id="@+id/switch5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/open"
                     android:textColor="@color/white" />
@@ -233,7 +308,7 @@
                     android:id="@+id/switch6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/open"
                     android:textColor="@color/white" />
@@ -248,65 +323,109 @@
         android:orientation="vertical"
         android:visibility="gone">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="10dp"
+            android:visibility="visible">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="@string/state"
+                android:text="@string/bomb_1"
                 android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:textSize="16sp"/>
+            <Switch
+                android:id="@+id/throwerAllowDetonationSwitch_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:text="@string/allow_detonation"
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:visibility="visible">
             <TextView
-                android:id="@+id/bombState_2"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="@string/cannot_detonate"
-                android:textColor="@color/red"
-                android:textSize="16dp" />
+                android:text="@string/bomb_2"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+            <Switch
+                android:id="@+id/throwerAllowDetonationSwitch_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:text="@string/allow_detonation"
+                android:textColor="@color/white" />
         </LinearLayout>
-
-        <Switch
-            android:id="@+id/throwerChargingSwitch"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="2dp"
-            android:paddingLeft="20dp"
-            android:scaleX="1.2"
-            android:scaleY="1.2"
-            android:text="@string/charging_switch"
-            android:textColor="@color/white" />
-        <Switch
-            android:id="@+id/throwerAllowDetonationSwitch"
-            android:layout_width="wrap_content"
+            android:visibility="visible">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:text="@string/bomb_3"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+            <Switch
+                android:id="@+id/throwerAllowDetonationSwitch_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:text="@string/allow_detonation"
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="2dp"
-            android:paddingLeft="20dp"
-            android:scaleX="1.2"
-            android:scaleY="1.2"
-            android:text="@string/allow_detonation"
-            android:textColor="@color/white" />
+            android:visibility="visible">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:text="@string/bomb_4"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+            <Switch
+                android:id="@+id/throwerAllowDetonationSwitch_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:text="@string/allow_detonation"
+                android:textColor="@color/white" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:paddingLeft="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="@string/detonate_height"
                 android:textColor="@color/white"
-                android:textSize="16dp"/>
+                android:textSize="16sp"/>
             <EditText
                 android:id="@+id/detonateHeight"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:inputType="number"
                 android:text="0"
                 android:textColor="@color/white"
@@ -314,17 +433,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:gravity="left"
                 android:text="m"
                 android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
             android:visibility="gone">
 
             <TextView
@@ -333,12 +452,12 @@
                 android:gravity="left"
                 android:text="@string/current_height"
                 android:textColor="@color/white"
-                android:textSize="16dp"/>
+                android:textSize="16sp"/>
             <EditText
                 android:id="@+id/currentHeight"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:inputType="number"
                 android:text="0"
                 android:textColor="@color/white"
@@ -346,17 +465,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:gravity="left"
                 android:text="m"
                 android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
         </LinearLayout>
         <Button
             android:id="@+id/OKBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/play_btn"
             android:text="@string/ok"
@@ -373,20 +492,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:text="@string/confirm_open"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_marginTop="20dp"
             android:visibility="visible">
             <Button
                 android:id="@+id/promptOkBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/ok"
@@ -395,7 +513,7 @@
                 android:id="@+id/promptCancelBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/cancel"
@@ -413,20 +531,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:text="@string/isUpdate"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_marginTop="20dp"
             android:visibility="visible">
             <Button
                 android:id="@+id/updateOkBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/ok"
@@ -435,7 +552,7 @@
                 android:id="@+id/updateCancelBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/cancel"
