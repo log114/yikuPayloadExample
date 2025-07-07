@@ -365,15 +365,6 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             throwerService.throwerUpdate()
             mUpdateView.visibility = GONE
             mThrowerView.visibility = VISIBLE
-            val timer = Timer();
-            val task = object : TimerTask() {
-                override fun run() {
-                    timer.cancel()
-                    exitProcess(-1)
-                }
-            }
-            // 定时器，100毫秒后开始执行，每2秒执行一次
-            timer.scheduleAtFixedRate(task, 2000, 1000);
         }
         // 取消更新程序
         mUpdateCancelBtn.setOnClickListener {
