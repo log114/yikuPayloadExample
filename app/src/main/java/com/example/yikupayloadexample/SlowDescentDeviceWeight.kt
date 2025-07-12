@@ -371,6 +371,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
                     }
                 }
                 else {
+                    slowDescentDeviceService.connectTest()
                     // 3秒没收到信息，显示未连接
                     if (Date().time - updateTime > 3000) {
                         val handler = Handler(Looper.getMainLooper())
