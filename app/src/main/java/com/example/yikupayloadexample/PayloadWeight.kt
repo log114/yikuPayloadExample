@@ -506,7 +506,7 @@ class PayloadWeight : Service() {
             EasyFloat.with(applicationContext)
                 // 设置浮窗xml布局文件/自定义View，并可设置详细信息
                 .setLayout(R.layout.payload_weight) {
-                    mShoutView = it.findViewById(R.id.shoutView)
+                    mShoutView = it.findViewById(R.id.shoutComp)
                     lockBtn = it.findViewById(R.id.lockBtn)
                     it.isFocusable = true;
 //                    // 初始化关闭喊话界面
