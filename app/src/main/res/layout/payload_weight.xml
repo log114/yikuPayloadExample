@@ -13,7 +13,6 @@
         android:layout_centerInParent="true"
         android:background="@drawable/yk_shout_model"
         android:minWidth="300dp"
-        android:minHeight="364dp"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -42,7 +41,8 @@
         <LinearLayout
             android:id="@+id/shout_view_content"
             android:layout_width="wrap_content"
-            android:layout_height="340dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             android:gravity="center_vertical"
             android:minWidth="300dp"
             android:orientation="horizontal">
