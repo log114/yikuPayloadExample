@@ -43,9 +43,9 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var audioTrack: AudioTrack
     private lateinit var mRadioDisable: Switch
     private var isRadio = false;
-    private val radioRate = 48000 // 新版收音麦opus编码采样率是16000
+    private val radioRate = 16000 // 新版收音麦opus编码采样率是16000
     private val channels = 1
-    private val frameSize = 960
+    private val frameSize = 320
     private val channelsConfig =
         AudioFormat.CHANNEL_OUT_MONO  // CHANNEL_OUT_MONO 单声道 CHANNEL_OUT_STEREO双声道
 
