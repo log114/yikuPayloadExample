@@ -148,9 +148,9 @@ class MainActivity : AppCompatActivity() {
             REQUIRED_PERMISSION_LIST.add(Manifest.permission.FOREGROUND_SERVICE)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
-            REQUIRED_PERMISSION_LIST.add(Manifest.permission.POST_NOTIFICATIONS)
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+//            REQUIRED_PERMISSION_LIST.add(Manifest.permission.POST_NOTIFICATIONS)
+//        }
         // Check for permissions
         for (eachPermission in REQUIRED_PERMISSION_LIST) {
             if (ContextCompat.checkSelfPermission(
