@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -19,6 +20,8 @@ import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
 class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
@@ -29,6 +32,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private lateinit var mSafetySwitchSwitch: Switch
     private lateinit var mHoseReleaseBtn: Button
     private lateinit var mHoseDetachmentBtn: Button
+    private lateinit var mManualEscapeBtn: Button
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
     private var updateTime = Date().time
@@ -36,6 +40,14 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private var operate: Int = 1
     private var isHoseRelease: Boolean = false
     private var isHoseDetachment: Boolean = false
+    private val executor = Executors.newSingleThreadExecutor() // 使用单线程池，避免重复创建线程
+    private val isButtonDown = AtomicBoolean(false)
+
+    // 定义一个阈值，表示允许手指轻微移动但不触发拖动的最大像素值
+    private val MOVE_TOLERANCE = 20
+    // 记录手指按下的初始坐标
+    private var downX = 0f
+    private var downY = 0f
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -73,17 +85,20 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.water_branch_weight, this, true)
         mLightView = findViewById(R.id.waterBranch_view)
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
         mHoseReleaseBtn = findViewById(R.id.hoseReleaseBtn)
         mHoseDetachmentBtn = findViewById(R.id.hoseDetachmentBtn)
+        mManualEscapeBtn = findViewById(R.id.manualEscapeBtn)
         setConnectState()
 
         mSafetySwitchSwitch.setOnClickListener {
             mHoseReleaseBtn.isEnabled = mSafetySwitchSwitch.isChecked
             mHoseDetachmentBtn.isEnabled = mSafetySwitchSwitch.isChecked
+            mManualEscapeBtn.isEnabled = mSafetySwitchSwitch.isChecked
         }
         // 释放水带
         mHoseReleaseBtn.setOnClickListener {
@@ -127,6 +142,60 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                     mHoseDetachmentBtn.isEnabled = true
                     mHoseDetachmentBtn.setText(R.string.hoseDetachment )
                 }
+            }
+        }
+
+
+        // 手动脱困
+        mManualEscapeBtn.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // 1. 记录手指按下的初始位置
+                    downX = event.rawX
+                    downY = event.rawY
+
+                    if (!mSafetySwitchSwitch.isChecked) {
+                        showToast(R.string.need_to_open_safety_switch)
+                        false // 不消费事件，允许后续处理（但也可能触发悬浮窗拖动）
+                    } else {
+                        isButtonDown.set(true)
+                        // 使用单线程线程池，避免重复创建线程
+                        executor.submit {
+                            try {
+                                while (isButtonDown.get()) {
+                                    waterBranchService.hoseDetachment(0)
+                                    // 添加短暂休眠，避免循环过紧占用资源
+                                    Thread.sleep(200)
+                                }
+                            } catch (e: InterruptedException) {
+                                // 恢复中断状态
+                                Thread.currentThread().interrupt()
+                            } catch (e: Exception) {
+                                // 日志记录或其他处理
+                                Log.e("TouchListener", "Error in hoseDetachment thread", e)
+                            }
+                        }
+                        true // 重要：告诉系统这个按钮消费了ACTION_DOWN事件
+                    }
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    // 2. 计算手指移动的距离
+                    val deltaX = event.rawX - downX
+                    val deltaY = event.rawY - downY
+
+                    // 3. 如果移动距离超过阈值，则认为用户想拖动悬浮窗，停止按钮功能
+                    if (deltaX * deltaX + deltaY * deltaY > MOVE_TOLERANCE * MOVE_TOLERANCE) {
+                        isButtonDown.set(false)
+                        false // 返回false，不消费ACTION_MOVE事件，让悬浮窗拖动逻辑接管
+                    } else {
+                        true // 移动量很小，认为用户仍在尝试按按钮，消费掉事件
+                    }
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    isButtonDown.set(false)
+                    true // 消费抬起事件
+                }
+                else -> false
             }
         }
     }

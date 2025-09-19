@@ -44,7 +44,8 @@
                 android:layout_marginStart="8dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/hoseRelease"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:enabled="false"/>
 
             <Button
                 android:id="@+id/hoseDetachmentBtn"
@@ -53,7 +54,18 @@
                 android:layout_marginStart="8dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/hoseDetachment"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:enabled="false" />
+
+            <Button
+                android:id="@+id/manualEscapeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/play_btn"
+                android:text="@string/manual_escape"
+                android:textColor="@color/white"
+                android:enabled="false" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -19,6 +19,7 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -105,6 +106,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferences = getSharedPreferences("myPreferences", MODE_PRIVATE);
@@ -139,7 +141,16 @@ class MainActivity : AppCompatActivity() {
      * Checks if there is any missing permissions, and
      * requests runtime permission if needed.
      */
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun checkAndRequestPermissions() {
+        // 添加版本特定的权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // Android 9+
+            REQUIRED_PERMISSION_LIST.add(Manifest.permission.FOREGROUND_SERVICE)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+            REQUIRED_PERMISSION_LIST.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
         // Check for permissions
         for (eachPermission in REQUIRED_PERMISSION_LIST) {
             if (ContextCompat.checkSelfPermission(
@@ -215,7 +226,8 @@ class MainActivity : AppCompatActivity() {
         private val TAG = MainActivity::class.java.name
         const val FLAG_CONNECTION_CHANGE = "dji_sdk_connection_change"
 
-        private val REQUIRED_PERMISSION_LIST = arrayOf(
+        @RequiresApi(Build.VERSION_CODES.P)
+        private var REQUIRED_PERMISSION_LIST = mutableListOf(
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.BLUETOOTH,
@@ -223,18 +235,14 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.INTERNET,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.VIBRATE,
-            Manifest.permission.INTERNET,
             Manifest.permission.ACCESS_WIFI_STATE,
-//            Manifest.permission.WAKE_LOCK,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.CHANGE_WIFI_STATE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.MODIFY_AUDIO_SETTINGS,
+//            Manifest.permission.WAKE_LOCK,
+            Manifest.permission.ACCESS_NETWORK_STATE
         )
         private const val REQUEST_PERMISSION_CODE = 12345
     }
