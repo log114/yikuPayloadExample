@@ -144,9 +144,9 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 stateText = resources.getString(R.string.charging)
                 isCharging = true
             }
-            // 未充电
+            // 未连接
             else if(stateData[0] == 127.toByte()) {
-                stateText = resources.getString(R.string.connection_status_notconnected)
+                stateText = resources.getString(R.string.not_connected)
                 isCharging = false
             }
             // 高度不够，飞机高度-引爆高度<=22米

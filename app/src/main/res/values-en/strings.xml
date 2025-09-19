@@ -209,4 +209,7 @@
     <string name="not_set_pass">Corresponding channel not set</string>
     <string name="not_set">Not set</string>
     <string name="charging">charging</string>
+    <string name="not_connected">Not connected</string>
+    <string name="manual_escape">Manual escape</string>
+    <string name="no_microphone_found">No microphone found</string>
 </resources>

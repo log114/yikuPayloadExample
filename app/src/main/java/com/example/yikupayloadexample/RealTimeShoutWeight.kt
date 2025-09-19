@@ -1,27 +1,41 @@
 package com.example.yikupayloadexample
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.media.AudioDeviceInfo
 import android.media.AudioFormat
+import android.media.AudioManager
 import android.media.AudioTrack
 import android.media.AudioTrack.MODE_STREAM
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.*
+import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.yikupayloadexample.MApplication.applicationContext
 import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
 import com.yiku.yikupayloadSDK.service.FourInOneService
 import com.yiku.yikupayloadSDK.service.MegaphoneService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.OpusUtils
+import com.yiku.yikupayloadSDK.util.main
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
 
+@RequiresApi(Build.VERSION_CODES.S)
 class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "RealTimeShoutWeight"
@@ -38,7 +52,6 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 
     private lateinit var sharedPreferences: SharedPreferences
 
-
     private lateinit var mRadioBtn: Button
     private lateinit var audioTrack: AudioTrack
     private lateinit var mRadioDisable: Switch
@@ -48,6 +61,11 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private val frameSize = 320
     private val channelsConfig =
         AudioFormat.CHANNEL_OUT_MONO  // CHANNEL_OUT_MONO 单声道 CHANNEL_OUT_STEREO双声道
+    private var isForegroundServiceRunning = false
+
+    companion object {
+        private const val REQUEST_CODE_RECORD_AUDIO = 123 // 定义请求码
+    }
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -155,6 +173,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         mRadioBtn.setText(R.string.start_listening)
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun initView(context: Context?) {
 
         LayoutInflater.from(context).inflate(R.layout.real_time_shout_weight, this, true)
@@ -287,15 +306,27 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             if (megaphoneService?.isRecording == true) {
                 mRealTimeSpeakBtn.setText(R.string.start_speak)
                 Log.i(TAG, "stopRecord...")
+                stopForegroundService()
                 megaphoneService?.stopRealTimeShout()
                 edit.putBoolean("record", false)
             } else {
-                Log.i(TAG, "startRecord...")
-                mRealTimeSpeakBtn.setText(R.string.staring_speak)
-                mRealTimeSpeakBtn.isEnabled = false
-                megaphoneService?.startRealTimeShout(mRadioDisable.isEnabled)
-                mRealTimeSpeakBtn.setText(R.string.stop_speak)
-                mRealTimeSpeakBtn.isEnabled = true
+                // 麦克风权限检查
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                    showToast(R.string.lack_of_permissions)
+                    return@setOnClickListener
+                }
+
+                // 启动前台服务
+                startForegroundService()
+
+                RecordingForegroundService.onServiceStarted = {
+                    Handler(Looper.getMainLooper()).post {
+                        // 服务已启动，开始录音
+                        startRecordingProcess()
+                    }
+                }
+
                 edit.putBoolean("record", true)
             }
             edit.apply()
@@ -304,14 +335,57 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         initStatus()
     }
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
+    private fun startRecordingProcess() {
+        mRealTimeSpeakBtn.setText(R.string.staring_speak)
+        mRealTimeSpeakBtn.isEnabled = false
+
+        // 设置录音准备回调
+        megaphoneService?.onRecordingReady = {
+            Handler(Looper.getMainLooper()).post {
+                mRealTimeSpeakBtn.setText(R.string.stop_speak)
+                mRealTimeSpeakBtn.isEnabled = true
+            }
+        }
+
+        // 开始录音
+        megaphoneService?.startRealTimeShout(mRadioDisable.isEnabled)
+    }
+
+    private fun startForegroundService() {
+        if (isForegroundServiceRunning) return
+
+        val serviceIntent = Intent(context, RecordingForegroundService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(serviceIntent)
+        } else {
+            context.startService(serviceIntent)
+        }
+        isForegroundServiceRunning = true
+    }
+
+    private fun stopForegroundService() {
+        if (!isForegroundServiceRunning) return
+
+        // 使用明确的停止动作
+        val serviceIntent = Intent(context, RecordingForegroundService::class.java).apply {
+            action = RecordingForegroundService.ACTION_STOP
+        }
+        context.startService(serviceIntent) // 或者使用 stopService
+        isForegroundServiceRunning = false
+    }
+
     fun ByteArray.toHex(): String =
         joinToString(separator = "") { eachByte -> "%02x ".format(eachByte) }
 
 
-    private fun showToast(msg: String) {
-        (context as Activity).runOnUiThread {
+    private fun showToast(toastMsg: Int) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
             Toast.makeText(
-                context, msg, Toast.LENGTH_SHORT
+                applicationContext,
+                toastMsg,
+                Toast.LENGTH_LONG
             ).show()
         }
     }
@@ -345,6 +419,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                             if (megaphoneService1.getIsConnected()) {
                                 megaphoneService = megaphoneService1;
                                 setCallbacks()
+                                megaphoneService?.setContext(context)
                             }
                             isConnecting_1 = false
                         }
@@ -363,6 +438,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                             if (megaphoneService2.getIsConnectedYA3()) {
                                 megaphoneService = megaphoneService2;
                                 setCallbacks()
+                                megaphoneService?.setContext(context)
                             }
                             isConnecting_2 = false
                         }
@@ -398,5 +474,14 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
         timer.scheduleAtFixedRate(task, 100, 1000);
+    }
+
+    // 释放资源
+    fun releaseResources() {
+        stopForegroundService()
+        megaphoneService?.stopRealTimeShout()
+        // 其他清理工作
+        stopRadio() // 确保停止收音
+        megaphoneService?.releaseAudioResources() // 释放SDK音频资源
     }
 }

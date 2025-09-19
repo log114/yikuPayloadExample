@@ -253,4 +253,7 @@
     <string name="not_set_pass">未设置对应通道</string>
     <string name="not_set">未设置</string>
     <string name="charging">正在充电</string>
+    <string name="not_connected">未连接</string>
+    <string name="manual_escape">手动脱困</string>
+    <string name="no_microphone_found">没有找到麦克风</string>
 </resources>

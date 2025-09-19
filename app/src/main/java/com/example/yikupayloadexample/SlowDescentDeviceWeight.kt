@@ -70,6 +70,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private var isEnable = false
     private var isEmergency = false
     private var liftingMethod: Int = 1
+    private var needJudgeConnectState = false
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -107,6 +108,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
     fun updateStatus(msg: ByteArray) {
         Log.i(TAG, "缓降器msg:${msg.toHex()}")
         updateTime = Date().time
+        needJudgeConnectState = false // 收到消息，说明是还在连接，暂时关闭连接判断
         val enableType = msg[0 + 3]                 // 0: 缓降器已Disable, 1: 缓降器已Enable
         val mode = msg[1 + 3]                       // 0: 长度控制模式, 1: 速度控制模式
         val speed = msg[2 + 3]                      // 当前速度 m/min
@@ -143,6 +145,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
 
             0x01.toByte() -> {
                 mCurrentLocation.setText(R.string.reached_the_top)
+                mCurrentLineLength.text = "0.0m"
             }
 
             else -> {
@@ -208,10 +211,14 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
         // 打开安全开关
         mBtnOpen.setOnClickListener {
             slowDescentDeviceService.descentControl(true)
+            updateTime = Date().time
+            needJudgeConnectState = true
         }
         // 关闭安全开关
         mBtnClose.setOnClickListener {
             slowDescentDeviceService.descentControl(false)
+            updateTime = Date().time
+            needJudgeConnectState = true
         }
 
         // 按速度
@@ -251,6 +258,8 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
                     speed = 20
                 }
                 slowDescentDeviceService.actionControl(liftingMethod, 20 - speed)
+                updateTime = Date().time
+                needJudgeConnectState = true
             } else {
                 showToast(R.string.need_to_open_safety_switch)
             }
@@ -269,6 +278,8 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
                 }
                 speed += 20
                 slowDescentDeviceService.actionControl(liftingMethod, speed)
+                updateTime = Date().time
+                needJudgeConnectState = true
             } else {
                 showToast(R.string.need_to_open_safety_switch)
             }
@@ -278,6 +289,8 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
             if (isEnable) {
                 Log.i(TAG, "=================停止================")
                 slowDescentDeviceService.actionControl(liftingMethod, 20)
+                updateTime = Date().time
+                needJudgeConnectState = true
                 Log.i(TAG, "=================停止END================")
 
             } else {
@@ -294,6 +307,8 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
                     length = (lengthStr.toFloat() * 10).toInt()
                 }
                 slowDescentDeviceService.actionControl(liftingMethod, length)
+                updateTime = Date().time
+                needJudgeConnectState = true
             } else {
                 showToast(R.string.need_to_open_safety_switch)
             }
@@ -302,6 +317,8 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
         mBtnEmergencyStop.setOnClickListener {
             if (isEnable) {
                 slowDescentDeviceService.emergencyControl(1)
+                updateTime = Date().time
+                needJudgeConnectState = true
             } else {
                 showToast(R.string.need_to_open_safety_switch)
             }
@@ -319,6 +336,8 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
         // 确定熔断
         mBtnOk.setOnClickListener {
             slowDescentDeviceService.emergencyControl(2)
+            updateTime = Date().time
+            needJudgeConnectState = true
             mSlowDescentDeviceView.visibility = VISIBLE // 显示内容
             mPromptBox.visibility = View.GONE // 隐藏确认框
         }
@@ -332,6 +351,8 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
         mReleaseEmergency.setOnClickListener {
             if (isEnable) {
                 slowDescentDeviceService.emergencyControl(0)
+                updateTime = Date().time
+                needJudgeConnectState = true
             } else {
                 showToast(R.string.need_to_open_safety_switch)
             }
@@ -372,15 +393,15 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
                 }
                 else {
                     slowDescentDeviceService.connectTest()
-                    // 3秒没收到信息，显示未连接
-                    if (Date().time - updateTime > 3000) {
+                    // 3秒没收到信息，显示未连接，且需要判断连接状态
+                    if (Date().time - updateTime > 3000 && needJudgeConnectState) {
                         val handler = Handler(Looper.getMainLooper())
                         handler.post {
                             mConnectState.setText(R.string.connection_status_notconnected)
                         }
                     }
                     // 如果超过10s没收到消息，主动断开连接，等待重连
-                    if (Date().time - updateTime > 10000) {
+                    if (Date().time - updateTime > 10000 && needJudgeConnectState) {
                         // 断连
                         slowDescentDeviceService.disConnect()
                     }

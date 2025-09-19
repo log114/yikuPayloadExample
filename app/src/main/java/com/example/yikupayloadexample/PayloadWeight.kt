@@ -484,7 +484,6 @@ class PayloadWeight : Service() {
         return mShoutView.visibility == VISIBLE
     }
 
-
     private fun showWindow() {
         realTimeShoutWeight = RealTimeShoutWeight(this)
         ttsShoutWeight = TtsShoutWeight(this)
@@ -589,7 +588,7 @@ class PayloadWeight : Service() {
     override fun onDestroy() {
         super.onDestroy()
         Log.w(TAG, "onDestroy........")
-
+        realTimeShoutWeight.releaseResources()
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
