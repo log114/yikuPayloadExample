@@ -31,7 +31,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     var waterBranchService: WaterBranchService = WaterBranchService()
     private lateinit var mSafetySwitchSwitch: Switch
     private lateinit var mHoseReleaseBtn: Button
-    private lateinit var mHoseDetachmentBtn: Button
+//    private lateinit var mHoseDetachmentBtn: Button
     private lateinit var mManualEscapeBtn: Button
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
@@ -91,13 +91,13 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         mLightView = findViewById(R.id.waterBranch_view)
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
         mHoseReleaseBtn = findViewById(R.id.hoseReleaseBtn)
-        mHoseDetachmentBtn = findViewById(R.id.hoseDetachmentBtn)
+//        mHoseDetachmentBtn = findViewById(R.id.hoseDetachmentBtn)
         mManualEscapeBtn = findViewById(R.id.manualEscapeBtn)
         setConnectState()
 
         mSafetySwitchSwitch.setOnClickListener {
             mHoseReleaseBtn.isEnabled = mSafetySwitchSwitch.isChecked
-            mHoseDetachmentBtn.isEnabled = mSafetySwitchSwitch.isChecked
+//            mHoseDetachmentBtn.isEnabled = mSafetySwitchSwitch.isChecked
             mManualEscapeBtn.isEnabled = mSafetySwitchSwitch.isChecked
         }
         // 释放水带
@@ -126,24 +126,24 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             }
         }
         // 水带脱困
-        mHoseDetachmentBtn.setOnClickListener {
-            if(!mSafetySwitchSwitch.isChecked) {
-                showToast(R.string.need_to_open_safety_switch)
-                return@setOnClickListener
-            }
-            waterBranchService.hoseDetachment(1)
-
-            mHoseDetachmentBtn.setText( R.string.executing )
-            mHoseDetachmentBtn.isEnabled = false
-            thread {
-                Thread.sleep(3000)
-                val handler = Handler(Looper.getMainLooper())
-                handler.post {
-                    mHoseDetachmentBtn.isEnabled = true
-                    mHoseDetachmentBtn.setText(R.string.hoseDetachment )
-                }
-            }
-        }
+//        mHoseDetachmentBtn.setOnClickListener {
+//            if(!mSafetySwitchSwitch.isChecked) {
+//                showToast(R.string.need_to_open_safety_switch)
+//                return@setOnClickListener
+//            }
+//            waterBranchService.hoseDetachment(1)
+//
+//            mHoseDetachmentBtn.setText( R.string.executing )
+//            mHoseDetachmentBtn.isEnabled = false
+//            thread {
+//                Thread.sleep(3000)
+//                val handler = Handler(Looper.getMainLooper())
+//                handler.post {
+//                    mHoseDetachmentBtn.isEnabled = true
+//                    mHoseDetachmentBtn.setText(R.string.hoseDetachment )
+//                }
+//            }
+//        }
 
 
         // 手动脱困
@@ -175,6 +175,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                                 Log.e("TouchListener", "Error in hoseDetachment thread", e)
                             }
                         }
+                        v.setPressed(true);
                         true // 重要：告诉系统这个按钮消费了ACTION_DOWN事件
                     }
                 }
@@ -193,6 +194,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     isButtonDown.set(false)
+                    v.setPressed(false);
                     true // 消费抬起事件
                 }
                 else -> false

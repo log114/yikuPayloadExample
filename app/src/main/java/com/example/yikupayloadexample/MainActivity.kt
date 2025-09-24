@@ -15,6 +15,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
 import android.os.Process
+import android.provider.Settings
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -148,9 +149,16 @@ class MainActivity : AppCompatActivity() {
             REQUIRED_PERMISSION_LIST.add(Manifest.permission.FOREGROUND_SERVICE)
         }
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
-//            REQUIRED_PERMISSION_LIST.add(Manifest.permission.POST_NOTIFICATIONS)
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+            REQUIRED_PERMISSION_LIST.add(Manifest.permission.POST_NOTIFICATIONS)
+
+            // 添加媒体权限
+            REQUIRED_PERMISSION_LIST.add(Manifest.permission.READ_MEDIA_AUDIO)
+        } else {
+            // Android 12 及以下使用旧存储权限
+            REQUIRED_PERMISSION_LIST.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            REQUIRED_PERMISSION_LIST.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
         // Check for permissions
         for (eachPermission in REQUIRED_PERMISSION_LIST) {
             if (ContextCompat.checkSelfPermission(
@@ -229,7 +237,6 @@ class MainActivity : AppCompatActivity() {
         @RequiresApi(Build.VERSION_CODES.P)
         private var REQUIRED_PERMISSION_LIST = mutableListOf(
             Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -238,7 +245,6 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.VIBRATE,
             Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.CHANGE_WIFI_STATE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.MODIFY_AUDIO_SETTINGS,
 //            Manifest.permission.WAKE_LOCK,

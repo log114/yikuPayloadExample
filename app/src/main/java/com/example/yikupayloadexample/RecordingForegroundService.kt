@@ -53,7 +53,7 @@ class RecordingForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "recording_channel"
             val channelName = "Recording Service"
-            val importance = NotificationManager.IMPORTANCE_LOW
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
 
             // 检查渠道是否已存在
             val manager = getSystemService(NotificationManager::class.java)
@@ -61,6 +61,9 @@ class RecordingForegroundService : Service() {
                 val channel = NotificationChannel(channelId, channelName, importance).apply {
                     description = "Channel for recording foreground service"
                     lockscreenVisibility = Notification.VISIBILITY_PUBLIC // 锁屏可见
+                    setShowBadge(true) // 显示角标
+                    enableVibration(false) // 无振动
+                    enableLights(false) // 无灯光
                 }
                 manager.createNotificationChannel(channel)
                 Log.d(TAG, "创建通知渠道")
