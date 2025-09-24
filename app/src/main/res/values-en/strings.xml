@@ -212,4 +212,5 @@
     <string name="not_connected">Not connected</string>
     <string name="manual_escape">Manual escape</string>
     <string name="no_microphone_found">No microphone found</string>
+    <string name="need_notification_permission">Need notification permission</string>
 </resources>
