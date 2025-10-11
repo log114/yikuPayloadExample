@@ -20,8 +20,8 @@ import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
-import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.thread
 
 class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
@@ -40,7 +40,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private var operate: Int = 1
     private var isHoseRelease: Boolean = false
     private var isHoseDetachment: Boolean = false
-    private val executor = Executors.newSingleThreadExecutor() // 使用单线程池，避免重复创建线程
+    private val hoseThread: AtomicReference<Thread> = AtomicReference()
     private val isButtonDown = AtomicBoolean(false)
 
     // 定义一个阈值，表示允许手指轻微移动但不触发拖动的最大像素值
@@ -159,47 +159,48 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                         false // 不消费事件，允许后续处理（但也可能触发悬浮窗拖动）
                     } else {
                         isButtonDown.set(true)
-                        // 使用单线程线程池，避免重复创建线程
-                        executor.submit {
+                        v.setPressed(true);
+                        val thread = Thread {
                             try {
-                                while (isButtonDown.get()) {
+                                while (isButtonDown.get() && !Thread.currentThread().isInterrupted) {
                                     waterBranchService.hoseDetachment(0)
                                     // 添加短暂休眠，避免循环过紧占用资源
                                     Thread.sleep(200)
                                 }
                             } catch (e: InterruptedException) {
-                                // 恢复中断状态
-                                Thread.currentThread().interrupt()
+                                // 线程被中断，正常退出
+                                Log.d("HoseThread", "Thread interrupted, stopping.")
                             } catch (e: Exception) {
-                                // 日志记录或其他处理
-                                Log.e("TouchListener", "Error in hoseDetachment thread", e)
+                                Log.e("HoseThread", "Error in hoseDetachment thread", e)
                             }
                         }
-                        v.setPressed(true);
+                        thread.start()
+                        hoseThread.set(thread)
                         true // 重要：告诉系统这个按钮消费了ACTION_DOWN事件
                     }
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    // 2. 计算手指移动的距离
-                    val deltaX = event.rawX - downX
-                    val deltaY = event.rawY - downY
-
-                    // 3. 如果移动距离超过阈值，则认为用户想拖动悬浮窗，停止按钮功能
-                    if (deltaX * deltaX + deltaY * deltaY > MOVE_TOLERANCE * MOVE_TOLERANCE) {
-                        isButtonDown.set(false)
-                        false // 返回false，不消费ACTION_MOVE事件，让悬浮窗拖动逻辑接管
-                    } else {
-                        true // 移动量很小，认为用户仍在尝试按按钮，消费掉事件
-                    }
+                    true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     isButtonDown.set(false)
+                    releaseButton(v)
                     v.setPressed(false);
                     true // 消费抬起事件
                 }
                 else -> false
             }
         }
+    }
+
+    private fun releaseButton(v: View) {
+        isButtonDown.set(false)
+        // 中断工作线程
+        hoseThread.get()?.interrupt()
+        hoseThread.set(null)
+        v.isPressed = false
+        // 恢复父View的拦截权限
+        v.parent.requestDisallowInterceptTouchEvent(false)
     }
 
     fun ByteArray.toHex(): String =
