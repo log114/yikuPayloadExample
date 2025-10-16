@@ -213,4 +213,8 @@
     <string name="manual_escape">Manual escape</string>
     <string name="no_microphone_found">No microphone found</string>
     <string name="need_notification_permission">Need notification permission</string>
+    <string name="high_temperature_protection">High temperature protection, actual effective volume:</string>
+    <string name="password_verification">Password verification</string>
+    <string name="please_enter_the_access_password">Please enter the access password</string>
+    <string name="password_error">Password error, please try again!</string>
 </resources>

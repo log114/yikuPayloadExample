@@ -2,6 +2,7 @@ package com.example.yikupayloadexample
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -40,6 +41,7 @@ import kotlin.concurrent.thread
 class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "RealTimeShoutWeight"
+    private var isInit = false
     private lateinit var mTemperature: TextView // 温度
     private lateinit var mStatus: TextView // 状态
     private lateinit var mRealTimeSpeakBtn: Button // 开始喊话按钮
@@ -50,9 +52,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var mServoControlSeekbar: SeekBar // 舵机控制
     private var isConnecting_1 = false; // 喊话器是否正在连接
     private var isConnecting_2 = false; // 四合一是否正在连接
-
     private lateinit var sharedPreferences: SharedPreferences
-
     private lateinit var mRadioBtn: Button
     private lateinit var audioTrack: AudioTrack
     private lateinit var mRadioDisable: Switch
@@ -63,6 +63,9 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private val channelsConfig =
         AudioFormat.CHANNEL_OUT_MONO  // CHANNEL_OUT_MONO 单声道 CHANNEL_OUT_STEREO双声道
     private var isForegroundServiceRunning = false
+    private var isSettingVolume = false; // 是否正在设置音量
+    private var isGetCurrentVolume = false; // 是否返回了当前实际音量
+    private var currentVolume = 0; // 当前实际音量
 
     companion object {
         private const val REQUEST_CODE_RECORD_AUDIO = 123 // 定义请求码
@@ -73,9 +76,6 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 
     init {
         initView(context)
-        if (megaphoneService != null) {
-            setCallbacks()
-        }
     }
 
     fun setCallbacks() {
@@ -85,17 +85,45 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
 
             override fun onMsg(msg: ByteArray) {
-
-
-                if (msg.isNotEmpty() && msg[0] != 0x8d.toByte()) {
+                if (msg.isNotEmpty() && msg[0] == 0x8d.toByte()) {
+                    if (msg[2] == 0x18.toByte()) {
+                        Log.i(TAG, "recv 0x18!")
+                        val handler = Handler(Looper.getMainLooper())
+                        // 喊话器温度状态
+                        handler.post {
+                            updateTemperatureStatus(msg)
+                        }
+                    }
                     return
                 }
-                if (msg[2] == 0x18.toByte()) {
-                    Log.i(TAG, "recv 0x18!")
-                    val handler = Handler(Looper.getMainLooper())
-                    // 喊话器温度状态
-                    handler.post {
-                        updateTemperatureStatus(msg)
+                if (msg.size > 6 && String(msg.slice(0..3).toByteArray()) == "[14]") {
+                    // 假设 msg 是一个 ByteArray
+                    val dataLength = msg.size - 2 - 4
+                    // 使用 Kotlin 的 sliceArray 方法提取子数组，更简洁
+                    val valueBytes = msg.sliceArray(5 until 5 + dataLength)
+
+                    // 将字节数组（ASCII字符）转换为字符串
+                    val hexString = valueBytes.toString(Charsets.US_ASCII)
+                    try {
+                        // 关键：使用字符串的 toInt(16) 方法进行十六进制解析
+                        val result = hexString.toInt(16).toByte()
+                        Log.i(TAG, "提取到的数值为: 0x${result.toString(16).padStart(2, '0')} (十进制${result.toUByte().toInt()})")
+                        isGetCurrentVolume = true
+                        currentVolume = result.toUByte().toInt()
+                        // 如果不是正在设置音量的时候，收单音量生效数据
+                        if(!isSettingVolume) {
+                            mVolumeSeekBar.post {
+                                if (currentVolume < mVolumeSeekBar.progress) {
+                                    mVolumeSeekBar.progress = currentVolume
+                                    showToast(context.resources.getString(R.string.high_temperature_protection) + currentVolume + "%")
+                                }
+                                isGetCurrentVolume = false
+                            }
+                        }
+                    } catch (e: NumberFormatException) {
+                        Log.e(TAG, "十六进制数据格式错误！")
+                    } catch (e: IllegalArgumentException) {
+                        Log.e(TAG, "数值超出字节范围(0-255)！")
                     }
                 }
             }
@@ -283,12 +311,24 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                isSettingVolume = true
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (seekBar != null) {
                     megaphoneService?.setVolume(seekBar.progress)
-
+                    Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
+                    thread {
+                        Thread.sleep(500)
+                        mVolumeSeekBar.post {
+                            if (isGetCurrentVolume && currentVolume < seekBar.progress) {
+                                seekBar.progress = currentVolume
+                                isGetCurrentVolume = false
+                                showToast(context.resources.getString(R.string.high_temperature_protection) + currentVolume + "%")
+                            }
+                            isSettingVolume = false
+                        }
+                    }
                 }
             }
 
@@ -408,6 +448,15 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         }
     }
 
+    private fun showToast(msg: String) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            Toast.makeText(
+                context, msg, Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     // 定时器，判断连接状态
     private fun setConnectState() {
         val timer = Timer();
@@ -418,6 +467,11 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                 if (megaphoneService?.getIsConnected() == true || megaphoneService?.getIsConnectedYA3() == true) {
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
+                    }
+
+                    if (!isInit && megaphoneService != null) {
+                        isInit = true
+                        setCallbacks()
                     }
                 } else {
                     handler.post {
@@ -475,7 +529,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
-        timer.scheduleAtFixedRate(task, 100, 1000);
+        timer.scheduleAtFixedRate(task, 100, 2000);
     }
 
     // 设置默认音量
