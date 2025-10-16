@@ -213,4 +213,8 @@
     <string name="manual_escape">手动脱困</string>
     <string name="no_microphone_found">没有找到麦克风</string>
     <string name="need_notification_permission">需要通知权限</string>
+    <string name="high_temperature_protection">高温保护，实际生效音量：</string>
+    <string name="password_verification">密码验证</string>
+    <string name="please_enter_the_access_password">请输入访问密码</string>
+    <string name="password_error">密码错误，请重试！</string>
 </resources>

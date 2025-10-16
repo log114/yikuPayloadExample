@@ -17,15 +17,18 @@ import android.os.PowerManager
 import android.os.Process
 import android.provider.Settings
 import android.util.Log
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
 import com.yiku.yikupayloadSDK.service.MegaphoneService
+import android.text.InputType
 
 var megaphoneService: BaseMegaphoneService? = null
 var preferences: SharedPreferences? = null
@@ -133,8 +136,42 @@ class MainActivity : AppCompatActivity() {
         //跳转页面
         val setting_btn = findViewById<ImageView>(R.id.setting_btn)
         setting_btn.setOnClickListener {
-            val intent = Intent(this, SettingActivity::class.java)
-            startActivity(intent)
+            // 创建密码输入对话框
+            val passwordDialog = AlertDialog.Builder(this).apply {
+                setTitle(R.string.password_verification)
+                setMessage(R.string.please_enter_the_access_password)
+
+                // 创建密码输入框
+                val passwordInput = EditText(this@MainActivity).apply {
+                    inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                }
+                setView(passwordInput)
+
+                // 确定按钮
+                setPositiveButton(R.string.ok) { dialog, which ->
+                    val inputPassword = passwordInput.text.toString()
+                    val correctPassword = "8888"
+
+                    if (inputPassword == correctPassword) {
+                        // 密码正确，执行跳转
+                        val intent = Intent(this@MainActivity, SettingActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        // 密码错误，提示并重新显示对话框
+                        Toast.makeText(this@MainActivity, R.string.password_error, Toast.LENGTH_SHORT).show()
+                        // 可以重新调用设置按钮的点击事件，或者直接再次显示对话框
+                        setting_btn.performClick()
+                    }
+                }
+
+                // 取消按钮
+                setNegativeButton(R.string.cancel) { dialog, which ->
+                    dialog.dismiss() // 关闭对话框，不执行任何操作
+                }
+            }.create()
+
+            // 显示对话框
+            passwordDialog.show()
         }
     }
 

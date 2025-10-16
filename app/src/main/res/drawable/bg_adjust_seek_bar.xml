@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 背景轨道 -->
     <item
         android:id="@android:id/background"
         android:paddingBottom="4dp"
         android:paddingTop="4dp">
         <shape>
             <corners android:radius="50dp"/>
-            <solid android:color="#dddddd"/>
+            <solid android:color="#bbbbbb"/>
         </shape>
     </item>
-
+    <!-- 主进度条颜色 -->
     <item
         android:id="@android:id/progress"
         android:paddingBottom="4dp"
