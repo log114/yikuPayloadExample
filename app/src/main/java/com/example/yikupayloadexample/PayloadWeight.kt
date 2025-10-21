@@ -218,6 +218,7 @@ class PayloadWeight : Service() {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(15, waterBranchBtn)) {
                             waterBranchBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            lockBtn.performClick() // 默认锁定悬浮窗
                         }
                     }
                 }

@@ -80,6 +80,23 @@
 
     </CheckBox>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="@string/adjust_volume"
+        android:textColor="@color/white" />
+
+    <SeekBar
+        android:id="@+id/volume_seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:minHeight="2dp"
+        android:maxHeight="2dp"
+        android:progressDrawable="@drawable/bg_adjust_seek_bar"
+        android:thumb="@drawable/bg_seek_bar_thumb"
+        android:max="100"
+        android:progress="30" />
+
     <Button
         android:id="@+id/tts_play"
         android:layout_width="100dp"

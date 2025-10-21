@@ -947,7 +947,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     if(!isConnecting){
                         isConnecting = true
                         thread {
-                            Thread.sleep(10000)// 先等待10s，防止刚断连就重连，报错
+                            Thread.sleep(5000)// 先等待5s，防止刚断连就重连，报错
                             while (!throwerService.connect()) {
                                 Thread.sleep(1000)
                             }

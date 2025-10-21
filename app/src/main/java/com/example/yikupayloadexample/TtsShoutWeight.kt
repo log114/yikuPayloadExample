@@ -14,11 +14,12 @@ import android.widget.*
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.concurrent.thread
 
 
 class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr)  {
-    private val TAG = "RealTimeShoutWeight"
+    private val TAG = "TtsShoutWeight"
     private lateinit var mTemperature: TextView // 温度
     private lateinit var mStatus: TextView // 状态
     private lateinit var mTtsPlayBtn: Button;
@@ -29,36 +30,63 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private var sharedPreferences: SharedPreferences? = null
     private var isPlaying = false
     private var voice: Int = 0
+    private lateinit var mVolumeSeekBar: SeekBar // 音量滑块
+    private var isSettingVolume = false; // 是否正在设置音量
+    private var isGetCurrentVolume = false; // 是否返回了当前实际音量
+    private var currentVolume = 0; // 当前实际音量
+
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
 
     init {
         initView(context)
-        if(megaphoneService != null) {
-            setCallbacks()
-        }
-        else {
-            setCallbacksTask()
-        }
+        setCallbacksTask()
     }
 
     private fun setCallbacks() {
         megaphoneService!!.msgCallbacks += object : MsgCallback {
             override fun getId(): String {
-                return "RealTimeShoutWeightCallback"
+                return "TtsShoutWeightCallback"
             }
 
             override fun onMsg(msg: ByteArray) {
                 Log.i(TAG, "msg:${msg.toHex()}")
-                if (msg[0] != 0x8d.toByte()) {
+                if (msg.isNotEmpty() && msg[0] == 0x8d.toByte()) {
+                    if (msg[2] == 0x18.toByte()) {
+                        Log.i(TAG, "recv 0x18!")
+                        val handler = Handler(Looper.getMainLooper())
+                        // 喊话器温度状态
+                        handler.post {
+                            updateTemperatureStatus(msg)
+                        }
+                    }
                     return
                 }
-                if (msg[2] == 0x18.toByte()) {
-                    Log.i(TAG, "recv 0x18!")
-                    val handler = Handler(Looper.getMainLooper())
-                    // 喊话器温度状态
-                    handler.post {
-                        updateTemperatureStatus(msg)
+                if (msg.size > 6 && String(msg.slice(0..3).toByteArray()) == "[14]") {
+                    // 假设 msg 是一个 ByteArray
+                    val dataLength = msg.size - 2 - 4
+                    // 使用 Kotlin 的 sliceArray 方法提取子数组，更简洁
+                    val valueBytes = msg.sliceArray(5 until 5 + dataLength)
+
+                    // 将字节数组（ASCII字符）转换为字符串
+                    val hexString = valueBytes.toString(Charsets.US_ASCII)
+                    try {
+                        // 关键：使用字符串的 toInt(16) 方法进行十六进制解析
+                        val result = hexString.toInt(16).toByte()
+                        Log.i(TAG, "提取到的数值为: 0x${result.toString(16).padStart(2, '0')} (十进制${result.toUByte().toInt()})")
+                        isGetCurrentVolume = true
+                        currentVolume = result.toUByte().toInt()
+                        // 如果不是正在设置音量的时候，收单音量生效数据
+                        if(!isSettingVolume) {
+                            mVolumeSeekBar.post {
+                                mVolumeSeekBar.progress = currentVolume
+                                isGetCurrentVolume = false
+                            }
+                        }
+                    } catch (e: NumberFormatException) {
+                        Log.e(TAG, "十六进制数据格式错误！")
+                    } catch (e: IllegalArgumentException) {
+                        Log.e(TAG, "数值超出字节范围(0-255)！")
                     }
                 }
             }
@@ -70,7 +98,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         val timer = Timer();
         val task = object : TimerTask() {
             override fun run() {
-                if(megaphoneService != null) {
+                if(megaphoneService?.getIsConnected() == true || megaphoneService?.getIsConnectedYA3() == true) {
                     setCallbacks()
                     timer.cancel()
                 }
@@ -163,7 +191,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         }
     }
 
-    private fun initView(context: Context?) {
+    private fun initView(context: Context) {
         LayoutInflater.from(context).inflate(R.layout.tts_shout_weight, this, true)
         mTemperature = findViewById(R.id.temperature)
         mStatus = findViewById(R.id.status)
@@ -171,6 +199,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mTextView = this.findViewById(R.id.tts_text)
         mBtnManVoice = this.findViewById(R.id.btn_man_voice)
         mBtnWomanVoice = this.findViewById(R.id.btn_woman_voice)
+        mVolumeSeekBar = findViewById(R.id.volume_seek_bar)
         mBtnManVoice.setOnCheckedChangeListener{_, checked ->
             run {
                 if(checked){
@@ -201,7 +230,33 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 sendText2Vehicle(mTtsLoopPlaybackCheckbox.isChecked)
             }
         }
+        mVolumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            }
 
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                isSettingVolume = true
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if (seekBar != null) {
+                    megaphoneService?.setVolume(seekBar.progress)
+                    Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
+                    thread {
+                        Thread.sleep(500)
+                        mVolumeSeekBar.post {
+                            if (isGetCurrentVolume && currentVolume < seekBar.progress) {
+                                seekBar.progress = currentVolume
+                                isGetCurrentVolume = false
+                                showToast(context.resources.getString(R.string.high_temperature_protection) + currentVolume + "%")
+                            }
+                            isSettingVolume = false
+                        }
+                    }
+                }
+            }
+
+        })
     }
 
     fun ByteArray.toHex(): String =
@@ -211,5 +266,12 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         super.onDraw(canvas)
     }
 
+    private fun showToast(msg: String) {
+        Toast.makeText(
+            context,
+            msg,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
 
 }

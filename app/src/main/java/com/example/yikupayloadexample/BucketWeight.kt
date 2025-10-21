@@ -219,13 +219,14 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     // 尝试重连
                     thread {
                         if(!isFirstConnect) {
-                            Thread.sleep(10000)
+                            Thread.sleep(5000)
                         }
                         isFirstConnect = false
                         while (!bucketService.connect()) {
                             Thread.sleep(1000)
                         }
                         isConnecting = false
+                        updateTime = Date().time
                     }
                 }
             }
