@@ -113,10 +113,11 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                         // 如果不是正在设置音量的时候，收单音量生效数据
                         if(!isSettingVolume) {
                             mVolumeSeekBar.post {
-                                if (currentVolume < mVolumeSeekBar.progress) {
-                                    mVolumeSeekBar.progress = currentVolume
-                                    showToast(context.resources.getString(R.string.high_temperature_protection) + currentVolume + "%")
-                                }
+//                                if (currentVolume < mVolumeSeekBar.progress) {
+//                                    mVolumeSeekBar.progress = currentVolume
+//                                    showToast(context.resources.getString(R.string.high_temperature_protection) + currentVolume + "%")
+//                                }
+                                mVolumeSeekBar.progress = currentVolume
                                 isGetCurrentVolume = false
                             }
                         }
