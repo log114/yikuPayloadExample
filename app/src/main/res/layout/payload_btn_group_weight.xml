@@ -195,6 +195,19 @@
         app:layout_constraintStart_toEndOf="@id/bucketBtn"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
+    <!--品灵探照灯-->
+    <ImageView
+        android:id="@+id/light_pl_Btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/yk_shout_btn"
+        android:contentDescription="@string/light"
+        android:src="@drawable/light"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/waterBranchBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/emptyText"

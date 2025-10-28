@@ -56,11 +56,11 @@
     <string name="start_listening">开始收音</string>
     <string name="stop_listening">停止收音</string>
     <string name="setting">设置</string>
-    <string name="ShoutHost_name">喊话器ip:</string>
-    <string name="LightHost_name">探照灯ip:</string>
-    <string name="CacheNetHost_name">捕捉网ip:</string>
-    <string name="EmitterHost_name">38毫米ip:</string>
-    <string name="YA3Host_name">四合一ip:</string>
+    <string name="ShoutHost_name">喊话器IP:</string>
+    <string name="LightHost_name">探照灯IP:</string>
+    <string name="CacheNetHost_name">捕捉网IP:</string>
+    <string name="EmitterHost_name">38毫米IP:</string>
+    <string name="YA3Host_name">四合一IP:</string>
     <string name="save_name">保存</string>
     <string name="not_supported_for_pitch_control">该版本设备不支持app控制俯仰</string>
     <string name="host_not_initialized">host未初始化</string>
@@ -95,8 +95,8 @@
     <string name="stop">停止</string>
     <string name="emergency_stop">紧急制动</string>
     <string name="operation_failed">操作失败！</string>
-    <string name="ThrowerHost_name">抛投器ip:</string>
-    <string name="SlowDescentDeviceHost_name">缓降器ip:</string>
+    <string name="ThrowerHost_name">抛投器IP:</string>
+    <string name="SlowDescentDeviceHost_name">缓降器IP:</string>
     <string name="stuck">卡住了！</string>
     <string name="short_position">空仓</string>
     <string name="launching">发射中</string>
@@ -149,7 +149,7 @@
     <string name="isUpdate">警告：点击确定之后会擦除现有程序进入升级流程，升级完成之前将无法使用负载，请务必在了解升级流程的情况下进行升级！</string>
     <string name="grab">抓取</string>
     <string name="release">松开</string>
-    <string name="GripperHost_name">机械爪ip:</string>
+    <string name="GripperHost_name">机械爪IP:</string>
     <string name="emergency_brake">紧急制动</string>
     <string name="cannot_detonate_uncharged">无法引爆，未充电</string>
     <string name="cannot_detonate_notAllow">无法引爆，未允许</string>
@@ -217,4 +217,10 @@
     <string name="password_verification">密码验证</string>
     <string name="please_enter_the_access_password">请输入访问密码</string>
     <string name="password_error">密码错误，请重试！</string>
+    <string name="flashing_frequency">闪烁频率：</string>
+    <string name="flashing">爆闪：</string>
+    <string name="rotating_speed">转动速度</string>
+    <string name="to_center">回中</string>
+    <string name="downward">向下</string>
+    <string name="PL_LightHost_name">"品灵探照灯IP: "</string>
 </resources>

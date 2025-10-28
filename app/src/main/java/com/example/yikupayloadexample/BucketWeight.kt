@@ -227,6 +227,9 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         }
                         isConnecting = false
                         updateTime = Date().time
+                        handler.post {
+                            connectText.setText(R.string.connection_status_connected)
+                        }
                     }
                 }
             }

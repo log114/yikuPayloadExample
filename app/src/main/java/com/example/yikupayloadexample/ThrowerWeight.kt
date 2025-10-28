@@ -918,6 +918,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     // 定时器，判断消息接收情况
     private fun getMessageTime() {
         val timer = Timer();
+        val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask() {
             override fun run() {
                 // 已连接
@@ -926,7 +927,6 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     throwerService.connectionTesting()
                     // 3秒没收到信息，显示未连接
                     if (Date().time - updateTime > 3000) {
-                        val handler = Handler(Looper.getMainLooper())
                         handler.post {
                             mThrowerAllowDetonationSwitch_1.isChecked = false
                             mThrowerAllowDetonationSwitch_2.isChecked = false
@@ -953,6 +953,9 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             }
                             isConnecting = false
                             updateTime = Date().time
+                            handler.post {
+                                mConnectState.setText(R.string.connection_status_connected)
+                            }
                         }
                     }
                 }

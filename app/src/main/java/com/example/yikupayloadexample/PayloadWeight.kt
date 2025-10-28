@@ -47,6 +47,7 @@ class PayloadWeight : Service() {
     private lateinit var waterGunWeight: WaterGunWeight
     private lateinit var bucketWeight: BucketWeight
     private lateinit var waterBranchWeight: WaterBranchWeight
+    private lateinit var plLightweight: PL_LightWeight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -67,6 +68,7 @@ class PayloadWeight : Service() {
     private lateinit var waterGunBtn: ImageView
     private lateinit var bucketBtn: ImageView
     private lateinit var waterBranchBtn: ImageView
+    private lateinit var plLightBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
     private var isVideoWindowInit = false
@@ -95,6 +97,7 @@ class PayloadWeight : Service() {
         waterGunBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         bucketBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         waterBranchBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        plLightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
     }
 
     private fun openFloatingWindow() {
@@ -121,6 +124,7 @@ class PayloadWeight : Service() {
                     waterGunBtn = it.findViewById(R.id.waterGunBtn)
                     bucketBtn = it.findViewById(R.id.bucketBtn)
                     waterBranchBtn = it.findViewById(R.id.waterBranchBtn)
+                    plLightBtn = it.findViewById(R.id.light_pl_Btn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -221,6 +225,12 @@ class PayloadWeight : Service() {
                             lockBtn.performClick() // 默认锁定悬浮窗
                         }
                     }
+                    plLightBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(16, plLightBtn)) {
+                            plLightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                        }
+                    }
                 }
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -294,6 +304,12 @@ class PayloadWeight : Service() {
         }
         try {
             if (mShoutView.visibility == VISIBLE) {
+                if (type == 16) {
+                    opened = 16
+                    mShoutViewContent.removeAllViews()
+                    mShoutViewContent.addView(plLightweight)
+                    EasyFloat.show("yk_payload_weight_op")
+                }
                 if (type == 15) {
                     opened = 15
                     mShoutViewContent.removeAllViews()
@@ -501,6 +517,7 @@ class PayloadWeight : Service() {
         waterGunWeight = WaterGunWeight(this)
         bucketWeight = BucketWeight(this)
         waterBranchWeight = WaterBranchWeight(this)
+        plLightweight = PL_LightWeight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -651,6 +668,7 @@ class PayloadWeight : Service() {
                 val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 清洗水枪
                 val isConnectedBucket = bucketWeight.bucketService.getIsConnected(); // 吊桶
                 val isConnectedWaterBranch = waterBranchWeight.waterBranchService.getIsConnected(); // 消防水枪
+                val isConnectedPLLight = plLightweight.plLightService.getIsConnected(); // 品灵探照灯
 
 //                val isConnectedMegaphone = true;// 喊话器
 //                val isConnectedYA3 = true; // 四合一
@@ -665,6 +683,7 @@ class PayloadWeight : Service() {
 //                val isConnectedWaterGun = true; // 清洗水枪
 //                val isConnectedBucket = true; // 吊桶
 //                val isConnectedWaterBranch = true; // 消防水枪
+//                val isConnectedPLLight = true; // 品灵探照灯
                     // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示
@@ -762,6 +781,13 @@ class PayloadWeight : Service() {
                         mRecordBtn.visibility = VISIBLE;
                         // 灯光、红蓝
                         mLightBtn.visibility = VISIBLE;
+                        emptyText.visibility = View.GONE;
+                    }
+                }
+                // 品灵探照灯
+                if(isConnectedPLLight){
+                    handler.post {
+                        plLightBtn.visibility = VISIBLE;
                         emptyText.visibility = View.GONE;
                     }
                 }

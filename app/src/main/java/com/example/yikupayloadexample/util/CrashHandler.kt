@@ -31,6 +31,7 @@ class CrashHandler(private val context: Context) : Thread.UncaughtExceptionHandl
         val fileName = "log_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())}.txt"
         val logDir = context.getExternalFilesDir("crash_logs") ?: context.filesDir.resolve("crash_logs")
         logDir.mkdirs()
+        Log.d("CrashHandler", "崩溃日志保存目录: ${logDir.absolutePath}")
         File(logDir, fileName).writeText(log)
 
         // 定期清理旧日志（例如保留最近7天）
