@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/lightConnect"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="@string/connection_status_notconnected"
+        android:textColor="@color/white" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:visibility="visible">
+        <Switch
+            android:id="@+id/lightSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LED："
+            android:textColor="@color/white"
+            android:trackTint="@drawable/switch_track_color"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:gravity="end">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="start"
+                android:text="@string/temperature"
+                android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/temperatureText"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="start"
+                android:text="0°C"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/brightness_adjustment"
+        android:textColor="@color/white" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <SeekBar
+            android:id="@+id/luminanceSeekbar"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:minHeight="2dp"
+            android:maxHeight="2dp"
+            android:progressDrawable="@drawable/bg_adjust_seek_bar"
+            android:thumb="@drawable/bg_seek_bar_thumb"
+            android:max="100"
+            android:min="0"
+            android:progress="0" />
+        <TextView
+            android:id="@+id/luminanceText"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:gravity="start"
+            android:text="0%"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+        <Switch
+            android:id="@+id/flashingSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flashing"
+            android:textColor="@color/white"
+            android:trackTint="@drawable/switch_track_color"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="start"
+            android:text="@string/flashing_frequency"
+            android:textColor="@color/white" />
+        <Spinner
+            android:id="@+id/flashingFrequencySpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/spinner_bg_custom"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/rotating_speed"
+        android:textColor="@color/white" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <SeekBar
+            android:id="@+id/rotatingSpeedSeekbar"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:minHeight="2dp"
+            android:maxHeight="2dp"
+            android:progressDrawable="@drawable/bg_adjust_seek_bar"
+            android:thumb="@drawable/bg_seek_bar_thumb"
+            android:max="90"
+            android:min="0"
+            android:progress="30" />
+        <TextView
+            android:id="@+id/rotatingSpeedText"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:gravity="start"
+            android:text="30°/s"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+        <com.example.yikupayloadexample.component.RoundMenuView
+            android:id="@+id/ptzControl"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="8dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/toCenterBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/play_btn"
+                android:text="@string/to_center"
+                android:textColor="@color/white" />
+            <Button
+                android:id="@+id/downwardBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/play_btn"
+                android:text="@string/downward"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

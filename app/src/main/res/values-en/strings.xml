@@ -217,4 +217,10 @@
     <string name="password_verification">Password verification</string>
     <string name="please_enter_the_access_password">Please enter the access password</string>
     <string name="password_error">Password error, please try again!</string>
+    <string name="flashing_frequency">"frequency: "</string>
+    <string name="flashing">"flashing: "</string>
+    <string name="rotating_speed">rotating speed</string>
+    <string name="to_center">to center</string>
+    <string name="downward">downward</string>
+    <string name="PL_LightHost_name">"PL_LightHost IP: "</string>
 </resources>

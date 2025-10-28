@@ -13,13 +13,20 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 /**
  * 仿遥控器上下左右ok圆形菜单
  */
 
 public class RoundMenuView extends View {
+    // 按键按下监听器
+    public interface OnKeyDownListener {
+        void onKeyDown(RoundMenuView v);
+    }
 
+    // 按键抬起监听器
+    public interface OnKeyUpListener {
+        void onKeyUp(RoundMenuView v);
+    }
     /**
      * 变量
      */
@@ -166,6 +173,12 @@ public class RoundMenuView extends View {
                     //点击了外面
                     onClickState = -2;
                 }
+                if(onClickState >= 0 && onClickState < roundMenus.size()) {
+                    if(roundMenus.get(onClickState).onKeyDownListener != null) {
+                        isLongPress = false;
+                        roundMenus.get(onClickState).onKeyDownListener.onKeyDown(this);
+                    }
+                }
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
@@ -182,6 +195,11 @@ public class RoundMenuView extends View {
                     }
                 }
                 stopLongPressOperation();
+                if(onClickState >= 0 && onClickState < roundMenus.size()) {
+                    if(roundMenus.get(onClickState).onKeyUpListener != null) {
+                        roundMenus.get(onClickState).onKeyUpListener.onKeyUp(this);
+                    }
+                }
                 onClickState = -2;
                 invalidate();
                 break;
@@ -293,5 +311,7 @@ public class RoundMenuView extends View {
         public Bitmap icon;//菜单的图片
         public OnClickListener onClickListener;//点击监听
         public double iconDistance = 0.63;//图标距离中心点的距离
+        public OnKeyDownListener onKeyDownListener; // 按键按下监听
+        public OnKeyUpListener onKeyUpListener; // 按键抬起监听
     }
 }

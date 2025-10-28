@@ -12,6 +12,7 @@ import com.yiku.yikupayloadSDK.util.EmitterHost
 import com.yiku.yikupayloadSDK.util.ExtinguisherHost
 import com.yiku.yikupayloadSDK.util.GripperHost
 import com.yiku.yikupayloadSDK.util.LightHost
+import com.yiku.yikupayloadSDK.util.PLLightHost
 import com.yiku.yikupayloadSDK.util.ResqmeHost
 import com.yiku.yikupayloadSDK.util.ShoutHost
 import com.yiku.yikupayloadSDK.util.SlowDescentDeviceHost
@@ -26,7 +27,6 @@ class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.setting)
-
 
         val save = findViewById<Button>(R.id.save)
         var shout  = findViewById<EditText>(R.id.ShoutHostIP)
@@ -43,6 +43,7 @@ class SettingActivity : AppCompatActivity() {
         val waterGun = findViewById<EditText>(R.id.WaterGunHostIP)
         val bucket = findViewById<EditText>(R.id.BucketHostIP)
         val waterBranch = findViewById<EditText>(R.id.WaterBranchHostIP)
+        val PL_Light = findViewById<EditText>(R.id.PL_LightHostIP)
 
         //        获取了 SharedPreferences 对象
 //        preferences = getSharedPreferences("myPreferences", MODE_PRIVATE)
@@ -60,6 +61,7 @@ class SettingActivity : AppCompatActivity() {
         val valueWaterGunHost = preferences?.getString("WaterGunHost", "")//水枪
         val valueBucketHost = preferences?.getString("BucketHost", "")// 吊桶
         val valueWaterBranchHost = preferences?.getString("WaterBranchHost", "")// 消防水枪
+        val valuePLLightHost = preferences?.getString("PL_LightHost", "")// 品灵探照灯
         // 当未设置过ip时，ip显示为Host.kt里面的值，否则显示设置后的值
         if (valueShoutHost == "") {
             shout.setText(ShoutHost)
@@ -140,6 +142,12 @@ class SettingActivity : AppCompatActivity() {
             waterBranch.setText(valueWaterBranchHost)
         }
 
+        if (valuePLLightHost == "") {
+            PL_Light.setText(PLLightHost)
+        } else {
+            PL_Light.setText(valuePLLightHost)
+        }
+
         save.setOnClickListener {
             val textShoutHost = shout.text.toString()
             val textLightHost = light.text.toString()
@@ -154,6 +162,7 @@ class SettingActivity : AppCompatActivity() {
             val textWaterGunHost = waterGun.text.toString()
             val textBucketHost = bucket.text.toString()
             val textWaterBranchHost = waterBranch.text.toString()
+            val textPL_LightHost = PL_Light.text.toString()
             // 将修改后的值存储到 SharedPreferences 中
             val editer = preferences!!.edit()
             editer.putString("ShoutHost", textShoutHost)
@@ -169,6 +178,7 @@ class SettingActivity : AppCompatActivity() {
             editer.putString("WaterGunHost", textWaterGunHost)
             editer.putString("BucketHost", textBucketHost)
             editer.putString("WaterBranchHost", textWaterBranchHost)
+            editer.putString("PL_LightHost", textPL_LightHost)
             editer.apply()
             finish();  //直接关闭当前页面
         }

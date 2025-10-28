@@ -158,6 +158,9 @@ class ExtinguisherWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
                         }
                         isConnecting = false
                         updateTime = Date().time
+                        handler.post {
+                            connectText.setText(R.string.connection_status_connected)
+                        }
                     }
                 }
             }
