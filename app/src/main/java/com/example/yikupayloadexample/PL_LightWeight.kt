@@ -29,7 +29,7 @@ class PL_LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private val TAG = "PL_LightWeight"
     var plLightService: PL_LightService = PL_LightService()
     private lateinit var mLightSwitch: Switch
-    private lateinit var mTemperatureText: TextView
+//    private lateinit var mTemperatureText: TextView
     private lateinit var mLuminanceSeekbar: SeekBar
     private var rotatingSpeed = 30
     private lateinit var mLuminanceText: TextView
@@ -62,33 +62,33 @@ class PL_LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
         override fun onMsg(msg: ByteArray) {
             Log.i(TAG, "recv: ${msg.asList()}")
-            if(msg.size > 3) {
-                if (msg[0] == 0x55.toByte() && msg[1] == 0xAA.toByte() && msg[2] == 0xDC.toByte()) {
-                    Log.i(TAG, "包头正确")
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post {
-                        // 灯定时上报状态
-                        if (msg[4] == 0x2D.toByte()) {
-                            if (isFirstInit) {
-                                isFirstInit = false
-                                if (msg[5] == 0x0F.toByte()) {
-                                    mLightSwitch.isChecked = true
-                                } else if (msg[5] == 0x1F.toByte()) {
-                                    mLightSwitch.isChecked = false
-                                }
-                                mLuminanceSeekbar.progress = msg[6].toInt()
-                            }
-                            mTemperatureText.text = "${msg[7].toInt()}°C"
-                            when (msg[8]) {
-                                0x02.toByte() -> mFlashingFrequencySpinner.setSelection(0)
-                                0x05.toByte() -> mFlashingFrequencySpinner.setSelection(1)
-                                0x0A.toByte() -> mFlashingFrequencySpinner.setSelection(2)
-                                0x0F.toByte() -> mFlashingFrequencySpinner.setSelection(3)
-                            }
-                        }
-                    }
-                }
-            }
+//            if(msg.size > 3) {
+//                if (msg[0] == 0x55.toByte() && msg[1] == 0xAA.toByte() && msg[2] == 0xDC.toByte()) {
+//                    Log.i(TAG, "包头正确")
+//                    val handler = Handler(Looper.getMainLooper())
+//                    handler.post {
+//                        // 灯定时上报状态
+//                        if (msg[4] == 0x2D.toByte()) {
+//                            if (isFirstInit) {
+//                                isFirstInit = false
+//                                if (msg[5] == 0x0F.toByte()) {
+//                                    mLightSwitch.isChecked = true
+//                                } else if (msg[5] == 0x1F.toByte()) {
+//                                    mLightSwitch.isChecked = false
+//                                }
+//                                mLuminanceSeekbar.progress = msg[6].toInt()
+//                            }
+//                            mTemperatureText.text = "${msg[7].toInt()}°C"
+//                            when (msg[8]) {
+//                                0x02.toByte() -> mFlashingFrequencySpinner.setSelection(0)
+//                                0x05.toByte() -> mFlashingFrequencySpinner.setSelection(1)
+//                                0x0A.toByte() -> mFlashingFrequencySpinner.setSelection(2)
+//                                0x0F.toByte() -> mFlashingFrequencySpinner.setSelection(3)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
 
     }
@@ -96,7 +96,7 @@ class PL_LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private fun initView(context: Context?){
         LayoutInflater.from(context).inflate(R.layout.light_weight_pl, this, true)
         mLightSwitch = findViewById<Switch>(R.id.lightSwitch)
-        mTemperatureText = findViewById<TextView>(R.id.temperatureText)
+//        mTemperatureText = findViewById<TextView>(R.id.temperatureText)
         mLuminanceSeekbar = findViewById<SeekBar>(R.id.luminanceSeekbar)
         mLuminanceText = findViewById<TextView>(R.id.luminanceText)
         mFlashingFrequencySpinner = findViewById<Spinner>(R.id.flashingFrequencySpinner)

@@ -16,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:visibility="visible">
         <Switch
@@ -27,26 +26,26 @@
             android:textColor="@color/white"
             android:trackTint="@drawable/switch_track_color"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:gravity="end">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:gravity="start"
-                android:text="@string/temperature"
-                android:textColor="@color/white" />
-            <TextView
-                android:id="@+id/temperatureText"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:gravity="start"
-                android:text="0°C"
-                android:textColor="@color/white" />
-        </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="end">-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="24dp"-->
+<!--                android:gravity="start"-->
+<!--                android:text="@string/temperature"-->
+<!--                android:textColor="@color/white" />-->
+<!--            <TextView-->
+<!--                android:id="@+id/temperatureText"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="24dp"-->
+<!--                android:gravity="start"-->
+<!--                android:text="0°C"-->
+<!--                android:textColor="@color/white" />-->
+<!--        </LinearLayout>-->
     </LinearLayout>
 
     <TextView

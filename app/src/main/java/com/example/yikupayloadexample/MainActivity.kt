@@ -29,21 +29,22 @@ import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
 import com.yiku.yikupayloadSDK.service.MegaphoneService
 import android.text.InputType
+import com.example.yikupayloadexample.util.AppUpdateManager
+import com.example.yikupayloadexample.util.VersionData
+import java.io.File
 
 var megaphoneService: BaseMegaphoneService? = null
 var preferences: SharedPreferences? = null
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var appUpdateManager: AppUpdateManager
     private var mHandler: Handler? = null
-
-
     private val missingPermission: MutableList<String> = ArrayList()
-
     private lateinit var mOpenH16View: ImageView
-
     private var conn: ServiceConnection? = null
     private var intent: Intent? = null
+
     override fun onStop() {
         super.onStop()
         Log.w(TAG, "main onStop....")
@@ -72,8 +73,6 @@ class MainActivity : AppCompatActivity() {
         mOpenH16View = findViewById(R.id.open_h16_view)
         mOpenH16View.setOnClickListener {
             val powerManager = this.getSystemService(POWER_SERVICE) as PowerManager
-//            Log.i(TAG, "省电模式：${powerManager.isPowerSaveMode}")
-//            Log.i(TAG, "省电模式，机型：${Build.MANUFACTURER}")
             if(powerManager.isPowerSaveMode){
                 showToast(R.string.turn_off_power_saving_mode)
                 return@setOnClickListener;
@@ -173,6 +172,54 @@ class MainActivity : AppCompatActivity() {
             // 显示对话框
             passwordDialog.show()
         }
+
+        // 初始化版本更新管理器
+        appUpdateManager = AppUpdateManager.with(this)
+            .setBaseUrl("https://downloads.zzykhk.com/")
+            .setApiPath("payloadAppUpdate/api/version")
+            .build()
+            .setOnUpdateListener(object : AppUpdateManager.OnUpdateListener {
+                override fun onUpdateAvailable(versionData: VersionData) {
+                    // 可以在这里处理更新可用时的逻辑
+                    Log.d("AppUpdate", "发现新版本: ${versionData.version}")
+                }
+
+                override fun onUpdateCheckFailed(error: String) {
+                    Log.e("AppUpdate", "检查更新失败: $error")
+                }
+
+                override fun onDownloadStarted() {
+                    // 显示下载进度条等
+                    Toast.makeText(this@MainActivity, "开始下载...", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onDownloadProgress(progress: Int) {
+                    // 更新下载进度
+                    Log.d("AppUpdate", "下载进度: $progress%")
+                }
+
+                override fun onDownloadCompleted(file: File) {
+                    Log.d("AppUpdate", "下载完成: ${file.absolutePath}")
+                }
+
+                override fun onDownloadFailed(error: String) {
+                    Log.e("AppUpdate", "下载失败: $error")
+                }
+
+                override fun onInstallStarted() {
+                    Toast.makeText(this@MainActivity, "开始安装...", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onInstallFailed(error: String) {
+                    Log.e("AppUpdate", "安装失败: $error")
+                }
+            })
+
+        // 检查版本更新
+        checkVersionUpdate()
+    }
+    private fun checkVersionUpdate() {
+        appUpdateManager.checkVersionUpdate()
     }
 
     /**

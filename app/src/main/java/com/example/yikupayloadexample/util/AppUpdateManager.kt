@@ -9,6 +9,7 @@ import android.os.Environment
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import com.example.yikupayloadexample.R
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import kotlinx.coroutines.delay
 
 class AppUpdateManager private constructor(
     private val context: Context,
@@ -28,6 +30,9 @@ class AppUpdateManager private constructor(
 ) {
 
     private lateinit var apiService: ApiService
+    private lateinit var notificationHelper: NotificationHelper
+    private lateinit var notificationBuilder: NotificationCompat.Builder
+    private var isDownloading = false
     private var downloadUrl: String = ""
     private var onUpdateListener: OnUpdateListener? = null
 
@@ -72,8 +77,14 @@ class AppUpdateManager private constructor(
         return this
     }
 
-    fun checkVersionUpdate() {
+    private fun initComponents() {
         initRetrofit()
+        notificationHelper = NotificationHelper(context)
+        notificationBuilder = notificationHelper.createDownloadNotification()
+    }
+
+    fun checkVersionUpdate() {
+        initComponents()
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -83,8 +94,15 @@ class AppUpdateManager private constructor(
                         val versionResponse = response.body()
                         if (versionResponse?.result == "success") {
                             versionResponse.data?.let { versionData ->
-                                onUpdateListener?.onUpdateAvailable(versionData)
-                                showUpdateDialog(versionData)
+                                val currentVersion = getCurrentVersionName()
+
+                                if (isNewVersionAvailable(versionData.version, currentVersion)) {
+                                    onUpdateListener?.onUpdateAvailable(versionData)
+                                    showUpdateDialog(versionData)
+                                } else {
+                                    onUpdateListener?.onUpdateCheckFailed("当前已是最新版本")
+                                    Toast.makeText(context, "当前已是最新版本", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         } else {
                             val errorMessage = versionResponse?.message ?: "检查更新失败"
@@ -125,6 +143,43 @@ class AppUpdateManager private constructor(
         apiService = retrofit.create(ApiService::class.java)
     }
 
+    /**
+     * 获取当前应用的版本名称
+     */
+    private fun getCurrentVersionName(): String {
+        return try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            packageInfo.versionName
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "1.0.0"
+        }
+    }
+
+    /**
+     * 比较版本号，判断新版本是否比当前版本新
+     */
+    private fun isNewVersionAvailable(newVersion: String, currentVersion: String): Boolean {
+        return try {
+            val newParts = newVersion.split(".").map { it.toInt() }
+            val currentParts = currentVersion.split(".").map { it.toInt() }
+
+            for (i in 0 until maxOf(newParts.size, currentParts.size)) {
+                val newPart = newParts.getOrElse(i) { 0 }
+                val currentPart = currentParts.getOrElse(i) { 0 }
+
+                when {
+                    newPart > currentPart -> return true
+                    newPart < currentPart -> return false
+                }
+            }
+            false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
     private fun showUpdateDialog(versionData: VersionData) {
         val activity = context as? Activity ?: return
 
@@ -160,6 +215,11 @@ class AppUpdateManager private constructor(
     }
 
     private fun downloadAndInstallApk() {
+        isDownloading = true
+
+        // 显示初始下载通知 - 修正这里，使用notificationHelper
+        notificationHelper.showInitialNotification(notificationBuilder)
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val downloadDir = File(
@@ -187,35 +247,57 @@ class AppUpdateManager private constructor(
                                 val buffer = ByteArray(8192)
                                 var bytesRead: Int
 
-                                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                                while (inputStream.read(buffer).also { bytesRead = it } != -1 && isDownloading) {
                                     outputStream.write(buffer, 0, bytesRead)
                                     totalBytesRead += bytesRead
 
-                                    // 更新下载进度
                                     if (contentLength > 0) {
                                         val progress = (totalBytesRead * 100 / contentLength).toInt()
-                                        onUpdateListener?.onDownloadProgress(progress)
+                                        // 确保进度不超过 100%
+                                        val safeProgress = progress.coerceAtMost(99)
+                                        // 更新通知栏进度
+                                        withContext(Dispatchers.Main) {
+                                            notificationHelper.updateDownloadProgress(safeProgress, notificationBuilder)
+                                        }
+
+                                        // 回调进度
+                                        onUpdateListener?.onDownloadProgress(safeProgress)
                                     }
                                 }
                             }
                         }
 
-                        withContext(Dispatchers.Main) {
-                            onUpdateListener?.onDownloadCompleted(outputFile)
-                            installApk(outputFile)
+                        if (isDownloading) {
+                            withContext(Dispatchers.Main) {
+                                // 先更新到 100%
+                                notificationHelper.updateDownloadProgress(100, notificationBuilder)
+                                onUpdateListener?.onDownloadProgress(100)
+
+                                delay(300) // 延迟 300ms 让用户看到 100%
+
+                                notificationHelper.showDownloadCompleteNotification(outputFile)
+                                onUpdateListener?.onDownloadCompleted(outputFile)
+                                installApk(outputFile)
+                            }
                         }
                     }
                 } else {
                     withContext(Dispatchers.Main) {
+                        notificationHelper.showDownloadFailedNotification()
                         onUpdateListener?.onDownloadFailed("下载失败")
                         Toast.makeText(context, "下载失败", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    onUpdateListener?.onDownloadFailed("下载错误: ${e.message}")
-                    Toast.makeText(context, "下载错误: ${e.message}", Toast.LENGTH_SHORT).show()
+                    if (isDownloading) {
+                        notificationHelper.showDownloadFailedNotification()
+                        onUpdateListener?.onDownloadFailed("下载错误: ${e.message}")
+                        Toast.makeText(context, "下载错误: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
                 }
+            } finally {
+                isDownloading = false
             }
         }
     }
@@ -243,5 +325,10 @@ class AppUpdateManager private constructor(
             onUpdateListener?.onInstallFailed("安装失败: ${e.message}")
             Toast.makeText(context, "安装失败: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun cancelDownload() {
+        isDownloading = false
+        notificationHelper.cancelNotification()
     }
 }
