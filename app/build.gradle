@@ -11,7 +11,7 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 1
-        versionName "4.4.0"
+        versionName "4.3.12"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -100,9 +100,6 @@ dependencies {
     implementation 'io.github.h07000223:flycoTabLayout:3.0.0'
     implementation 'com.github.princekin-f:EasyFloat:2.0.4'
     implementation files('libs/fpvlibrary-v1.0.3.aar')
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
     implementation 'com.alibaba:fastjson:1.2.83'
     implementation 'io.github.controlwear:virtualjoystick:1.10.1'

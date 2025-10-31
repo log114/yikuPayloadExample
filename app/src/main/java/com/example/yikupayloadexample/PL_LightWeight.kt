@@ -159,7 +159,7 @@ class PL_LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         }
         // 向下
         mDownwardBtn.setOnClickListener {
-            plLightService.PTZCtrlByAngle(0, -90, 0)
+            plLightService.PTZCtrlByAngle(0, 90, 0)
         }
         setConnectState()
     }
