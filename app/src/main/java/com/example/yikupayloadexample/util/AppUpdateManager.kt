@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -22,6 +23,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import kotlinx.coroutines.delay
+import java.util.Locale
 
 class AppUpdateManager private constructor(
     private val context: Context,
@@ -100,24 +102,23 @@ class AppUpdateManager private constructor(
                                     onUpdateListener?.onUpdateAvailable(versionData)
                                     showUpdateDialog(versionData)
                                 } else {
-                                    onUpdateListener?.onUpdateCheckFailed("当前已是最新版本")
-                                    Toast.makeText(context, "当前已是最新版本", Toast.LENGTH_SHORT).show()
+                                    onUpdateListener?.onUpdateCheckFailed(context.resources.getString(R.string.is_latest_version))
                                 }
                             }
                         } else {
-                            val errorMessage = versionResponse?.message ?: "检查更新失败"
+                            val errorMessage = versionResponse?.message ?: context.resources.getString(R.string.failed_to_check_updates)
                             onUpdateListener?.onUpdateCheckFailed(errorMessage)
                             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        val errorMessage = "网络请求失败: ${response.code()}"
+                        val errorMessage = "${context.resources.getString(R.string.network_request_failed)}: ${response.code()}"
                         onUpdateListener?.onUpdateCheckFailed(errorMessage)
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    val errorMessage = "网络错误: ${e.message}"
+                    val errorMessage = "${context.resources.getString(R.string.network_error)}: ${e.message}"
                     onUpdateListener?.onUpdateCheckFailed(errorMessage)
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                 }
@@ -194,9 +195,15 @@ class AppUpdateManager private constructor(
             val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
             val btnUpdate = dialog.findViewById<Button>(R.id.btnUpdate)
 
-            tvVersion.text = "版本号：${versionData.version}"
-            tvReleaseDate.text = "发布日期：${versionData.releaseDate}"
-            tvDescription.text = versionData.description.replace("\\r\\n", "\n")
+            tvVersion.text = "${context.resources.getString(R.string.version_number)}${versionData.version}"
+            tvReleaseDate.text = "${context.resources.getString(R.string.release_date)}${versionData.releaseDate}"
+            val languageCode = checkSystemLanguage()
+            if(languageCode == "zh") {
+                tvDescription.text = versionData.descriptionZH.replace("\\r\\n", "\n")
+            }
+            else {
+                tvDescription.text = versionData.descriptionEN.replace("\\r\\n", "\n")
+            }
 
             downloadUrl = versionData.downloadUrl
 
@@ -230,7 +237,7 @@ class AppUpdateManager private constructor(
                     downloadDir.mkdirs()
                 }
 
-                val fileName = "智慧负载v${System.currentTimeMillis()}.apk"
+                val fileName = "${context.resources.getString(R.string.app_name)}v${System.currentTimeMillis()}.apk"
                 val outputFile = File(downloadDir, fileName)
 
                 val client = OkHttpClient()
@@ -284,16 +291,16 @@ class AppUpdateManager private constructor(
                 } else {
                     withContext(Dispatchers.Main) {
                         notificationHelper.showDownloadFailedNotification()
-                        onUpdateListener?.onDownloadFailed("下载失败")
-                        Toast.makeText(context, "下载失败", Toast.LENGTH_SHORT).show()
+                        onUpdateListener?.onDownloadFailed(context.resources.getString(R.string.download_failed))
+                        Toast.makeText(context, R.string.download_failed, Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     if (isDownloading) {
                         notificationHelper.showDownloadFailedNotification()
-                        onUpdateListener?.onDownloadFailed("下载错误: ${e.message}")
-                        Toast.makeText(context, "下载错误: ${e.message}", Toast.LENGTH_SHORT).show()
+                        onUpdateListener?.onDownloadFailed("${context.resources.getString(R.string.download_error)}: ${e.message}")
+                        Toast.makeText(context, "${context.resources.getString(R.string.download_error)}: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
             } finally {
@@ -322,13 +329,30 @@ class AppUpdateManager private constructor(
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             context.startActivity(intent)
         } catch (e: Exception) {
-            onUpdateListener?.onInstallFailed("安装失败: ${e.message}")
-            Toast.makeText(context, "安装失败: ${e.message}", Toast.LENGTH_SHORT).show()
+            onUpdateListener?.onInstallFailed("${context.resources.getString(R.string.installation_failed)}: ${e.message}")
+            Toast.makeText(context, "${context.resources.getString(R.string.installation_failed)}: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
     fun cancelDownload() {
         isDownloading = false
         notificationHelper.cancelNotification()
+    }
+
+    /**
+     * 判断当前系统语言的工具函数。
+     *
+     * @return 返回一个字符串描述当前语言：
+     *         "Chinese" - 中文
+     *         "English" - 英文
+     *         "Other" - 其他语言
+     */
+    fun checkSystemLanguage(): String {
+        // 获取当前系统的默认Locale
+        val currentLocale = Locale.getDefault()
+        // 获取语言代码（例如："zh", "en"）
+        val languageCode = currentLocale.language
+
+        return languageCode
     }
 }

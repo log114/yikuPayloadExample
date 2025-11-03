@@ -223,4 +223,25 @@
     <string name="to_center">to center</string>
     <string name="downward">downward</string>
     <string name="PL_LightHost_name">"PL_LightHost IP: "</string>
+    <string name="found_new_version">Found a new version</string>
+    <string name="version_number">"Version number: "</string>
+    <string name="release_date">"Release date: "</string>
+    <string name="update_content">"Update content: "</string>
+    <string name="update_now">update now</string>
+    <string name="start_installing">Start installing...</string>
+    <string name="start_download">Start download...</string>
+    <string name="failed_to_check_updates">Failed to check for updates</string>
+    <string name="network_request_failed">Network request failed</string>
+    <string name="network_error">Network error</string>
+    <string name="is_latest_version">It is already the latest version</string>
+    <string name="download_failed">Download failed</string>
+    <string name="download_error">Download error</string>
+    <string name="installation_failed">Installation failed</string>
+    <string name="app_update">Application update</string>
+    <string name="app_update_notification">Application Download Update Notification</string>
+    <string name="downloading_new_version">Downloading new version...</string>
+    <string name="download_progress">Download progress</string>
+    <string name="download_completed">Download completed</string>
+    <string name="click_to_install">Click to install the new version</string>
+    <string name="app_update_fail">Application update download failed, please try again</string>
 </resources>

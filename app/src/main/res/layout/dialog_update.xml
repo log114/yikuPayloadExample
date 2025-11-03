@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="发现新版本"
+        android:text="@string/found_new_version"
         android:textSize="18sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -18,20 +18,20 @@
         android:id="@+id/tvVersion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="版本号："
+        android:text="@string/version_number"
         android:layout_marginBottom="5dp" />
 
     <TextView
         android:id="@+id/tvReleaseDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="发布日期："
+        android:text="@string/release_date"
         android:layout_marginBottom="10dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="更新内容："
+        android:text="@string/update_content"
         android:textStyle="bold"
         android:layout_marginBottom="5dp" />
 
@@ -44,7 +44,7 @@
             android:id="@+id/tvDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="更新内容描述..."
+            android:text=""
             android:lineSpacingExtra="4dp" />
 
     </ScrollView>
@@ -55,21 +55,19 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-        <Button
+        <android.widget.Button
             android:id="@+id/btnCancel"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:text="取消"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:text="@string/cancel"
             android:layout_marginEnd="10dp"
             android:background="@drawable/btn_cancel_bg" />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/btnUpdate"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:text="立即更新"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:text="@string/update_now"
             android:textColor="@color/white"
             android:background="@drawable/btn_update_bg" />
 
