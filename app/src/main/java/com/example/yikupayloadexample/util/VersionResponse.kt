@@ -8,7 +8,8 @@ data class VersionResponse(
 
 data class VersionData(
     val version: String,
-    val description: String,
+    val descriptionZH: String,
+    val descriptionEN: String,
     val downloadUrl: String,
     val releaseDate: String,
     val updateNote: String

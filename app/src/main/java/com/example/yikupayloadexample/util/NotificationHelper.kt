@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.example.yikupayloadexample.R
 import java.io.File
 
 class NotificationHelper(private val context: Context) {
@@ -26,10 +27,10 @@ class NotificationHelper(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "应用更新",
+                context.resources.getString(R.string.app_update),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "应用下载更新通知"
+                description = context.resources.getString(R.string.app_update_notification)
                 setShowBadge(false)
             }
             notificationManager.createNotificationChannel(channel)
@@ -51,8 +52,8 @@ class NotificationHelper(private val context: Context) {
         )
 
         return NotificationCompat.Builder(context, CHANNEL_ID)
-            .setContentTitle("应用更新")
-            .setContentText("正在下载新版本...")
+            .setContentTitle(context.resources.getString(R.string.app_update))
+            .setContentText(context.resources.getString(R.string.downloading_new_version))
             .setSmallIcon(android.R.drawable.stat_sys_download)
             .setContentIntent(pendingIntent)
             .setAutoCancel(false)
@@ -63,7 +64,7 @@ class NotificationHelper(private val context: Context) {
 
     fun updateDownloadProgress(progress: Int, builder: NotificationCompat.Builder) {
         builder.setProgress(100, progress, false)
-            .setContentText("下载进度: $progress%")
+            .setContentText("${context.resources.getString(R.string.download_progress)}: $progress%")
 
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
@@ -92,8 +93,8 @@ class NotificationHelper(private val context: Context) {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setContentTitle("下载完成")
-            .setContentText("点击安装新版本")
+            .setContentTitle(context.resources.getString(R.string.download_completed))
+            .setContentText(context.resources.getString(R.string.click_to_install))
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -105,8 +106,8 @@ class NotificationHelper(private val context: Context) {
 
     fun showDownloadFailedNotification() {
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setContentTitle("下载失败")
-            .setContentText("应用更新下载失败，请重试")
+            .setContentTitle(context.resources.getString(R.string.download_failed))
+            .setContentText(context.resources.getString(R.string.app_update_fail))
             .setSmallIcon(android.R.drawable.stat_notify_error)
             .setAutoCancel(true)
             .setOngoing(false)

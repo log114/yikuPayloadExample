@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onDownloadStarted() {
                     // 显示下载进度条等
-                    Toast.makeText(this@MainActivity, "开始下载...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, R.string.start_download, Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onDownloadProgress(progress: Int) {
@@ -207,7 +207,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onInstallStarted() {
-                    Toast.makeText(this@MainActivity, "开始安装...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, R.string.start_installing, Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onInstallFailed(error: String) {
