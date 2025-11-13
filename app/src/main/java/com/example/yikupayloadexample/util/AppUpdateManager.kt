@@ -120,7 +120,7 @@ class AppUpdateManager private constructor(
                 withContext(Dispatchers.Main) {
                     val errorMessage = "${context.resources.getString(R.string.network_error)}: ${e.message}"
                     onUpdateListener?.onUpdateCheckFailed(errorMessage)
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
         }
