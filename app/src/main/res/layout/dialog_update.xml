@@ -14,19 +14,26 @@
         android:gravity="center"
         android:layout_marginBottom="10dp" />
 
-    <TextView
-        android:id="@+id/tvVersion"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/version_number"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/version_number"/>
 
-    <TextView
-        android:id="@+id/tvReleaseDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/release_date"
-        android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/tvReleaseDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/release_date"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -37,7 +44,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="15dp">
 
         <TextView
