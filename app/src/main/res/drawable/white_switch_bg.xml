@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"> <!-- 定义形状为矩形 -->
+    <!-- 填充色为白色 -->
+    <solid android:color="#FFFFFF" />
+    <!-- 设置圆角弧度，数值越大角越圆 -->
+    <corners android:radius="13dp" />
+    <!-- 如需边框，可添加stroke标签 -->
+    <stroke
+        android:width="4dp"
+        android:color="#00000000" /> <!-- 透明边框 -->
+</shape>

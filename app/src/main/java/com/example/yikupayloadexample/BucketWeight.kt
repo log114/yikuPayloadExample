@@ -8,11 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import com.yiku.yikupayloadSDK.protocol.BUCKET_STATE_RECEIVE
+import com.yiku.yikupayloadSDK.protocol.BUCKET_BARREL_STATE
 import com.yiku.yikupayloadSDK.service.BucketService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.util.Date
@@ -23,17 +24,27 @@ import kotlin.concurrent.thread
 class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "BucketWeight"
-    private lateinit var mLightView: View
+    private lateinit var mBucketView: View
+    private lateinit var mPromptView: View
     var bucketService: BucketService = BucketService()
     private lateinit var mSafetySwitchSwitch: Switch
-    private lateinit var mBarrelOpenBtn: Button
-    private lateinit var mBarrelCloseBtn: Button
-    private lateinit var mBarrelStopBtn: Button
-    private lateinit var mHookOpenBtn: Button
-    private lateinit var mHookCloseBtn: Button
+    private lateinit var mHookSwitch: Switch
+    private lateinit var mBarrelOpenBtn: ImageButton
+    private lateinit var mBarrelCloseBtn: ImageButton
+    private lateinit var mBarrelStopBtn: ImageButton
+    private lateinit var mOkBtn: Button
+    private lateinit var mCancelBtn: Button
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
     private var updateTime = Date().time
+    private var isFirstLoad = true
+    private var safetySwitch = false
+    private var barrelState = 0
+    private var hookState = false
+
+    private var isControlingSafetySwitch = false // 安全开关控制
+    private var isControlingHookSwitch = false // 挂钩控制
+    private var isControlingBarrel = false // 水桶控制
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -54,24 +65,87 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 if (msg[0] != 0x8d.toByte()) {
                     return
                 }
-                if (msg[2] == BUCKET_STATE_RECEIVE.toByte()) {
+                if (msg[2] == BUCKET_BARREL_STATE.toByte()) {
                     updateTime = Date().time
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        updateState(msg)
+                    }
                 }
             }
 
         })
     }
 
+    private fun updateState(msg: ByteArray) {
+        safetySwitch = msg[3].toInt() == 1
+        barrelState = msg[4].toInt()
+        hookState = msg[5].toInt() == 1
+        if(isFirstLoad) {
+            isFirstLoad = false
+            mSafetySwitchSwitch.isChecked = safetySwitch
+            mHookSwitch.isChecked = hookState
+        }
+        // 安全开关状态
+        if(!isControlingSafetySwitch) {
+            mSafetySwitchSwitch.isChecked = safetySwitch
+            mSafetySwitchSwitch.isEnabled = true
+        }
+        // 挂钩开关状态
+        if(!isControlingHookSwitch) {
+            mHookSwitch.isChecked = hookState
+            if(safetySwitch) {
+                mHookSwitch.isEnabled = true
+            }
+        }
+        // 水桶控制按键状态
+        if(safetySwitch) {
+            if(!isControlingBarrel) {
+                mBarrelOpenBtn.isEnabled = true
+                mBarrelCloseBtn.isEnabled = true
+                mBarrelStopBtn.isEnabled = true
+            }
+        }
+        else {
+            mHookSwitch.isEnabled = false
+            mBarrelOpenBtn.isEnabled = false
+            mBarrelCloseBtn.isEnabled = false
+            mBarrelStopBtn.isEnabled = false
+        }
+    }
+
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.bucket_weight, this, true)
-        mLightView = findViewById(R.id.bucket_view)
+        mBucketView = findViewById(R.id.bucket_view)
+        mPromptView = findViewById(R.id.prompt_view)
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
+        mHookSwitch = findViewById(R.id.hookSwitch)
         mBarrelOpenBtn = findViewById(R.id.barrelOpenBtn)
         mBarrelCloseBtn = findViewById(R.id.barrelCloseBtn)
         mBarrelStopBtn = findViewById(R.id.barrelStopBtn)
-        mHookOpenBtn = findViewById(R.id.hookOpenBtn)
-        mHookCloseBtn = findViewById(R.id.hookCloseBtn)
+        mOkBtn = findViewById(R.id.okBtn)
+        mCancelBtn = findViewById(R.id.cancelBtn)
+
+        mBarrelOpenBtn.isEnabled = false
+        mBarrelCloseBtn.isEnabled = false
+        mBarrelStopBtn.isEnabled = false
+
         setConnectState()
+        // 安全开关
+        mSafetySwitchSwitch.setOnClickListener {
+            var _switch = 0
+            if( mSafetySwitchSwitch.isChecked) {
+                _switch = 1
+            }
+            bucketService.safetySwitch(_switch)
+            isControlingSafetySwitch = true
+            mSafetySwitchSwitch.isEnabled = false
+            thread {
+                Thread.sleep(2000)
+                isControlingSafetySwitch = false
+            }
+        }
+
         // 水桶开
         mBarrelOpenBtn.setOnClickListener {
             try {
@@ -80,15 +154,11 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     return@setOnClickListener
                 }
                 bucketService.barrelControl(1)
-                mBarrelOpenBtn.setText(R.string.opening)
+                isControlingBarrel = true
                 mBarrelOpenBtn.isEnabled = false
                 thread {
                     Thread.sleep(2000)
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post {
-                        mBarrelOpenBtn.isEnabled = true
-                        mBarrelOpenBtn.setText(R.string.open)
-                    }
+                    isControlingBarrel = false
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -99,15 +169,11 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mBarrelCloseBtn.setOnClickListener {
             try {
                 bucketService.barrelControl(2)
-                mBarrelCloseBtn.setText(R.string.closing)
                 mBarrelCloseBtn.isEnabled = false
+                isControlingBarrel = true
                 thread {
                     Thread.sleep(2000)
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post {
-                        mBarrelCloseBtn.isEnabled = true
-                        mBarrelCloseBtn.setText(R.string.close)
-                    }
+                    isControlingBarrel = false
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -118,57 +184,45 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mBarrelStopBtn.setOnClickListener {
             bucketService.barrelControl(0)
             mBarrelStopBtn.isEnabled = false
-            mBarrelStopBtn.setText(R.string.executing )
+            isControlingBarrel = true
             thread {
                 Thread.sleep(2000)
-                val handler = Handler(Looper.getMainLooper())
-                handler.post {
-                    mBarrelStopBtn.isEnabled = true
-                    mBarrelStopBtn.setText(R.string.stop )
-                }
+                isControlingBarrel = false
             }
         }
-        // 挂钩开
-        mHookOpenBtn.setOnClickListener {
-            try {
-                if(!mSafetySwitchSwitch.isChecked) {
-                    showToast(R.string.need_to_open_safety_switch)
-                    return@setOnClickListener
-                }
-                bucketService.hookControl(1)
-                mHookOpenBtn.setText(R.string.opening)
-                mHookOpenBtn.isEnabled = false
-                thread {
-                    Thread.sleep(2000)
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post {
-                        mHookOpenBtn.isEnabled = true
-                        mHookOpenBtn.setText(R.string.open)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                showToast(R.string.operation_failed)
+        // 挂钩开关
+        mHookSwitch.setOnClickListener {
+            isControlingHookSwitch = true
+            if(mHookSwitch.isChecked) {
+                mBucketView.visibility = GONE
+                mPromptView.visibility = VISIBLE
             }
-        }
-        // 挂钩关
-        mHookCloseBtn.setOnClickListener {
-            try {
+            else {
                 bucketService.hookControl(0)
-                mHookCloseBtn.setText(R.string.closing)
-                mHookCloseBtn.isEnabled = false
+                mHookSwitch.isEnabled = false
                 thread {
                     Thread.sleep(2000)
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post {
-                        mHookCloseBtn.isEnabled = true
-                        mHookCloseBtn.setText(R.string.close)
-                    }
+                    isControlingHookSwitch = false
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                showToast(R.string.operation_failed)
             }
+        }
+        // 确定打开挂钩
+        mOkBtn.setOnClickListener {
+            bucketService.hookControl(1)
+            mBucketView.visibility = VISIBLE
+            mPromptView.visibility = GONE
+            mHookSwitch.isEnabled = false
+            thread {
+                Thread.sleep(2000)
+                isControlingHookSwitch = false
+            }
+        }
+        // 取消打开挂钩
+        mCancelBtn.setOnClickListener {
+            mHookSwitch.isChecked = false
+            mBucketView.visibility = VISIBLE
+            mPromptView.visibility = GONE
+            isControlingHookSwitch = false
         }
     }
 
@@ -198,7 +252,6 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             connectText.setText(R.string.connection_status_connected)
                         }
                     }
-                    bucketService.heartbeat()
                     // 3秒没收到信息，显示未连接
                     if (Date().time - updateTime > 3000) {
                         handler.post {

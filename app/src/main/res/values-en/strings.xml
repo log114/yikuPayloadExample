@@ -244,4 +244,5 @@
     <string name="download_completed">Download completed</string>
     <string name="click_to_install">Click to install the new version</string>
     <string name="app_update_fail">Application update download failed, please try again</string>
+    <string name="hucket_hook_prompt">Open the hook and discard the bucket. The bucket may be damaged. Do you want to continue?</string>
 </resources>

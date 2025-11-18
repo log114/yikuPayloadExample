@@ -70,9 +70,9 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?) : Ba
             Log.i(TAG, "${mData[position].recordName}----${mData[position].playing}")
             if (mData[position].playing) {
                 if (mData[position].loop) {
-                    mLoopPlayerAudio.setImageResource(R.drawable.stop)
+                    mLoopPlayerAudio.setImageResource(R.drawable.ic_stop)
                 } else {
-                    mPlayerAudio.setImageResource(R.drawable.stop)
+                    mPlayerAudio.setImageResource(R.drawable.ic_stop)
                 }
             }
             mPlayerAudio.setOnClickListener {
