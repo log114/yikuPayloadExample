@@ -244,4 +244,5 @@
     <string name="download_completed">下载完成</string>
     <string name="click_to_install">点击安装新版本</string>
     <string name="app_update_fail">应用更新下载失败，请重试</string>
+    <string name="hucket_hook_prompt">打开挂钩丢弃吊桶，吊桶可能会损坏，是否继续？</string>
 </resources>

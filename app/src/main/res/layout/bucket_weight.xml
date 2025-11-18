@@ -17,7 +17,7 @@
         <TextView
             android:id="@+id/bucketConnect"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/connection_status_notconnected"
@@ -27,77 +27,102 @@
             android:id="@+id/safetySwitchSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="@string/safety_switch"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-        <TextView
+        <Switch
+            android:id="@+id/hookSwitch"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="@string/barrelControl"
-            android:textColor="@color/white" />
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="visible">
-            <Button
-                android:id="@+id/barrelOpenBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/play_btn"
-                android:text="@string/open"
-                android:textColor="@color/white" />
-            <Button
-                android:id="@+id/barrelCloseBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/play_btn"
-                android:text="@string/close"
-                android:textColor="@color/white" />
-            <Button
-                android:id="@+id/barrelStopBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/play_btn"
-                android:text="@string/stop"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
             android:text="@string/hookControl"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:enabled="false"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:visibility="visible">
 
-            <Button
-                android:id="@+id/hookOpenBtn"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/play_btn"
-                android:text="@string/open"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="@string/barrelControl"
                 android:textColor="@color/white" />
+            <ImageButton
+                android:id="@+id/barrelOpenBtn"
+                android:layout_width="60dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:padding="0dp"
+                android:src="@drawable/ic_switch_on"
+                android:background="@drawable/white_switch_bg"
+                android:scaleType="fitXY"
+                android:contentDescription="@string/open" />
+            <ImageButton
+                android:id="@+id/barrelStopBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:padding="0dp"
+                android:src="@drawable/ic_stop"
+                android:background="@drawable/white_switch_bg"
+                android:scaleType="fitXY"
+                android:contentDescription="@string/stop" />
+            <ImageButton
+                android:id="@+id/barrelCloseBtn"
+                android:layout_width="60dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="10dp"
+                android:padding="0dp"
+                android:src="@drawable/ic_switch_off"
+                android:background="@drawable/white_switch_bg"
+                android:scaleType="fitXY"
+                android:contentDescription="@string/close" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/prompt_view"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:text="@string/hucket_hook_prompt" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="visible">
             <Button
-                android:id="@+id/hookCloseBtn"
+                android:id="@+id/okBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="10dp"
                 android:background="@drawable/play_btn"
-                android:text="@string/close"
-                android:textColor="@color/white" />
+                android:text="@string/ok"
+                android:textColor="@color/white"
+                tools:ignore="ButtonStyle" />
+            <Button
+                android:id="@+id/cancelBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/play_btn"
+                android:text="@string/cancel"
+                android:textColor="@color/white"
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
