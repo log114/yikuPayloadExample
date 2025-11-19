@@ -174,8 +174,8 @@
     <string name="WaterGunHost_name">"WaterGunHost IP: "</string>
     <string name="BucketHost_name">"BucketHost IP: "</string>
     <string name="bucket">bucket</string>
-    <string name="barrelControl">"barrel control: "</string>
-    <string name="hookControl">"hook control: "</string>
+    <string name="drain_valve">"drain valve: "</string>
+    <string name="detach">"detach: "</string>
     <string name="WaterBranchHost_name">"WaterBranchHost IP: "</string>
     <string name="waterBranch">water branch</string>
     <string name="hoseRelease">release hose</string>

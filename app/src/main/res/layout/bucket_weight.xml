@@ -36,7 +36,7 @@
             android:id="@+id/hookSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hookControl"
+            android:text="@string/detach"
             android:textColor="@color/white"
             android:enabled="false"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
@@ -51,38 +51,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:gravity="center"
-                android:text="@string/barrelControl"
+                android:text="@string/drain_valve"
                 android:textColor="@color/white" />
-            <ImageButton
+            <Button
                 android:id="@+id/barrelOpenBtn"
-                android:layout_width="60dp"
-                android:layout_height="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:minWidth="60dp"
                 android:layout_marginStart="8dp"
-                android:padding="0dp"
-                android:src="@drawable/ic_switch_on"
-                android:background="@drawable/white_switch_bg"
-                android:scaleType="fitXY"
-                android:contentDescription="@string/open" />
-            <ImageButton
-                android:id="@+id/barrelStopBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:padding="0dp"
-                android:src="@drawable/ic_stop"
-                android:background="@drawable/white_switch_bg"
-                android:scaleType="fitXY"
-                android:contentDescription="@string/stop" />
-            <ImageButton
+                android:background="@drawable/play_btn"
+                android:text="@string/open"
+                android:textColor="@color/white"/>
+            <Button
                 android:id="@+id/barrelCloseBtn"
-                android:layout_width="60dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="10dp"
-                android:padding="0dp"
-                android:src="@drawable/ic_switch_off"
-                android:background="@drawable/white_switch_bg"
-                android:scaleType="fitXY"
-                android:contentDescription="@string/close" />
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:minWidth="60dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/play_btn"
+                android:text="@string/close"
+                android:textColor="@color/white"/>
+            <Button
+                android:id="@+id/barrelStopBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:minWidth="60dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/play_btn"
+                android:text="@string/stop"
+                android:textColor="@color/white"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -108,7 +105,8 @@
             <Button
                 android:id="@+id/okBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:minWidth="60dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/ok"
@@ -117,7 +115,8 @@
             <Button
                 android:id="@+id/cancelBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:minWidth="60dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/cancel"
