@@ -218,8 +218,8 @@
     <string name="WaterGunHost_name">"水枪IP: "</string>
     <string name="BucketHost_name">"吊桶IP: "</string>
     <string name="bucket">吊桶</string>
-    <string name="barrelControl">"水桶控制: "</string>
-    <string name="hookControl">"挂钩控制: "</string>
+    <string name="drain_valve">"放水阀门: "</string>
+    <string name="detach">"紧急脱离: "</string>
     <string name="WaterBranchHost_name">"消防水枪IP: "</string>
     <string name="waterBranch">消防水枪</string>
     <string name="hoseRelease">释放水带</string>

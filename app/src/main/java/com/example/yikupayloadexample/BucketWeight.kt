@@ -29,9 +29,9 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     var bucketService: BucketService = BucketService()
     private lateinit var mSafetySwitchSwitch: Switch
     private lateinit var mHookSwitch: Switch
-    private lateinit var mBarrelOpenBtn: ImageButton
-    private lateinit var mBarrelCloseBtn: ImageButton
-    private lateinit var mBarrelStopBtn: ImageButton
+    private lateinit var mBarrelOpenBtn: Button
+    private lateinit var mBarrelCloseBtn: Button
+    private lateinit var mBarrelStopBtn: Button
     private lateinit var mOkBtn: Button
     private lateinit var mCancelBtn: Button
     private var isConnecting: Boolean = false
@@ -104,6 +104,23 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 mBarrelOpenBtn.isEnabled = true
                 mBarrelCloseBtn.isEnabled = true
                 mBarrelStopBtn.isEnabled = true
+                when(barrelState) {
+                    0 -> {
+                        mBarrelOpenBtn.isPressed = false
+                        mBarrelCloseBtn.isPressed = false
+                        mBarrelStopBtn.isPressed = true
+                    }
+                    1 -> {
+                        mBarrelOpenBtn.isPressed = true
+                        mBarrelCloseBtn.isPressed = false
+                        mBarrelStopBtn.isPressed = false
+                    }
+                    2 -> {
+                        mBarrelOpenBtn.isPressed = false
+                        mBarrelCloseBtn.isPressed = true
+                        mBarrelStopBtn.isPressed = false
+                    }
+                }
             }
         }
         else {
@@ -111,6 +128,9 @@ class BucketWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             mBarrelOpenBtn.isEnabled = false
             mBarrelCloseBtn.isEnabled = false
             mBarrelStopBtn.isEnabled = false
+            mBarrelOpenBtn.isPressed = false
+            mBarrelCloseBtn.isPressed = false
+            mBarrelStopBtn.isPressed = false
         }
     }
 
