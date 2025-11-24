@@ -6,9 +6,9 @@
     <string name="light">light</string>
     <string name="yk_shout">Smart Load</string>
     <string name="yk_light">light</string>
-    <string name="start_speak">Start Broadcasting</string>
+    <string name="start_speak">Start Shout</string>
     <string name="staring_speak">connecting</string>
-    <string name="stop_speak">Stop Broadcasting</string>
+    <string name="stop_speak">Stop Shout</string>
     <string name="place_input_text">Please Input Text</string>
     <string name="tts_play">Play</string>
     <string name="title_activity_add_record">AddRecordActivity</string>
@@ -124,7 +124,7 @@
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
     <string name="temperature">"Temperature: "</string>
-    <string name="excessive_temperature">Overheat!</string>
+    <string name="excessive_temperature">Temperature too high!</string>
     <string name="status_normal">Normal</string>
     <string name="throwBomb">Bombing</string>
     <string name="open_inverted_mode">Open inverted mode</string>
@@ -213,7 +213,7 @@
     <string name="manual_escape">Manual escape</string>
     <string name="no_microphone_found">No microphone found</string>
     <string name="need_notification_permission">Need notification permission</string>
-    <string name="high_temperature_protection">High temperature protection, actual effective volume:</string>
+    <string name="high_temperature_protection">"Speaker temperature too high, volume limit: "</string>
     <string name="password_verification">Password verification</string>
     <string name="please_enter_the_access_password">Please enter the access password</string>
     <string name="password_error">Password error, please try again!</string>
@@ -245,4 +245,5 @@
     <string name="click_to_install">Click to install the new version</string>
     <string name="app_update_fail">Application update download failed, please try again</string>
     <string name="hucket_hook_prompt">Open the hook and discard the bucket. The bucket may be damaged. Do you want to continue?</string>
+    <string name="normal_temperature">Normal Temperature</string>
 </resources>
