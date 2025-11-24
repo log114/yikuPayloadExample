@@ -29,8 +29,6 @@ class PayloadWeight : Service() {
     private lateinit var mShoutViewContent: LinearLayout
     private var opened: Int = 0
 
-    private lateinit var mVideoWindowView: View
-
     // 组件
     private lateinit var realTimeShoutWeight: RealTimeShoutWeight
     private lateinit var unitreeLightWeight: UnitreeLightWeight
@@ -339,64 +337,6 @@ class PayloadWeight : Service() {
                     mShoutViewContent.removeAllViews()
                     mShoutViewContent.addView(resqmeWeight)
                     EasyFloat.show("yk_payload_weight_op")
-                    // 视频窗口
-                    if(!isVideoWindowInit) {
-                        EasyFloat.with(applicationContext)
-                            // 设置浮窗xml布局文件/自定义View，并可设置详细信息
-                            .setLayout(R.layout.video_window){
-//                                mVideoWindowView = it.findViewById(R.id.videoWindowView)
-                                it.isFocusable = true;
-                            }
-                            // 设置浮窗显示类型，默认只`在当前Activity显示，可选一直显示、仅前台显示
-                            .setShowPattern(ShowPattern.ALL_TIME)
-                            // 设置吸附方式，共15种模式，详情参考SidePattern
-                            .setSidePattern(SidePattern.DEFAULT)
-                            // 设置浮窗的标签，用于区分多个浮窗
-                            .setTag("video_window")
-                            // 设置浮窗是否可拖拽
-                            .setDragEnable(true)
-                            // 浮窗是否包含EditText，默认不包含
-                            .hasEditText(true)
-                            // 设置浮窗的对齐方式和坐标偏移量
-                            .setGravity(Gravity.END or Gravity.BOTTOM, 0, 0)
-                            // 设置当布局大小变化后，整体view的位置对齐方式
-                            .setLayoutChangedGravity(Gravity.BOTTOM or Gravity.END)
-                            // 设置宽高是否充满父布局，直接在xml设置match_parent属性无效
-                            .setMatchParent(widthMatch = false, heightMatch = false)
-                            // 设置浮窗的出入动画，可自定义，实现相应接口即可（策略模式），无需动画直接设置为null
-                            .setAnimator(DefaultAnimator())
-                            // 设置系统浮窗的不需要显示的页面
-                            .setFilter(AddRecordActivity::class.java)
-                            // 设置系统浮窗的有效显示高度（不包含虚拟导航栏的高度），基本用不到，除非有虚拟导航栏适配问题
-                            .setDisplayHeight { context -> DisplayUtils.rejectedNavHeight(context) }
-                            // 浮窗的一些状态回调，如：创建结果、显示、隐藏、销毁、touchEvent、拖拽过程、拖拽结束。
-                            // ps：通过Kotlin DSL实现的回调，可以按需复写方法，用到哪个写哪个
-                            .registerCallback {
-                                createResult { isCreated, msg, view ->
-
-                                }
-                                show {
-                                }
-                                hide {
-                                }
-                                dismiss {
-                                    Log.w(TAG, "video_window float dismiss")
-                                    resetShoutBtnsBackground()
-                                }
-                                touchEvent { view, motionEvent ->
-
-                                }
-                                drag { view, motionEvent -> }
-                                dragEnd { }
-
-                            }
-//                            .show()
-                        isVideoWindowInit = true
-                    }
-                    EasyFloat.show("video_window")
-                }
-                else {
-                    EasyFloat.hide("video_window")
                 }
                 if (type == 10) {
                     opened = 10

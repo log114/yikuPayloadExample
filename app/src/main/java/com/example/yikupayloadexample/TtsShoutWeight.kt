@@ -12,6 +12,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.*
 import com.yiku.yikupayloadSDK.util.MsgCallback
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
@@ -32,8 +34,9 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private var voice: Int = 0
     private lateinit var mVolumeSeekBar: SeekBar // 音量滑块
     private var isSettingVolume = false; // 是否正在设置音量
-    private var isGetCurrentVolume = false; // 是否返回了当前实际音量
-    private var currentVolume = 0; // 当前实际音量
+    private var volumeReal = 0;
+    private var volumeLimit = 100
+    private var temperature = "0"
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -62,31 +65,46 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     }
                     return
                 }
-                if (msg.size > 6 && String(msg.slice(0..3).toByteArray()) == "[14]") {
+                // 温度、音量返回
+                if (msg.size > 6 && String(msg.slice(0..3).toByteArray()) == "[99]") {
                     // 假设 msg 是一个 ByteArray
                     val dataLength = msg.size - 2 - 4
                     // 使用 Kotlin 的 sliceArray 方法提取子数组，更简洁
                     val valueBytes = msg.sliceArray(5 until 5 + dataLength)
-
                     // 将字节数组（ASCII字符）转换为字符串
-                    val hexString = valueBytes.toString(Charsets.US_ASCII)
+                    val jsonString = valueBytes.toString(Charsets.US_ASCII)
                     try {
-                        // 关键：使用字符串的 toInt(16) 方法进行十六进制解析
-                        val result = hexString.toInt(16).toByte()
-                        Log.i(TAG, "提取到的数值为: 0x${result.toString(16).padStart(2, '0')} (十进制${result.toUByte().toInt()})")
-                        isGetCurrentVolume = true
-                        currentVolume = result.toUByte().toInt()
-                        // 如果不是正在设置音量的时候，收单音量生效数据
-                        if(!isSettingVolume) {
-                            mVolumeSeekBar.post {
-                                mVolumeSeekBar.progress = currentVolume
-                                isGetCurrentVolume = false
+                        // 使用 Kotlin 标准库的 JSONObject 进行解析
+                        val jsonObject = JSONObject(jsonString)
+                        // 从JSON对象中提取数据
+                        volumeReal = jsonObject.getInt("volume_real")
+                        volumeLimit = jsonObject.getInt("volume_limit")
+                        temperature = jsonObject.getString("temperature")
+                        // 记录日志以便调试
+                        Log.i(TAG, "解析结果 - 实际音量: $volumeReal, 音量上限: $volumeLimit, 温度: $temperature")
+                        // 更新到主线程
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            // 更新音量进度条
+                            if (!isSettingVolume) {
+                                mVolumeSeekBar.progress = volumeReal
+                            }
+                            mTemperature.text = "${context.resources.getString(R.string.temperature)} ${temperature}℃"
+                            if(volumeLimit < 100) {
+                                mStatus.setText(R.string.excessive_temperature)
+                                mStatus.setTextColor(Color.RED)
+                            }
+                            else {
+                                mStatus.setText(R.string.normal_temperature)
+                                mStatus.setTextColor(Color.WHITE)
                             }
                         }
-                    } catch (e: NumberFormatException) {
-                        Log.e(TAG, "十六进制数据格式错误！")
-                    } catch (e: IllegalArgumentException) {
-                        Log.e(TAG, "数值超出字节范围(0-255)！")
+                    } catch (e: JSONException) {
+                        // 处理JSON解析错误（如键不存在、类型不匹配、格式错误等）
+                        Log.e(TAG, "JSON解析失败: ${e.message}")
+                    } catch (e: Exception) {
+                        // 处理其他潜在异常
+                        Log.e(TAG, "处理消息时发生未知错误: ${e.message}")
                     }
                 }
             }
@@ -245,10 +263,9 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     thread {
                         Thread.sleep(500)
                         mVolumeSeekBar.post {
-                            if (isGetCurrentVolume && currentVolume < seekBar.progress) {
-                                seekBar.progress = currentVolume
-                                isGetCurrentVolume = false
-                                showToast(context.resources.getString(R.string.high_temperature_protection) + currentVolume + "%")
+                            if (seekBar.progress > volumeLimit) {
+                                seekBar.progress = volumeReal
+                                showToast(context.resources.getString(R.string.high_temperature_protection) + volumeLimit + "%")
                             }
                             isSettingVolume = false
                         }

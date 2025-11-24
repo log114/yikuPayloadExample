@@ -213,7 +213,7 @@
     <string name="manual_escape">手动脱困</string>
     <string name="no_microphone_found">没有找到麦克风</string>
     <string name="need_notification_permission">需要通知权限</string>
-    <string name="high_temperature_protection">高温保护，实际生效音量：</string>
+    <string name="high_temperature_protection">扬声器温度过高，限制音量：</string>
     <string name="password_verification">密码验证</string>
     <string name="please_enter_the_access_password">请输入访问密码</string>
     <string name="password_error">密码错误，请重试！</string>
@@ -245,4 +245,5 @@
     <string name="click_to_install">点击安装新版本</string>
     <string name="app_update_fail">应用更新下载失败，请重试</string>
     <string name="hucket_hook_prompt">打开挂钩丢弃吊桶，吊桶可能会损坏，是否继续？</string>
+    <string name="normal_temperature">温度正常</string>
 </resources>
