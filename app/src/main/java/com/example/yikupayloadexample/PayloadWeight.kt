@@ -1,5 +1,6 @@
 package com.example.yikupayloadexample
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
@@ -12,6 +13,7 @@ import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.*
+import com.example.yikupayloadexample.AllInOneSpeakerWeight
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.anim.DefaultAnimator
 import com.lzf.easyfloat.enums.ShowPattern
@@ -20,12 +22,14 @@ import com.lzf.easyfloat.utils.DisplayUtils
 import com.lzf.easyfloat.utils.InputMethodUtils
 import java.util.Timer
 import java.util.TimerTask
+import androidx.core.view.isVisible
 
 
 class PayloadWeight : Service() {
     private val TAG = "ShoutWeight"
     private lateinit var mShoutView: View
     private val binder = PayloadWeightBinder()
+    private lateinit var mWindowTitle: TextView
     private lateinit var mShoutViewContent: LinearLayout
     private var opened: Int = 0
 
@@ -46,6 +50,10 @@ class PayloadWeight : Service() {
     private lateinit var bucketWeight: BucketWeight
     private lateinit var waterBranchWeight: WaterBranchWeight
     private lateinit var plLightweight: PL_LightWeight
+    private lateinit var allInOneSpeakerWeight: AllInOneSpeakerWeight
+    private lateinit var allInOneLightWeight: AllInOneLightWeight
+    private lateinit var allInOneThrowerWeight: AllInOneThrowerWeight
+    private lateinit var allInOneFpvWeight: AllInOneFpvWeight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -67,9 +75,12 @@ class PayloadWeight : Service() {
     private lateinit var bucketBtn: ImageView
     private lateinit var waterBranchBtn: ImageView
     private lateinit var plLightBtn: ImageView
+    private lateinit var allInOneSpeakerBtn: ImageView
+    private lateinit var allInOneLightBtn: ImageView
+    private lateinit var allInOneThrowerBtn: ImageView
+    private lateinit var allInOneFpvBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
-    private var isVideoWindowInit = false
 
     // 空状态
     private lateinit var emptyText: View
@@ -96,6 +107,10 @@ class PayloadWeight : Service() {
         bucketBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         waterBranchBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         plLightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        allInOneSpeakerBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        allInOneLightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        allInOneThrowerBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        allInOneFpvBtn.setBackgroundResource(R.drawable.yk_shout_btn)
     }
 
     private fun openFloatingWindow() {
@@ -123,6 +138,10 @@ class PayloadWeight : Service() {
                     bucketBtn = it.findViewById(R.id.bucketBtn)
                     waterBranchBtn = it.findViewById(R.id.waterBranchBtn)
                     plLightBtn = it.findViewById(R.id.light_pl_Btn)
+                    allInOneSpeakerBtn = it.findViewById(R.id.all_in_on_speaker_Btn)
+                    allInOneLightBtn = it.findViewById(R.id.all_in_on_light_Btn)
+                    allInOneThrowerBtn = it.findViewById(R.id.all_in_on_thrower_Btn)
+                    allInOneFpvBtn = it.findViewById(R.id.all_in_on_fpv_Btn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -220,13 +239,51 @@ class PayloadWeight : Service() {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(15, waterBranchBtn)) {
                             waterBranchBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
-                            lockBtn.performClick() // 默认锁定悬浮窗
+                            if(!isLockWindow) {
+                                lockBtn.performClick() // 默认锁定悬浮窗
+                            }
                         }
                     }
                     plLightBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(16, plLightBtn)) {
                             plLightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                        }
+                    }
+                    allInOneSpeakerBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(17, allInOneSpeakerBtn)) {
+                            allInOneSpeakerBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            if(!isLockWindow) {
+                                lockBtn.performClick() // 默认锁定悬浮窗
+                            }
+                        }
+                    }
+                    allInOneLightBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(18, allInOneLightBtn)) {
+                            allInOneLightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            if(isLockWindow) {
+                                lockBtn.performClick() // 默认不锁定悬浮窗
+                            }
+                        }
+                    }
+                    allInOneThrowerBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(19, allInOneThrowerBtn)) {
+                            allInOneThrowerBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            if(isLockWindow) {
+                                lockBtn.performClick() // 默认不锁定悬浮窗
+                            }
+                        }
+                    }
+                    allInOneFpvBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(20, allInOneFpvBtn)) {
+                            allInOneFpvBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            if(isLockWindow) {
+                                lockBtn.performClick() // 默认不锁定悬浮窗
+                            }
                         }
                     }
                 }
@@ -289,6 +346,7 @@ class PayloadWeight : Service() {
     /**
      * 设置显示隐藏，返回true表示本次调用使组件显示，否则表示使隐藏
      */
+    @SuppressLint("ClickableViewAccessibility")
     fun setSVVisibility(type: Int, view: View): Boolean {
         Log.i(TAG, "mShoutView. setSVVisibility:${mShoutView.visibility}, opened:${opened}")
         if (mShoutView.visibility == GONE || opened != type) {
@@ -301,144 +359,149 @@ class PayloadWeight : Service() {
             opened = 0
         }
         try {
-            if (mShoutView.visibility == VISIBLE) {
-                if (type == 16) {
-                    opened = 16
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(plLightweight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 15) {
-                    opened = 15
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(waterBranchWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 14) {
-                    opened = 14
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(bucketWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 13) {
-                    opened = 13
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(waterGunWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 12) {
-                    opened = 12
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(extinguisherWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 11) {
-                    opened = 11
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(resqmeWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 10) {
-                    opened = 10
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(gripperWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 9) {
-                    opened = 9
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(slowDescentDeviceWeight)
-                    val speedEditText = mShoutViewContent.findViewById<EditText>(R.id.speed)
-                    speedEditText.setOnTouchListener { _, event ->
-                        if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
-                            speedEditText,
-                            "yk_payload_weight_op"
-                        )
-                        false
+            if (mShoutView.isVisible) {
+                mShoutViewContent.removeAllViews()
+                when(type) {
+                    20 -> {
+                        opened = 20
+                        mWindowTitle.text = "FPV"
+                        mShoutViewContent.addView(allInOneFpvWeight)
                     }
-                    val lengthEditText = mShoutViewContent.findViewById<EditText>(R.id.length)
-                    lengthEditText.setOnTouchListener { _, event ->
-                        if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
-                            lengthEditText,
-                            "yk_payload_weight_op"
-                        )
-                        false
+                    19 -> {
+                        opened = 19
+                        mWindowTitle.setText(R.string.thrower)
+                        mShoutViewContent.addView(allInOneThrowerWeight)
+                        val editText = mShoutViewContent.findViewById<EditText>(R.id.detonateHeightEditText)
+                        editText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                editText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
                     }
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 8) {
-                    opened = 8
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(throwerweight)
-                    val detonateHeightEditText = mShoutViewContent.findViewById<EditText>(R.id.detonateHeight)
-                    detonateHeightEditText.setOnTouchListener { _, event ->
-                        if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
-                            detonateHeightEditText,
-                            "yk_payload_weight_op"
-                        )
-                        false
+                    18 -> {
+                        opened = 18
+                        mWindowTitle.setText(R.string.lamplight)
+                        mShoutViewContent.addView(allInOneLightWeight)
                     }
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 7) {
-                    opened = 7
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(lightYl300Weight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 6) {
-                    opened = 6
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(emitterWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 5) {
-                    opened = 5
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(cacheNetWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 4) {
-                    opened = 4
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(unitreeLightWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-//                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-//                Log.i(TAG, "width:${popupWindow.width}，height:${popupWindow.height}")
-                }
-                if (type == 3) {
-                    opened = 3
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(realTimeShoutWeight)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
-                if (type == 1) {
-                    opened = 1
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(ttsShoutWeight)
-                    val editText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
-                    editText.setOnTouchListener { _, event ->
-                        if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
-                            editText,
-                            "yk_payload_weight_op"
-                        )
-                        false
+                    17 -> {
+                        opened = 17
+                        mWindowTitle.setText(R.string.sound)
+                        mShoutViewContent.addView(allInOneSpeakerWeight)
+                        val speedEditText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
+                        speedEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                speedEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
                     }
-                    EasyFloat.show("yk_payload_weight_op")
+                    16 -> {
+                        opened = 16
+                        mShoutViewContent.addView(plLightweight)
+                    }
+                    15 -> {
+                        opened = 15
+                        mShoutViewContent.addView(waterBranchWeight)
+                    }
+                    14 -> {
+                        opened = 14
+                        mShoutViewContent.addView(bucketWeight)
+                    }
+                    13 -> {
+                        opened = 13
+                        mShoutViewContent.addView(waterGunWeight)
+                    }
+                    12 -> {
+                        opened = 12
+                        mShoutViewContent.addView(extinguisherWeight)
+                    }
+                    11 -> {
+                        opened = 11
+                        mShoutViewContent.addView(resqmeWeight)
+                    }
+                    10 -> {
+                        opened = 10
+                        mShoutViewContent.addView(gripperWeight)
+                    }
+                    9 -> {
+                        opened = 9
+                        mShoutViewContent.addView(slowDescentDeviceWeight)
+                        val speedEditText = mShoutViewContent.findViewById<EditText>(R.id.speed)
+                        speedEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                speedEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                        val lengthEditText = mShoutViewContent.findViewById<EditText>(R.id.length)
+                        lengthEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                lengthEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                    }
+                    8 -> {
+                        opened = 8
+                        mShoutViewContent.addView(throwerweight)
+                        val detonateHeightEditText = mShoutViewContent.findViewById<EditText>(R.id.detonateHeight)
+                        detonateHeightEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                detonateHeightEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                    }
+                    7 -> {
+                        opened = 7
+                        mShoutViewContent.addView(lightYl300Weight)
+                    }
+                    6 -> {
+                        opened = 6
+                        mShoutViewContent.addView(emitterWeight)
+                    }
+                    5 -> {
+                        opened = 5
+                        mShoutViewContent.addView(cacheNetWeight)
+                    }
+                    4 -> {
+                        opened = 4
+                        mShoutViewContent.addView(unitreeLightWeight)
+                    }
+                    3 -> {
+                        opened = 3
+                        mShoutViewContent.addView(realTimeShoutWeight)
+                    }
+                    2 -> {
+                        opened = 2
+                        mShoutViewContent.addView(recordShoutWeight)
+                        recordShoutWeight.onShow()
+                    }
+                    1 -> {
+                        opened = 1
+                        mShoutViewContent.addView(ttsShoutWeight)
+                        val editText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
+                        editText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                editText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                    }
                 }
-                if (type == 2) {
-                    opened = 2
-                    mShoutViewContent.removeAllViews()
-                    mShoutViewContent.addView(recordShoutWeight)
-                    recordShoutWeight.onShow()
-//                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0)
-                    EasyFloat.show("yk_payload_weight_op")
-                }
+                EasyFloat.show("yk_payload_weight_op")
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return mShoutView.visibility == VISIBLE
+        return mShoutView.isVisible
     }
 
     private fun showWindow() {
@@ -458,6 +521,10 @@ class PayloadWeight : Service() {
         bucketWeight = BucketWeight(this)
         waterBranchWeight = WaterBranchWeight(this)
         plLightweight = PL_LightWeight(this)
+        allInOneSpeakerWeight = AllInOneSpeakerWeight(this)
+        allInOneLightWeight = AllInOneLightWeight(this)
+        allInOneThrowerWeight = AllInOneThrowerWeight(this)
+        allInOneFpvWeight = AllInOneFpvWeight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -468,6 +535,7 @@ class PayloadWeight : Service() {
                     it.isFocusable = true;
 //                    // 初始化关闭喊话界面
                     mShoutView.visibility = View.GONE
+                    mWindowTitle = it.findViewById(R.id.windowTitle)
                     mShoutViewContent = it.findViewById(R.id.shout_view_content)
                     mShoutViewContent.setOnClickListener {
                         Log.i(TAG, "mShoutViewContent clicked....")
@@ -624,6 +692,7 @@ class PayloadWeight : Service() {
 //                val isConnectedBucket = true; // 吊桶
 //                val isConnectedWaterBranch = true; // 消防水枪
 //                val isConnectedPLLight = true; // 品灵探照灯
+                val isConnectedAllInOne = true; // 多合一
                     // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示
@@ -631,84 +700,84 @@ class PayloadWeight : Service() {
                         mShoutBtn.visibility = VISIBLE;
                         mTTSBtn.visibility = VISIBLE;
                         mRecordBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 捕捉网
                 if(isConnectedCacheNet){
                     handler.post {
                         mCacheNetBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 38mm发射器
                 if(isConnectedEmitter){
                     handler.post {
                         mEmitterBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 探照灯
                 if(isConnectedLightYl300){
                     handler.post {
                         mLightYl300Btn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 抛投
                 if(isConnectedThrower){
                     handler.post {
                         throwerBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 缓降器
                 if(isConnectedSlowDescentDevice){
                     handler.post {
                         slowDescentDeviceBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 机械爪
                 if(isConnectedGripper){
                     handler.post {
                         gripperBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 破窗器
                 if(isConnectedResqme){
                     handler.post {
                         resqmeBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 灭火罐
                 if(isConnectedExtinguisher){
                     handler.post {
                         extinguisherBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 水枪
                 if(isConnectedWaterGun){
                     handler.post {
                         waterGunBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 吊桶
                 if(isConnectedBucket){
                     handler.post {
                         bucketBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 消防水枪
                 if(isConnectedWaterBranch){
                     handler.post {
                         waterBranchBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
 
@@ -721,14 +790,24 @@ class PayloadWeight : Service() {
                         mRecordBtn.visibility = VISIBLE;
                         // 灯光、红蓝
                         mLightBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
                     }
                 }
                 // 品灵探照灯
                 if(isConnectedPLLight){
                     handler.post {
                         plLightBtn.visibility = VISIBLE;
-                        emptyText.visibility = View.GONE;
+                        emptyText.visibility = GONE;
+                    }
+                }
+                // 多合一
+                if(isConnectedAllInOne){
+                    handler.post {
+                        allInOneSpeakerBtn.visibility = VISIBLE;
+                        allInOneLightBtn.visibility = VISIBLE
+                        allInOneThrowerBtn.visibility = VISIBLE
+                        allInOneFpvBtn.visibility = VISIBLE
+                        emptyText.visibility = GONE;
                     }
                 }
             }

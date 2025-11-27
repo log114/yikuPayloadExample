@@ -209,7 +209,6 @@
     <string name="not_set_pass">未设置对应通道</string>
     <string name="not_set">未设置</string>
     <string name="charging">正在充电</string>
-    <string name="not_connected">未连接</string>
     <string name="manual_escape">手动脱困</string>
     <string name="no_microphone_found">没有找到麦克风</string>
     <string name="need_notification_permission">需要通知权限</string>
@@ -246,4 +245,24 @@
     <string name="app_update_fail">应用更新下载失败，请重试</string>
     <string name="hucket_hook_prompt">打开挂钩丢弃吊桶，吊桶可能会损坏，是否继续？</string>
     <string name="normal_temperature">温度正常</string>
+    <string name="not_connected">未连接</string>
+    <string name="connected">已连接</string>
+    <string name="tts">文字转语言</string>
+    <string name="play_audio">音频播放</string>
+    <string name="loop">循环</string>
+    <string name="volume">音量</string>
+    <string name="pitch_angle">俯仰角度</string>
+    <string name="searchlight">探照灯</string>
+    <string name="red_and_blue">红蓝灯</string>
+    <string name="flash_lamp">爆闪</string>
+    <string name="lighting">照明</string>
+    <string name="luminance">亮度</string>
+    <string name="red_blue_mode">红蓝模式</string>
+    <string name="choose_mode">选择红蓝模式</string>
+    <string name="throwing_switch">抛投开关</string>
+    <string name="fire_extinguish_bomb">灭火弹</string>
+    <string name="bomb_positioning">投弹定位辅助</string>
+    <string name="fpv_assistance">FPV 辅助</string>
+    <string name="sound">声音</string>
+    <string name="lamplight">灯光</string>
 </resources>

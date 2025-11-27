@@ -209,7 +209,6 @@
     <string name="not_set_pass">Corresponding channel not set</string>
     <string name="not_set">Not set</string>
     <string name="charging">charging</string>
-    <string name="not_connected">Not connected</string>
     <string name="manual_escape">Manual escape</string>
     <string name="no_microphone_found">No microphone found</string>
     <string name="need_notification_permission">Need notification permission</string>
@@ -246,4 +245,24 @@
     <string name="app_update_fail">Application update download failed, please try again</string>
     <string name="hucket_hook_prompt">Open the hook and discard the bucket. The bucket may be damaged. Do you want to continue?</string>
     <string name="normal_temperature">Normal Temperature</string>
+    <string name="not_connected">Not Connected</string>
+    <string name="connected">Connected</string>
+    <string name="tts">TTS</string>
+    <string name="play_audio">Play Audio</string>
+    <string name="loop">loop</string>
+    <string name="volume">Volume</string>
+    <string name="pitch_angle">Pitch Angle</string>
+    <string name="searchlight">Searchlight</string>
+    <string name="red_and_blue">Warning Light</string>
+    <string name="flash_lamp">Flash</string>
+    <string name="lighting">Lighting</string>
+    <string name="luminance">Luminance</string>
+    <string name="red_blue_mode">Red Blue Mode</string>
+    <string name="choose_mode">Choose Mode</string>
+    <string name="throwing_switch">Throwing Switch</string>
+    <string name="fire_extinguish_bomb">Fire Extinguish Bomb</string>
+    <string name="bomb_positioning">Bomb Positioning</string>
+    <string name="fpv_assistance">FPV Assistance</string>
+    <string name="sound">Sound</string>
+    <string name="lamplight">Lamplight</string>
 </resources>

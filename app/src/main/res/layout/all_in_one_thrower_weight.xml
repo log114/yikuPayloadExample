@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/throwerWeight"
+    android:layout_width="450dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/thrower_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:paddingBottom="6dp"
+            android:gravity="center_vertical"
+            android:visibility="visible"
+            tools:ignore="UselessParent">
+            <Switch
+                android:id="@+id/throwerSafetySwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:text="@string/safety_switch"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+
+            <TextView
+                android:id="@+id/connectState"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:layout_weight="1"
+                android:text="@string/not_connected"
+                android:textSize="13sp"
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="6dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/boder"
+            android:visibility="visible"
+            tools:ignore="UselessParent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="6dp"
+                android:gravity="center_vertical"
+                android:visibility="visible"
+                tools:ignore="UselessParent">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/throwing_switch"
+                    android:textSize="18sp"
+                    android:textColor="@color/white" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    tools:ignore="UselessParent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:visibility="visible"
+                        tools:ignore="UselessParent">
+
+                        <Button
+                            android:id="@+id/thrower1_btn"
+                            android:layout_width="100dp"
+                            android:layout_height="30dp"
+                            android:padding="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/play_btn"
+                            android:text="@string/number_1"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            tools:ignore="ButtonStyle" />
+
+                        <Button
+                            android:id="@+id/thrower2_btn"
+                            android:layout_width="100dp"
+                            android:layout_height="30dp"
+                            android:padding="0dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/play_btn"
+                            android:text="@string/number_2"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            tools:ignore="ButtonStyle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center_vertical"
+                        android:visibility="visible"
+                        tools:ignore="UselessParent">
+
+                        <Button
+                            android:id="@+id/throwerAll_btn"
+                            android:layout_width="220dp"
+                            android:layout_height="30dp"
+                            android:padding="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/play_btn"
+                            android:text="@string/open_all"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            tools:ignore="ButtonStyle" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="6dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_bottom_dash_line"
+                android:visibility="visible"
+                tools:ignore="UselessParent">
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:visibility="visible"
+                tools:ignore="UselessParent">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/fire_extinguish_bomb"
+                    android:textSize="18sp"
+                    android:textColor="@color/white" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    tools:ignore="UselessParent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        tools:ignore="UselessParent">
+                        <LinearLayout
+                            android:layout_width="160dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:visibility="visible"
+                            tools:ignore="UselessParent">
+                            <TextView
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="10dp"
+                                android:text="@string/number_1"
+                                android:textSize="13sp"
+                                android:textColor="@color/white" />
+                            <TextView
+                                android:id="@+id/bomb1ConnectStateText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/not_connected"
+                                android:layout_weight="1"
+                                android:textSize="13sp"
+                                android:textColor="@color/white" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="10dp"
+                            android:gravity="center_vertical"
+                            android:visibility="visible"
+                            tools:ignore="UselessParent">
+                            <TextView
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="10dp"
+                                android:text="@string/number_2"
+                                android:textSize="13sp"
+                                android:textColor="@color/white" />
+                            <TextView
+                                android:id="@+id/bomb2ConnectStateText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/not_connected"
+                                android:layout_weight="1"
+                                android:textSize="13sp"
+                                android:textColor="@color/white"
+                                tools:ignore="NestedWeights" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:baselineAligned="false"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        tools:ignore="UselessParent">
+                        <LinearLayout
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:visibility="visible"
+                            tools:ignore="UselessParent">
+                            <TextView
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="10dp"
+                                android:text="@string/height"
+                                android:textSize="13sp"
+                                android:textColor="@color/white" />
+                            <TextView
+                                android:id="@+id/heightText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="0m"
+                                android:layout_weight="1"
+                                android:textSize="13sp"
+                                android:textColor="@color/white" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="4dp"
+                            android:gravity="center_vertical"
+                            android:visibility="visible"
+                            tools:ignore="UselessParent">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textAlignment="textEnd"
+                                android:layout_marginEnd="10dp"
+                                android:text="@string/detonate_height"
+                                android:textSize="13sp"
+                                android:textColor="@color/white"
+                                tools:ignore="NestedWeights" />
+                            <EditText
+                                android:id="@+id/detonateHeightEditText"
+                                android:layout_width="50dp"
+                                android:layout_height="24dp"
+                                android:inputType="number|numberDecimal"
+                                android:text="0"
+                                android:textColor="@color/white"
+                                android:textSize="13sp"
+                                android:background="@drawable/boder"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:text="m"
+                                android:textSize="13sp"
+                                android:textColor="@color/white" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_vertical"
+                        android:visibility="visible"
+                        tools:ignore="UselessParent">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/allow_detonation"
+                            android:textSize="13sp"
+                            android:textColor="@color/white" />
+                        <Switch
+                            android:id="@+id/allow_detonation_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="20dp"
+                            android:scaleX="1.2"
+                            android:scaleY="1.2"
+                            android:text="@string/number_1"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+                        <Switch
+                            android:id="@+id/allow_detonation_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="20dp"
+                            android:scaleX="1.2"
+                            android:scaleY="1.2"
+                            android:text="@string/number_2"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/bomb_positioning"
+                android:textSize="13sp"
+                android:textColor="@color/white" />
+            <Button
+                android:id="@+id/fpv_open_btn"
+                android:layout_width="140dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/play_btn"
+                android:text="@string/fpv_assistance"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                tools:ignore="ButtonStyle" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/fpv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:ignore="UselessParent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:padding="0dp"
+            android:background="@drawable/boder"
+            android:visibility="visible"
+            tools:ignore="UselessParent">
+
+            <LinearLayout
+                android:id="@+id/playerParentView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="UselessParent">
+                <!-- 视频播放区域（底层） -->
+                <org.videolan.libvlc.util.VLCVideoLayout
+                    android:id="@+id/playerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/front_sight"
+                android:scaleType="centerInside"
+                android:contentDescription="十字准星" />
+            <!-- 控制按钮区域（顶层） -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:visibility="visible">
+                <ImageView
+                    android:id="@+id/back_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="4dp"
+                    android:contentDescription="返回"
+                    android:src="@drawable/back" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+                <ImageView
+                    android:id="@+id/enlarge_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="全屏或恢复悬浮窗状态"
+                    android:src="@drawable/picture_in_picture" />
+            </LinearLayout>
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_bottom_dash_line"
+            android:visibility="visible"
+            tools:ignore="UselessParent">
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:visibility="visible"
+            tools:ignore="UselessParent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/throwing_switch"
+                android:textSize="13sp"
+                android:textColor="@color/white"/>
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:layout_marginStart="10dp"
+                android:textSize="13sp"
+                android:text="@string/number_1"
+                android:background="@drawable/play_btn"
+                android:textColor="@color/white"/>
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:layout_marginStart="10dp"
+                android:textSize="13sp"
+                android:text="@string/number_2"
+                android:background="@drawable/play_btn"
+                android:textColor="@color/white"/>
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:layout_marginStart="10dp"
+                android:textSize="13sp"
+                android:text="@string/open_all"
+                android:background="@drawable/play_btn"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
