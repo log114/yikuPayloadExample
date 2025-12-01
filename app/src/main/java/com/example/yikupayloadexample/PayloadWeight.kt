@@ -397,6 +397,7 @@ class PayloadWeight : Service() {
                             )
                             false
                         }
+                        allInOneSpeakerWeight.onShow()
                     }
                     16 -> {
                         opened = 16
@@ -677,6 +678,7 @@ class PayloadWeight : Service() {
                 val isConnectedBucket = bucketWeight.bucketService.getIsConnected(); // 吊桶
                 val isConnectedWaterBranch = waterBranchWeight.waterBranchService.getIsConnected(); // 消防水枪
                 val isConnectedPLLight = plLightweight.plLightService.getIsConnected(); // 品灵探照灯
+                val isConnectedAllInOne = allInOneService.getIsConnected(); // 多合一
 
 //                val isConnectedMegaphone = true;// 喊话器
 //                val isConnectedYA3 = true; // 四合一
@@ -692,7 +694,7 @@ class PayloadWeight : Service() {
 //                val isConnectedBucket = true; // 吊桶
 //                val isConnectedWaterBranch = true; // 消防水枪
 //                val isConnectedPLLight = true; // 品灵探照灯
-                val isConnectedAllInOne = true; // 多合一
+//                val isConnectedAllInOne = true; // 多合一
                     // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示

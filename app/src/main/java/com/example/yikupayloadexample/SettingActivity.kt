@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.yiku.yikupayloadSDK.service.MegaphoneService
+import com.yiku.yikupayloadSDK.util.AllInOneHost
 import com.yiku.yikupayloadSDK.util.BucketHost
 import com.yiku.yikupayloadSDK.util.CacheNetHost
 import com.yiku.yikupayloadSDK.util.EmitterHost
@@ -44,6 +45,7 @@ class SettingActivity : AppCompatActivity() {
         val bucket = findViewById<EditText>(R.id.BucketHostIP)
         val waterBranch = findViewById<EditText>(R.id.WaterBranchHostIP)
         val PL_Light = findViewById<EditText>(R.id.PL_LightHostIP)
+        val allInOne = findViewById<EditText>(R.id.AllInOneHostIP)
 
         //        获取了 SharedPreferences 对象
 //        preferences = getSharedPreferences("myPreferences", MODE_PRIVATE)
@@ -62,6 +64,7 @@ class SettingActivity : AppCompatActivity() {
         val valueBucketHost = preferences?.getString("BucketHost", "")// 吊桶
         val valueWaterBranchHost = preferences?.getString("WaterBranchHost", "")// 消防水枪
         val valuePLLightHost = preferences?.getString("PL_LightHost", "")// 品灵探照灯
+        val valueAllInOneHost = preferences?.getString("AllInOneHost", "")// 多合一
         // 当未设置过ip时，ip显示为Host.kt里面的值，否则显示设置后的值
         if (valueShoutHost == "") {
             shout.setText(ShoutHost)
@@ -148,6 +151,12 @@ class SettingActivity : AppCompatActivity() {
             PL_Light.setText(valuePLLightHost)
         }
 
+        if (valueAllInOneHost == "") {
+            allInOne.setText(AllInOneHost)
+        } else {
+            allInOne.setText(valueAllInOneHost)
+        }
+
         save.setOnClickListener {
             val textShoutHost = shout.text.toString()
             val textLightHost = light.text.toString()
@@ -163,6 +172,7 @@ class SettingActivity : AppCompatActivity() {
             val textBucketHost = bucket.text.toString()
             val textWaterBranchHost = waterBranch.text.toString()
             val textPL_LightHost = PL_Light.text.toString()
+            val textAllInOneHost = allInOne.text.toString()
             // 将修改后的值存储到 SharedPreferences 中
             val editer = preferences!!.edit()
             editer.putString("ShoutHost", textShoutHost)
@@ -179,6 +189,7 @@ class SettingActivity : AppCompatActivity() {
             editer.putString("BucketHost", textBucketHost)
             editer.putString("WaterBranchHost", textWaterBranchHost)
             editer.putString("PL_LightHost", textPL_LightHost)
+            editer.putString("AllInOneHost", textAllInOneHost)
             editer.apply()
             finish();  //直接关闭当前页面
         }

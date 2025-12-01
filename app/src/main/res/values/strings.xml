@@ -309,4 +309,5 @@
     <string name="fpv_assistance">FPV 辅助</string>
     <string name="sound">声音</string>
     <string name="lamplight">灯光</string>
+    <string name="AllInOneHost_name">"多合一IP: "</string>
 </resources>

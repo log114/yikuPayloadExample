@@ -265,4 +265,5 @@
     <string name="fpv_assistance">FPV Assistance</string>
     <string name="sound">Sound</string>
     <string name="lamplight">Lamplight</string>
+    <string name="AllInOneHost_name">"All-In-One Host IP: "</string>
 </resources>
