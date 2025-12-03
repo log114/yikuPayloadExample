@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/speakerWeight"
-    android:layout_width="360dp"
+    android:layout_width="450dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -56,7 +56,7 @@
                     android:layout_height="30dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/searchlight"
-                    android:textSize="18sp"
+                    android:textSize="13sp"
                     android:textColor="@color/white" />
 
                 <LinearLayout
@@ -76,32 +76,20 @@
                         <TextView
                             android:layout_width="100dp"
                             android:layout_height="30dp"
-                            android:layout_marginEnd="10dp"
+                            android:layout_marginEnd="20dp"
+                            android:textAlignment="textEnd"
                             android:text="@string/lighting"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textColor="@color/white" />
 
                         <Button
-                            android:id="@+id/light_open_btn"
-                            android:layout_width="60dp"
+                            android:id="@+id/light_switch_btn"
+                            android:layout_width="140dp"
                             android:layout_height="30dp"
                             android:padding="0dp"
                             android:layout_gravity="center_horizontal"
                             android:background="@drawable/play_btn"
-                            android:text="@string/open"
-                            android:textColor="@color/white"
-                            android:textSize="13sp"
-                            tools:ignore="ButtonStyle" />
-
-                        <Button
-                            android:id="@+id/light_close_btn"
-                            android:layout_width="60dp"
-                            android:layout_height="30dp"
-                            android:padding="0dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/play_btn"
-                            android:text="@string/close"
+                            android:text="@string/turn_on_the_light"
                             android:textColor="@color/white"
                             android:textSize="13sp"
                             tools:ignore="ButtonStyle" />
@@ -118,32 +106,20 @@
                         <TextView
                             android:layout_width="100dp"
                             android:layout_height="30dp"
-                            android:layout_marginEnd="10dp"
+                            android:layout_marginEnd="20dp"
+                            android:textAlignment="textEnd"
                             android:text="@string/flash_lamp"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textColor="@color/white" />
 
                         <Button
-                            android:id="@+id/flash_open_btn"
-                            android:layout_width="60dp"
+                            android:id="@+id/flash_switch_btn"
+                            android:layout_width="140dp"
                             android:layout_height="30dp"
                             android:padding="0dp"
                             android:layout_gravity="center_horizontal"
                             android:background="@drawable/play_btn"
-                            android:text="@string/open"
-                            android:textColor="@color/white"
-                            android:textSize="13sp"
-                            tools:ignore="ButtonStyle" />
-
-                        <Button
-                            android:id="@+id/flash_close_btn"
-                            android:layout_width="60dp"
-                            android:layout_height="30dp"
-                            android:padding="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginStart="10dp"
-                            android:background="@drawable/play_btn"
-                            android:text="@string/close"
+                            android:text="@string/explosive_flashing"
                             android:textColor="@color/white"
                             android:textSize="13sp"
                             tools:ignore="ButtonStyle" />
@@ -205,7 +181,7 @@
                 android:layout_marginEnd="10dp"
                 android:gravity="center_vertical"
                 android:text="@string/red_and_blue"
-                android:textSize="18sp"
+                android:textSize="13sp"
                 android:textColor="@color/white" />
 
             <LinearLayout
@@ -239,7 +215,7 @@
                         android:layout_width="100dp"
                         android:layout_height="30dp"
                         android:padding="0dp"
-                        android:layout_marginStart="40dp"
+                        android:layout_marginStart="50dp"
                         android:layout_gravity="center_horizontal"
                         android:background="@drawable/play_btn"
                         android:text="@string/close"
@@ -259,9 +235,10 @@
                     <TextView
                         android:layout_width="130dp"
                         android:layout_height="30dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:textAlignment="textEnd"
                         android:text="@string/red_blue_mode"
-                        android:textSize="18sp"
+                        android:textSize="13sp"
                         android:textColor="@color/white" />
 
                     <LinearLayout
@@ -278,7 +255,7 @@
                             android:layout_width="68dp"
                             android:layout_height="wrap_content"
                             android:text=""
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textColor="@color/white"
                             android:layout_marginEnd="4dp" />
 
@@ -316,8 +293,8 @@
                 android:maxHeight="2dp"
                 android:progressDrawable="@drawable/bg_adjust_seek_bar"
                 android:thumb="@drawable/bg_seek_bar_thumb"
-                android:max="100"
-                android:progress="30" />
+                android:max="900"
+                android:progress="0" />
 
             <TextView
                 android:id="@+id/pitch_text"

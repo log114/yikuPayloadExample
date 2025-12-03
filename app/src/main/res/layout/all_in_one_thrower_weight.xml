@@ -26,8 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
-                android:scaleX="1.2"
-                android:scaleY="1.2"
+                android:scaleX="1"
+                android:scaleY="1"
                 android:text="@string/safety_switch"
                 android:textColor="@color/white"
                 tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="@string/throwing_switch"
-                    android:textSize="18sp"
+                    android:textSize="13sp"
                     android:textColor="@color/white" />
 
                 <LinearLayout
@@ -90,7 +90,7 @@
                             android:padding="0dp"
                             android:layout_gravity="center_horizontal"
                             android:background="@drawable/play_btn"
-                            android:text="@string/number_1"
+                            android:text="@string/open_1"
                             android:textColor="@color/white"
                             android:textSize="13sp"
                             tools:ignore="ButtonStyle" />
@@ -103,7 +103,7 @@
                             android:layout_marginStart="20dp"
                             android:layout_gravity="center_horizontal"
                             android:background="@drawable/play_btn"
-                            android:text="@string/number_2"
+                            android:text="@string/open_2"
                             android:textColor="@color/white"
                             android:textSize="13sp"
                             tools:ignore="ButtonStyle" />
@@ -124,7 +124,7 @@
                             android:padding="0dp"
                             android:layout_gravity="center_horizontal"
                             android:background="@drawable/play_btn"
-                            android:text="@string/open_all"
+                            android:text="@string/openAll"
                             android:textColor="@color/white"
                             android:textSize="13sp"
                             tools:ignore="ButtonStyle" />
@@ -155,7 +155,7 @@
                     android:layout_marginEnd="10dp"
                     android:gravity="center_vertical"
                     android:text="@string/fire_extinguish_bomb"
-                    android:textSize="18sp"
+                    android:textSize="13sp"
                     android:textColor="@color/white" />
                 <LinearLayout
                     android:layout_width="0dp"
@@ -179,7 +179,7 @@
                             <TextView
                                 android:layout_width="40dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="10dp"
+                                android:layout_marginEnd="4dp"
                                 android:text="@string/number_1"
                                 android:textSize="13sp"
                                 android:textColor="@color/white" />
@@ -189,7 +189,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_connected"
                                 android:layout_weight="1"
-                                android:textSize="13sp"
+                                android:textSize="12sp"
                                 android:textColor="@color/white" />
                         </LinearLayout>
 
@@ -204,7 +204,7 @@
                             <TextView
                                 android:layout_width="40dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="10dp"
+                                android:layout_marginEnd="4dp"
                                 android:text="@string/number_2"
                                 android:textSize="13sp"
                                 android:textColor="@color/white" />
@@ -214,7 +214,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_connected"
                                 android:layout_weight="1"
-                                android:textSize="13sp"
+                                android:textSize="12sp"
                                 android:textColor="@color/white"
                                 tools:ignore="NestedWeights" />
                         </LinearLayout>
@@ -309,8 +309,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="20dp"
-                            android:scaleX="1.2"
-                            android:scaleY="1.2"
+                            android:scaleX="1"
+                            android:scaleY="1"
                             android:text="@string/number_1"
                             android:textSize="13sp"
                             android:textColor="@color/white"
@@ -320,8 +320,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="20dp"
-                            android:scaleX="1.2"
-                            android:scaleY="1.2"
+                            android:scaleX="1"
+                            android:scaleY="1"
                             android:text="@string/number_2"
                             android:textSize="13sp"
                             android:textColor="@color/white"
@@ -368,7 +368,7 @@
         tools:ignore="UselessParent">
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="220dp"
             android:padding="0dp"
             android:background="@drawable/boder"
             android:visibility="visible"
@@ -450,7 +450,7 @@
                 android:padding="0dp"
                 android:layout_marginStart="10dp"
                 android:textSize="13sp"
-                android:text="@string/number_1"
+                android:text="@string/open_1"
                 android:background="@drawable/play_btn"
                 android:textColor="@color/white"/>
             <Button
@@ -460,7 +460,7 @@
                 android:padding="0dp"
                 android:layout_marginStart="10dp"
                 android:textSize="13sp"
-                android:text="@string/number_2"
+                android:text="@string/open_2"
                 android:background="@drawable/play_btn"
                 android:textColor="@color/white"/>
             <Button
@@ -470,7 +470,7 @@
                 android:padding="0dp"
                 android:layout_marginStart="10dp"
                 android:textSize="13sp"
-                android:text="@string/open_all"
+                android:text="@string/openAll"
                 android:background="@drawable/play_btn"
                 android:textColor="@color/white"/>
         </LinearLayout>

@@ -266,4 +266,9 @@
     <string name="sound">Sound</string>
     <string name="lamplight">Lamplight</string>
     <string name="AllInOneHost_name">"All-In-One Host IP: "</string>
+    <string name="openAll">open all</string>
+    <string name="open_1">open No.1</string>
+    <string name="open_2">open No.2</string>
+    <string name="close_1">close No.1</string>
+    <string name="close_2">close No.2</string>
 </resources>

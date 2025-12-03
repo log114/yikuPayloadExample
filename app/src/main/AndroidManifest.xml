@@ -62,6 +62,12 @@
             android:label="@string/title_activity_add_record"
             android:theme="@style/Theme.YikuShoutApp.NoActionBar" />
         <activity
+            android:name="com.example.yikupayloadexample.component.FullScreenVideoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="landscape"
+            tools:ignore="MissingClass" />
+        <activity
             android:name=".MainActivity"
             android:configChanges="orientation"
             android:exported="true"

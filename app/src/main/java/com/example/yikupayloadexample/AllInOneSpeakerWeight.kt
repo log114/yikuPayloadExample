@@ -59,13 +59,14 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
     private var isConnecting: Boolean = false
-    private var updateTime = Date().time
     private var isForegroundServiceRunning = false
     private var isStartSpeak = false
     private var isPlayAlarm = false;
     private var isLoopTTSPlaying = false
     private var isConnectingPtz: Boolean = false
     private var isSettingPitch: Boolean = false
+    private var isInit: Boolean = false
+    private var updateTime = Date().time
 
     private lateinit var audioListView: ListView
     private var adapter: AudioListAdapter? = null
@@ -74,21 +75,6 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
 
     init {
         initView(context)
-        // 消息订阅
-        allInOneService.registMsgCallback(object : MsgCallback {
-            override fun getId(): String {
-                return "AllInOneSpeakerWeightCallback"
-            }
-            override fun onMsg(msg: ByteArray) {
-                if (msg[0] != 0x8d.toByte()) {
-                    return
-                }
-                if (msg[2] == ALLINONE_STATE.toByte()) {
-                    // 更新状态
-                    updateTime = Date().time
-                }
-            }
-        })
         // 云台消息订阅
         allInOneService.registPtzMsgCallback(object : MsgCallback {
             override fun getId(): String {
@@ -99,6 +85,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                     return
                 }
                 if (msg[2] == ALLINONE_PITCH_STATE.toByte()) {
+                    updateTime = Date().time
                     if(isSettingPitch) {
                         return
                     }
@@ -381,7 +368,6 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 Thread.sleep(1000)
             }
             isConnecting = false
-            updateTime = Date().time
             getMessageTime()
         }
     }
@@ -394,22 +380,9 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             override fun run() {
                 // 已连接
                 if (allInOneService.getIsConnected()) {
-                    // 3秒没收到信息，显示未连接
-//                    if (Date().time - updateTime > 3000) {
-//                        handler.post {
-//                            mConnectState.setText(R.string.connection_status_notconnected)
-//                        }
-//                    }
-//                    else {
-                        handler.post {
-                            mConnectState.setText(R.string.connection_status_connected)
-                        }
-//                    }
-//                    // 如果超过10s没收到消息，主动断开连接，等待重连
-//                    if (Date().time - updateTime > 10000) {
-//                        // 断连
-//                        allInOneService.disConnect()
-//                    }
+                    handler.post {
+                        mConnectState.setText(R.string.connection_status_connected)
+                    }
                     // 如果没连接云台，尝试连接
                     if(!allInOneService.getIsPtzConnected() && !isConnectingPtz) {
                         isConnectingPtz = true
@@ -425,18 +398,41 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                     if(!isConnecting){
                         isConnecting = true
                         thread {
-                            Thread.sleep(5000)// 先等待5s，防止刚断连就重连，报错
+                            if(isInit) {
+                                Thread.sleep(5000)// 先等待5s，防止刚断连就重连，报错
+                            }
+                            isInit = true
                             while (!allInOneService.connect()) {
                                 Thread.sleep(1000)
                             }
                             isConnecting = false
-                            updateTime = Date().time
                             handler.post {
                                 mConnectState.setText(R.string.connection_status_connected)
                             }
                             // 默认音量与滑条值同步
                             allInOneService.setVolume(volumeSeekBar.progress)
                         }
+                    }
+                }
+
+                // 如果云台没连接，尝试连接
+                if(!allInOneService.getIsPtzConnected() && !isConnectingPtz) {
+                    isConnectingPtz = true
+                    thread {
+                        Thread.sleep(5000)
+                        while (!allInOneService.mainConnect()) {
+                            Thread.sleep(1000)
+                        }
+                        isConnectingPtz = false
+                        updateTime = Date().time
+                    }
+                }
+                // 已连接
+                if (allInOneService.getIsPtzConnected()) {
+                    // 如果超过10s没收到消息，主动断开连接，等待重连
+                    if (Date().time - updateTime > 10000) {
+                        // 断连
+                        allInOneService.disConnectPtz()
                     }
                 }
             }

@@ -77,8 +77,8 @@ class PayloadWeight : Service() {
     private lateinit var plLightBtn: ImageView
     private lateinit var allInOneSpeakerBtn: ImageView
     private lateinit var allInOneLightBtn: ImageView
-    private lateinit var allInOneThrowerBtn: ImageView
-    private lateinit var allInOneFpvBtn: ImageView
+    public lateinit var allInOneThrowerBtn: ImageView
+    public lateinit var allInOneFpvBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
 
@@ -525,7 +525,9 @@ class PayloadWeight : Service() {
         allInOneSpeakerWeight = AllInOneSpeakerWeight(this)
         allInOneLightWeight = AllInOneLightWeight(this)
         allInOneThrowerWeight = AllInOneThrowerWeight(this)
+        allInOneThrowerWeight.attachFloatingWindow(this)
         allInOneFpvWeight = AllInOneFpvWeight(this)
+        allInOneFpvWeight.attachFloatingWindow(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)

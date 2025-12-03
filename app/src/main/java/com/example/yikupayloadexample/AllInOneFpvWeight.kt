@@ -1,6 +1,7 @@
 package com.example.yikupayloadexample
 
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -11,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import com.example.yikupayloadexample.component.FullScreenVideoActivity
 import com.example.yikupayloadexample.util.PlayerCallback
 import com.example.yikupayloadexample.util.RtspPlayer
 import com.yiku.yikupayloadSDK.protocol.ALLINONE_PITCH_STATE
@@ -33,6 +35,7 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
     private var isSettingPitch: Boolean = false
+    private var thisPayloadWeight: PayloadWeight? = null
 
     // 当窗口被加载时，加载视频
     override fun onAttachedToWindow() {
@@ -86,7 +89,7 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         })
         // 放大窗口
         enlargeBtn.setOnClickListener {
-
+            switchToFullScreen()
         }
         // 俯仰控制
         pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -113,5 +116,27 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         playerView = findViewById(R.id.playerView)
         pitchSeekBar = findViewById(R.id.pitch_seek_bar)
         pitchText = findViewById(R.id.pitch_text)
+    }
+
+    fun attachFloatingWindow(service: PayloadWeight) {
+        this.thisPayloadWeight = service
+    }
+
+    /**
+     * 切换到全屏模式
+     */
+    private fun switchToFullScreen() {
+        try {
+            val intent = Intent(context, FullScreenVideoActivity::class.java).apply {
+                putExtra(FullScreenVideoActivity.EXTRA_STREAM_URL, streamUrl)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
+            thisPayloadWeight?.allInOneFpvBtn?.performClick()
+
+        } catch (e: Exception) {
+            Log.e(TAG, "切换到全屏失败: ${e.message}")
+            Toast.makeText(context, "全屏模式暂不可用", Toast.LENGTH_SHORT).show()
+        }
     }
 }

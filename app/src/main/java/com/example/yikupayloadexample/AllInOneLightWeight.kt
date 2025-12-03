@@ -15,6 +15,7 @@ import com.example.yikupayloadexample.component.ModeSelectionDialog
 import com.yiku.yikupayloadSDK.protocol.ALLINONE_PITCH_STATE
 import com.yiku.yikupayloadSDK.protocol.ALLINONE_STATE
 import com.yiku.yikupayloadSDK.util.MsgCallback
+import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
@@ -33,10 +34,8 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 
     private val TAG = "AllInOneLightWeight"
     private lateinit var connectState: TextView
-    private lateinit var lightOpenBtn: Button
-    private lateinit var lightCloseBtn: Button
-    private lateinit var flashOpenBtn: Button
-    private lateinit var flashCloseBtn: Button
+    private lateinit var lightSwitchBtn: Button
+    private lateinit var flashSwitchBtn: Button
     private lateinit var luminanceSeekBar: SeekBar
     private lateinit var luminanceText: TextView
     private lateinit var redAndBlueOpenBtn: Button
@@ -71,11 +70,13 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private var redAndBlueMode: Int = 1
     private var isOpenRedAndBlue: Boolean = false
     private var isSettingRedAndBlueMode: Boolean = false
+    private var isConnectingMain: Boolean = false
+    private var updateTime = Date().time
 
     init {
         initView(context)
         // 消息订阅
-        allInOneService.registMsgCallback(object : MsgCallback {
+        allInOneService.registMainMsgCallback(object : MsgCallback {
             override fun getId(): String {
                 return "AllInOneLightWeightCallback"
             }
@@ -84,6 +85,7 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                     return
                 }
                 if (msg[2] == ALLINONE_STATE.toByte()) {
+                    updateTime = Date().time
                     // 更新状态
                     updateState(msg)
                 }
@@ -119,21 +121,29 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             showModeSelectionDialog()
         }
 
-        // 开灯
-        lightOpenBtn.setOnClickListener {
-            allInOneService.openLight(true)
+        // 开灯、关灯
+        lightSwitchBtn.setOnClickListener {
+            lightSwitchBtn.isEnabled = false
+            allInOneService.openLight(!isOpenLight)
+            thread {
+                Thread.sleep(2000)
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    lightSwitchBtn.isEnabled = true
+                }
+            }
         }
-        // 关灯
-        lightCloseBtn.setOnClickListener {
-            allInOneService.openLight(false)
-        }
-        // 开爆闪
-        flashOpenBtn.setOnClickListener {
-            allInOneService.flashSwitch(true)
-        }
-        // 关爆闪
-        flashCloseBtn.setOnClickListener {
-            allInOneService.flashSwitch(false)
+        // 开爆闪、关爆闪
+        flashSwitchBtn.setOnClickListener {
+            flashSwitchBtn.isEnabled = false
+            allInOneService.flashSwitch(!isFlashing)
+            thread {
+                Thread.sleep(2000)
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    flashSwitchBtn.isEnabled = true
+                }
+            }
         }
 
         // 亮度控制
@@ -191,7 +201,24 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         isOpenLight = lightStatus.lightEnabled
         isFlashing = lightStatus.strobeEnabled
         val handler = Handler(Looper.getMainLooper())
-        Log.d(TAG, "模式：${msg[7].toInt()}, isSettingRedAndBlueMode:$isSettingRedAndBlueMode")
+        handler.post {
+            if(lightSwitchBtn.isEnabled) {
+                if(isOpenLight) {
+                    lightSwitchBtn.setText(R.string.turn_off_the_light)
+                }
+                else {
+                    lightSwitchBtn.setText(R.string.turn_on_the_light)
+                }
+            }
+            if(flashSwitchBtn.isEnabled) {
+                if(isFlashing) {
+                    flashSwitchBtn.setText(R.string.turn_off_explosion_flash)
+                }
+                else {
+                    flashSwitchBtn.setText(R.string.explosive_flashing)
+                }
+            }
+        }
         // 红蓝模式
         if(msg[7].toInt() != 0 && !isSettingRedAndBlueMode) {
             Log.d(TAG, "自动更新红蓝模式")
@@ -229,10 +256,8 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.all_in_one_light_weight, this, true)
         connectState = findViewById(R.id.connectState)
-        lightOpenBtn = findViewById(R.id.light_open_btn)
-        lightCloseBtn = findViewById(R.id.light_close_btn)
-        flashOpenBtn = findViewById(R.id.flash_open_btn)
-        flashCloseBtn = findViewById(R.id.flash_close_btn)
+        lightSwitchBtn = findViewById(R.id.light_switch_btn)
+        flashSwitchBtn = findViewById(R.id.flash_switch_btn)
         luminanceSeekBar = findViewById(R.id.luminance_seek_bar)
         luminanceText = findViewById(R.id.luminance_text)
         redAndBlueOpenBtn = findViewById(R.id.redAndBlue_open_btn)
@@ -272,15 +297,36 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask() {
             override fun run() {
-                // 已连接
-                if (allInOneService.getIsConnected()) {
-                    handler.post {
-                        connectState.setText(R.string.connection_status_connected)
-                    }
-                }
-                else{// 未连接
+                // 如果没连接灯和抛投，尝试连接
+                if(!allInOneService.getMainIsConnected() && !isConnectingMain) {
+                    isConnectingMain = true
                     handler.post {
                         connectState.setText(R.string.connection_status_notconnected)
+                    }
+                    thread {
+                        Thread.sleep(5000)
+                        while (!allInOneService.mainConnect()) {
+                            Thread.sleep(1000)
+                        }
+                        handler.post {
+                            connectState.setText(R.string.connection_status_connected)
+                        }
+                        isConnectingMain = false
+                        updateTime = Date().time
+                    }
+                }
+                // 已连接
+                if (allInOneService.getMainIsConnected()) {
+                    // 5秒没收到信息，显示未连接
+                    if (Date().time - updateTime > 5000) {
+                        handler.post {
+                            connectState.setText(R.string.connection_status_notconnected)
+                        }
+                    }
+                    // 如果超过10s没收到消息，主动断开连接，等待重连
+                    if (Date().time - updateTime > 10000) {
+                        // 断连
+                        allInOneService.mainDisConnect()
                     }
                 }
             }

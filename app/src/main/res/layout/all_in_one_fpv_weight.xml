@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/throwerWeight"
-    android:layout_width="360dp"
+    android:layout_width="450dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -15,7 +15,7 @@
         tools:ignore="UselessParent">
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="226dp"
             android:padding="0dp"
             android:background="@drawable/boder"
             android:visibility="visible"

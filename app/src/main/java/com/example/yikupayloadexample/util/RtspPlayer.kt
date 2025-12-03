@@ -29,7 +29,9 @@ class RtspPlayer(context: Context) {
         "--live-caching=0",
         "--tcp-caching=0",
         "--rtsp-tcp",
-        "--avcodec-fast"
+        "--avcodec-hw=any", // 尝试使用任何可用的硬件解码器
+        "--skip-frames",    // 在解码瓶颈时主动跳帧以避免延迟累积，对实时性视频很有效
+        "--avcodec-fast"    // 可以尝试与硬件解码参数共用，但可能冲突
     )
 
     private var libVLC: LibVLC? = LibVLC(context, args)

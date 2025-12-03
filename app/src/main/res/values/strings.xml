@@ -310,4 +310,9 @@
     <string name="sound">声音</string>
     <string name="lamplight">灯光</string>
     <string name="AllInOneHost_name">"多合一IP: "</string>
+    <string name="openAll">全开</string>
+    <string name="open_1">开1号</string>
+    <string name="open_2">开2号</string>
+    <string name="close_1">关1号</string>
+    <string name="close_2">关2号</string>
 </resources>

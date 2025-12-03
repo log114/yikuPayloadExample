@@ -109,6 +109,6 @@ dependencies {
     implementation 'io.github.controlwear:virtualjoystick:1.10.1'
     implementation 'io.github.libpd.android:pd-core:1.2.1-rc6'
     implementation 'org.apache.commons:commons-math3:3.6.1'
-    implementation 'com.github.log114:yikupayload:0.12.0-test6'
+    implementation 'com.github.log114:yikupayload:0.12.0-test8'
     implementation 'org.videolan.android:libvlc-all:3.6.2'
 }

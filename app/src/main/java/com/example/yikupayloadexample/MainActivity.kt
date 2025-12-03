@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                 PayloadWeight::class.java
             )
 
-            this.bindService(intent, conn!!, Context.BIND_AUTO_CREATE)
+            this.bindService(intent!!, conn!!, Context.BIND_AUTO_CREATE)
 //            this.startActivity(intent)
 
             run {
