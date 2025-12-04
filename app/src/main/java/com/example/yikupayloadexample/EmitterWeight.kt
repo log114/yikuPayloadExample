@@ -143,6 +143,11 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mEmitterLaunch6Btn = findViewById(R.id.emitterLaunch6Btn)
         setConnectState()
 
+        // 安全开关
+        mSafetySwitchSwitch.setOnClickListener {
+            emitterService.safetySwitch(mSafetySwitchSwitch.isChecked)
+        }
+
         mEmitterLaunch1Btn.setOnClickListener {
             launch(0)
         }
