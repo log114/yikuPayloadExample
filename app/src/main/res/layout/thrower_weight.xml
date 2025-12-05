@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/thWeight"
     android:layout_width="500dp"
-    android:layout_height="match_parent">
+    android:layout_height="300dp">
 
     <LinearLayout
         android:id="@+id/throwerWeight"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:orientation="vertical"
         android:visibility="visible">
@@ -318,14 +318,15 @@
     <LinearLayout
         android:id="@+id/detonationSettingsView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:layout_centerInParent="true"
         android:orientation="vertical"
         android:visibility="gone">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="60dp"
             android:visibility="visible">
             <TextView
                 android:layout_width="wrap_content"
@@ -346,7 +347,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="60dp"
             android:layout_marginTop="2dp"
             android:visibility="visible">
             <TextView
@@ -368,7 +369,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="60dp"
             android:layout_marginTop="2dp"
             android:visibility="visible">
             <TextView
@@ -390,7 +391,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="60dp"
             android:layout_marginTop="2dp"
             android:visibility="visible">
             <TextView
@@ -413,7 +414,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp">
+            android:layout_marginStart="60dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -443,7 +444,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:paddingStart="10dp"
+            android:paddingStart="60dp"
             android:visibility="gone">
 
             <TextView
@@ -475,7 +476,7 @@
             android:id="@+id/OKBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="60dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/play_btn"
             android:text="@string/ok"
@@ -484,8 +485,9 @@
     <LinearLayout
         android:id="@+id/promptView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         android:visibility="gone">
         <TextView
@@ -523,8 +525,9 @@
     <LinearLayout
         android:id="@+id/updateView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         android:visibility="gone">
         <TextView

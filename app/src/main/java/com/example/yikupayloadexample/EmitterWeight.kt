@@ -29,6 +29,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mEmitterView: View
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
+    private var isOpenSafetySwitch: Boolean = false
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -67,7 +68,6 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         Log.i(TAG, "38mm发射器，更新状态msg:${msg.toHex()}")
         var i = 0
         while (i < 6) {
-
             val btn: Button = when (i) {
                 0 -> mEmitterLaunch1Btn
                 1 -> mEmitterLaunch4Btn
@@ -79,25 +79,31 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     mEmitterLaunch1Btn
                 }
             }
-            if (msg[i + 3] == 0x00.toByte()) {
-                // 空仓
-                btn.setText(R.string.short_position)
+            if(!isOpenSafetySwitch) {
+                btn.setText(R.string.not_detected)
                 btn.isEnabled = false
             }
-            if (msg[i + 3] == 0x01.toByte()) {
-                // 在仓
-                btn.setText(R.string.launch)
-                btn.isEnabled = true
-            }
-            if (msg[i + 3] == 0x02.toByte()) {
-                // 发射中
-                btn.setText(R.string.launching)
-                btn.isEnabled = false
-            }
-            if (msg[i + 3] == 0x03.toByte()) {
-                // 卡住
-                btn.setText(R.string.stuck)
-                btn.isEnabled = false
+            else {
+                if (msg[i + 3] == 0x00.toByte()) {
+                    // 空仓
+                    btn.setText(R.string.short_position)
+                    btn.isEnabled = false
+                }
+                if (msg[i + 3] == 0x01.toByte()) {
+                    // 在仓
+                    btn.setText(R.string.launch)
+                    btn.isEnabled = true
+                }
+                if (msg[i + 3] == 0x02.toByte()) {
+                    // 发射中
+                    btn.setText(R.string.launching)
+                    btn.isEnabled = false
+                }
+                if (msg[i + 3] == 0x03.toByte()) {
+                    // 卡住
+                    btn.setText(R.string.stuck)
+                    btn.isEnabled = false
+                }
             }
             i++
         }
@@ -114,21 +120,16 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 showToast(R.string.launch_command_executed)
 
                 mSafetySwitchSwitch.isChecked = false
+                thread {
+                    Thread.sleep(100)
+                    emitterService.safetySwitch(false)
+                }
+                isOpenSafetySwitch = false
             }
         } catch (e: Exception) {
             e.printStackTrace()
             showToast(R.string.launch_failed)
         }
-//        thread {
-//            try {
-//                Log.i(TAG, "获取状态")
-//                Thread.sleep(1500)
-//                emitterService.getStatus()
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-////                showToast("获取状态失败")
-//            }
-//        }
     }
 
     private fun initView(context: Context?) {
@@ -146,6 +147,15 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         // 安全开关
         mSafetySwitchSwitch.setOnClickListener {
             emitterService.safetySwitch(mSafetySwitchSwitch.isChecked)
+            if(mSafetySwitchSwitch.isChecked) {
+                thread {
+                    Thread.sleep(2000)
+                    isOpenSafetySwitch = mSafetySwitchSwitch.isChecked
+                }
+            }
+            else {
+                isOpenSafetySwitch = mSafetySwitchSwitch.isChecked
+            }
         }
 
         mEmitterLaunch1Btn.setOnClickListener {
