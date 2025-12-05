@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
 
     private var conn: ServiceConnection? = null
     private var intent: Intent? = null
+    private var isOpenedPayloadWeight: Boolean = false
+
     override fun onStop() {
         super.onStop()
         Log.w(TAG, "main onStop....")
@@ -73,6 +75,11 @@ class MainActivity : AppCompatActivity() {
                 showToast(R.string.turn_off_power_saving_mode)
                 return@setOnClickListener;
             }
+            if(isOpenedPayloadWeight) {
+                goHome()
+                return@setOnClickListener;
+            }
+            isOpenedPayloadWeight = true
             conn = object : ServiceConnection {
                 override fun onServiceDisconnected(name: ComponentName) {}
                 override fun onServiceConnected(name: ComponentName, binder: IBinder) {
