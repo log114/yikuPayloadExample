@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.SurfaceView
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -19,13 +20,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.example.yikupayloadexample.component.FullScreenVideoActivity
-import com.example.yikupayloadexample.util.PlayerCallback
 import com.example.yikupayloadexample.util.RtspPlayer
-import com.google.common.io.Resources
 import com.yiku.yikupayloadSDK.protocol.ALLINONE_STATE
 import com.yiku.yikupayloadSDK.util.MsgCallback
-import org.videolan.libvlc.MediaPlayer
-import org.videolan.libvlc.util.VLCVideoLayout
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
@@ -52,14 +49,14 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var fpvOpenBtn: Button
     private lateinit var backBtn: ImageView
     private lateinit var enlargeBtn: ImageView
-    private lateinit var playerView: VLCVideoLayout
+    private lateinit var playerView: SurfaceView
     private lateinit var playerParentView: LinearLayout
     private lateinit var thrower1FpvBtn: Button
     private lateinit var thrower2FpvBtn: Button
     private lateinit var throwerAllFpvBtn: Button
-    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
-//    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
-    private var rtspPlayer: RtspPlayer = RtspPlayer(context)
+//    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
+    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
+    private lateinit var rtspPlayer: RtspPlayer
 
     private var isOpenSafetySwitch: Boolean = false
     private var isSettingDetonateHeight: Boolean = false
@@ -67,30 +64,28 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var isOpenThrower2: Boolean = false
     private var isOpenThrowerAll: Boolean = false
     private var thisPayloadWeight: PayloadWeight? = null
+    private var isInitPlayer: Boolean = false
 
     // 当窗口被加载时，加载视频
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (streamUrl != "" && fpvContent.isVisible) {
-            Log.d(TAG, "onAttachedToWindow，播放视频")
-            rtspPlayer.registPlayerCallback(object : PlayerCallback {
-                override fun onPlaying(index: Int, mediaPlayer: MediaPlayer) {
-                    Log.i(TAG, "视频播放成功")
-                }
-
-                override fun onError(index: Int) {
-                    Log.e(TAG, "视频播放失败")
-                    Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show()
-                }
-            })
-            rtspPlayer.createPlayer(3, playerView, streamUrl)
+            if(isInitPlayer) {
+                rtspPlayer.startPlayback(streamUrl)
+            }
+            else {
+                initPlayer()
+                isInitPlayer = true
+            }
         }
     }
     // 当窗口被移除时，释放视频资源
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         // 释放视频资源
-        rtspPlayer.release()
+        if(isInitPlayer) {
+            rtspPlayer.stopPlayback()
+        }
     }
 
     init {
@@ -103,17 +98,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             }
             if (streamUrl != "") {
                 Log.d(TAG, "按键播放视频")
-                rtspPlayer.registPlayerCallback(object : PlayerCallback {
-                    override fun onPlaying(index: Int, mediaPlayer: MediaPlayer) {
-                        Log.i(TAG, "视频播放成功")
-                    }
-
-                    override fun onError(index: Int) {
-                        Log.e(TAG, "视频播放失败")
-                        Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show()
-                    }
-                })
-                rtspPlayer.createPlayer(3, playerView, streamUrl)
+                initPlayer()
             }
         }
         backBtn.setOnClickListener {
@@ -377,6 +362,36 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         throwerAllFpvBtn = findViewById(R.id.throwerAll_fpv_btn)
     }
 
+    // 创建播放器
+    private fun initPlayer() {
+        // 创建播放器（使用简化的事件监听）
+        rtspPlayer = RtspPlayer(streamUrl, playerView, object : RtspPlayer.RtspPlayerEventListener {
+            override fun onPlaying() {
+//                showToast("开始播放")
+            }
+
+            override fun onStopped() {
+//                showToast("播放停止")
+            }
+
+            override fun onError(errorMessage: String) {
+//                showToast("错误: $errorMessage")
+            }
+
+            override fun onLogMessage(message: String) {
+//                Log.d("RtspPlayer", message)
+            }
+
+            override fun onVideoSizeChanged(width: Int, height: Int) {
+                // 可选的视频尺寸变化处理
+            }
+
+            override fun onFrameRendered(frameCount: Int) {
+                // 可选的帧渲染回调
+            }
+        })
+    }
+
     // 更新状态
     private fun updateState(msg: ByteArray) {
         val handler = Handler(Looper.getMainLooper())
@@ -566,5 +581,23 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
         timer.scheduleAtFixedRate(task, 100, 2000);
+    }
+
+    private fun showToast(msg: Int) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            Toast.makeText(
+                MApplication.applicationContext, msg, Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun showToast(msg: String) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            Toast.makeText(
+                MApplication.applicationContext, msg, Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }

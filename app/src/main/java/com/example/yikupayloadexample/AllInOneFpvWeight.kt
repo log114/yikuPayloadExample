@@ -13,13 +13,11 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import com.example.yikupayloadexample.component.FullScreenVideoActivity
-import com.example.yikupayloadexample.util.PlayerCallback
 import com.example.yikupayloadexample.util.RtspPlayer
 import com.yiku.yikupayloadSDK.protocol.ALLINONE_PITCH_STATE
 import com.yiku.yikupayloadSDK.util.MsgCallback
-import org.videolan.libvlc.MediaPlayer
-import org.videolan.libvlc.util.VLCVideoLayout
 import kotlin.concurrent.thread
+import android.view.SurfaceView
 
 class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
@@ -28,30 +26,27 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
 
     private val TAG = "AllInOneFpvWeight"
     private lateinit var enlargeBtn: ImageView
-    private var playerView: VLCVideoLayout? = null
-    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
-//    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
-    private var rtspPlayer: RtspPlayer = RtspPlayer(context)
+    private lateinit var playerView: SurfaceView
+    private lateinit var rtspPlayer: RtspPlayer
+//    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
+    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
     private var isSettingPitch: Boolean = false
     private var thisPayloadWeight: PayloadWeight? = null
+    private var isInitPlayer: Boolean = false
 
     // 当窗口被加载时，加载视频
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (streamUrl != "") {
-            rtspPlayer.registPlayerCallback(object : PlayerCallback {
-                override fun onPlaying(index: Int, mediaPlayer: MediaPlayer) {
-                    Log.i(TAG, "视频播放成功")
-                }
-
-                override fun onError(index: Int) {
-                    Log.e(TAG, "视频播放失败")
-                    Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show()
-                }
-            })
-            rtspPlayer.createPlayer(3, playerView!!, streamUrl)
+            if(isInitPlayer) {
+                rtspPlayer.startPlayback(streamUrl)
+            }
+            else {
+                initPlayer()
+                isInitPlayer = true
+            }
         }
     }
     // 当窗口被移除时，释放视频资源
@@ -60,8 +55,11 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         Log.d(TAG, "onDetachedFromWindow: 视频View被移出窗口层级")
 
         // 释放视频资源
-        rtspPlayer.release()
+        if(isInitPlayer) {
+            rtspPlayer.stopPlayback()
+        }
     }
+
     init {
         initView(context)
         // 云台消息订阅
@@ -122,6 +120,36 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         this.thisPayloadWeight = service
     }
 
+    // 创建播放器
+    private fun initPlayer() {
+        // 创建播放器（使用简化的事件监听）
+        rtspPlayer = RtspPlayer(streamUrl, playerView, object : RtspPlayer.RtspPlayerEventListener {
+            override fun onPlaying() {
+//                showToast("开始播放")
+            }
+
+            override fun onStopped() {
+//                showToast("播放停止")
+            }
+
+            override fun onError(errorMessage: String) {
+//                showToast("错误: $errorMessage")
+            }
+
+            override fun onLogMessage(message: String) {
+//                Log.d("RtspPlayer", message)
+            }
+
+            override fun onVideoSizeChanged(width: Int, height: Int) {
+                // 可选的视频尺寸变化处理
+            }
+
+            override fun onFrameRendered(frameCount: Int) {
+                // 可选的帧渲染回调
+            }
+        })
+    }
+
     /**
      * 切换到全屏模式
      */
@@ -137,6 +165,24 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         } catch (e: Exception) {
             Log.e(TAG, "切换到全屏失败: ${e.message}")
             Toast.makeText(context, "全屏模式暂不可用", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showToast(msg: Int) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            Toast.makeText(
+                MApplication.applicationContext, msg, Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun showToast(msg: String) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            Toast.makeText(
+                MApplication.applicationContext, msg, Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }

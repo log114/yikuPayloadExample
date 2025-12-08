@@ -22,7 +22,7 @@
             tools:ignore="UselessParent">
 
             <!-- 视频播放区域（底层） -->
-            <org.videolan.libvlc.util.VLCVideoLayout
+            <SurfaceView
                 android:id="@+id/playerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

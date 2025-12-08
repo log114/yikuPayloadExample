@@ -5,7 +5,7 @@
     android:background="@android:color/black">
 
     <!-- 全屏视频播放区域 -->
-    <org.videolan.libvlc.util.VLCVideoLayout
+    <SurfaceView
         android:id="@+id/fullscreen_video_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
@@ -13,16 +14,12 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.yikupayloadexample.R
-import com.example.yikupayloadexample.util.PlayerCallback
 import com.example.yikupayloadexample.util.RtspPlayer
-import org.videolan.libvlc.MediaPlayer
-import org.videolan.libvlc.util.VLCVideoLayout
 import com.example.yikupayloadexample.MApplication
-import java.security.Provider
 
 class FullScreenVideoActivity : AppCompatActivity() {
     private val TAG = "FullScreenVideoActivity"
-    private lateinit var fullScreenVideoLayout: VLCVideoLayout
+    private lateinit var playerView: SurfaceView
     private lateinit var exitFullScreenBtn: ImageView
     private lateinit var controlsLayout: LinearLayout
 
@@ -57,7 +54,7 @@ class FullScreenVideoActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        fullScreenVideoLayout = findViewById(R.id.fullscreen_video_layout)
+        playerView = findViewById(R.id.fullscreen_video_layout)
         exitFullScreenBtn = findViewById(R.id.exit_fullscreen_btn)
         controlsLayout = findViewById(R.id.fullscreen_controls_layout)
     }
@@ -71,20 +68,32 @@ class FullScreenVideoActivity : AppCompatActivity() {
     }
 
     private fun setupPlayer() {
-        rtspPlayer = RtspPlayer(this)
-        rtspPlayer?.registPlayerCallback(object : PlayerCallback {
-            override fun onPlaying(index: Int, mediaPlayer: MediaPlayer) {
-                // 视频播放成功
+        // 创建播放器（使用简化的事件监听）
+        rtspPlayer = RtspPlayer(streamUrl!!, playerView, object : RtspPlayer.RtspPlayerEventListener {
+            override fun onPlaying() {
+//                showToast("开始播放")
             }
 
-            override fun onError(index: Int) {
-                // 处理播放错误
-                Log.e(TAG, "播放失败")
-//                finish()
+            override fun onStopped() {
+//                showToast("播放停止")
+            }
+
+            override fun onError(errorMessage: String) {
+//                showToast("错误: $errorMessage")
+            }
+
+            override fun onLogMessage(message: String) {
+//                Log.d("RtspPlayer", message)
+            }
+
+            override fun onVideoSizeChanged(width: Int, height: Int) {
+                // 可选的视频尺寸变化处理
+            }
+
+            override fun onFrameRendered(frameCount: Int) {
+                // 可选的帧渲染回调
             }
         })
-
-        rtspPlayer?.createPlayer(0, fullScreenVideoLayout, streamUrl!!)
     }
 
     private fun setupListeners() {
@@ -113,7 +122,16 @@ class FullScreenVideoActivity : AppCompatActivity() {
             Toast.makeText(
                 MApplication.applicationContext,
                 toastMsg,
-                Toast.LENGTH_LONG
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun showToast(msg: String) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            Toast.makeText(
+                MApplication.applicationContext, msg, Toast.LENGTH_SHORT
             ).show()
         }
     }

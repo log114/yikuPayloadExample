@@ -218,7 +218,7 @@ class AllInOneAddRecordActivity: AppCompatActivity() {
             Toast.makeText(
                 this,
                 msg,
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_LONG
             ).show()
         }
     }

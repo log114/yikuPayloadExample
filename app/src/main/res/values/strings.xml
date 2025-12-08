@@ -305,7 +305,7 @@
     <string name="choose_mode">选择红蓝模式</string>
     <string name="throwing_switch">抛投开关</string>
     <string name="fire_extinguish_bomb">灭火弹</string>
-    <string name="bomb_positioning">投弹定位辅助</string>
+    <string name="bomb_positioning">抛投定位辅助</string>
     <string name="fpv_assistance">FPV 辅助</string>
     <string name="sound">声音</string>
     <string name="lamplight">灯光</string>
