@@ -54,8 +54,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var thrower1FpvBtn: Button
     private lateinit var thrower2FpvBtn: Button
     private lateinit var throwerAllFpvBtn: Button
-//    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
-    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
+    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
+//    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
     private lateinit var rtspPlayer: RtspPlayer
 
     private var isOpenSafetySwitch: Boolean = false
@@ -93,6 +93,10 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         fpvOpenBtn.setOnClickListener {
             throwerContent.visibility = GONE
             fpvContent.visibility = VISIBLE
+            // 如果已连接云台，将俯仰调到90度
+            if(allInOneService.getIsPtzConnected()) {
+                allInOneService.pitchControl(900)
+            }
             if(playerView.parent == null) {
                 playerParentView.addView(playerView)
             }

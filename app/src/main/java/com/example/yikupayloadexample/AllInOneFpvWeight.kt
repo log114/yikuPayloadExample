@@ -28,8 +28,8 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private lateinit var enlargeBtn: ImageView
     private lateinit var playerView: SurfaceView
     private lateinit var rtspPlayer: RtspPlayer
-//    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
-    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
+    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
+//    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
     private var isSettingPitch: Boolean = false

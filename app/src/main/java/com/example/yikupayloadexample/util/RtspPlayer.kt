@@ -1,6 +1,5 @@
 package com.example.yikupayloadexample.util
 
-import android.content.Context
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
