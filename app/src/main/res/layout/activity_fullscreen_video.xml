@@ -7,8 +7,8 @@
     <!-- 全屏视频播放区域 -->
     <SurfaceView
         android:id="@+id/fullscreen_video_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="1280dp"
+        android:layout_height="720dp" />
 
     <!-- 顶部控制栏 -->
     <LinearLayout

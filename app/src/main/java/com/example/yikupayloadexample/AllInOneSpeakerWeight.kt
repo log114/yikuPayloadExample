@@ -16,6 +16,7 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.RadioGroup
@@ -42,6 +43,10 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     constructor(context: Context) : this(context, null, 0)
     private val TAG = "AllInOneSpeakerWeight"
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var speakerMainPage: LinearLayout
+    private lateinit var speakerSecondPage: LinearLayout
+    private lateinit var ttsSettingPage: LinearLayout
+    private lateinit var audioFileListPage: LinearLayout
     private lateinit var realTimeSpeakBtn: Button
     private lateinit var playAlarmBtn: Button
     private lateinit var mConnectState: TextView
@@ -49,15 +54,18 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var ttsPlayBtn: Button
     private lateinit var ttsRadioGroup: RadioGroup
     private lateinit var ttsLoopPlaybackCheckbox: CheckBox
-    private lateinit var audioPlayBtn: Button
-    private lateinit var audioStopPlayBtn: Button
-    private lateinit var audioLoopPlayBtn: Button
+    private lateinit var ttsSettingBtn: Button
+    private lateinit var openFileListBtn: Button
     private lateinit var addRecordBtn: Button
     private lateinit var delAudioBtn: Button
+    private lateinit var audioFileNameText: TextView
+    private lateinit var audioLoopPlaybackCheckbox: CheckBox
+    private lateinit var audioPlayBtn: Button
     private lateinit var volumeSeekBar: SeekBar
     private lateinit var volumeText: TextView
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
+    private lateinit var backBtn: ImageView
     private var isConnecting: Boolean = false
     private var isForegroundServiceRunning = false
     private var isStartSpeak = false
@@ -66,8 +74,10 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var isConnectingPtz: Boolean = false
     private var isSettingPitch: Boolean = false
     private var isInit: Boolean = false
+    private var isFirstConneted: Boolean = true
     private var updateTime = Date().time
 
+    private var isPlayingAudio: Boolean = false
     private lateinit var audioListView: ListView
     private var adapter: AudioListAdapter? = null
     // 初始化数据
@@ -150,7 +160,6 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 edit.putBoolean("alar_status", false);
             }
             edit.apply()
-
         }
         // 文字转语音
         ttsPlayBtn.setOnClickListener {
@@ -187,14 +196,21 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                     else -> 0
                 }
                 if(ttsLoopPlaybackCheckbox.isChecked) {
-                    isLoopTTSPlaying = true
                     allInOneService.startLoopTtsV2(translateText, voice)
-                    ttsPlayBtn.setText(R.string.stop_playing)
                 }
                 else {
                     allInOneService.ttsV2(translateText, voice)
                 }
+                ttsPlayBtn.setText(R.string.stop_playing)
+                isLoopTTSPlaying = true
             }
+        }
+        // 设置文字转语音
+        ttsSettingBtn.setOnClickListener {
+            speakerMainPage.visibility = GONE
+            speakerSecondPage.visibility = VISIBLE
+            ttsSettingPage.visibility = VISIBLE
+            audioFileListPage.visibility = GONE
         }
 
         // 音量控制
@@ -228,37 +244,36 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             }
         })
 
-        // 播放音频文件
+        // 播放、停止播放音频文件
         audioPlayBtn.setOnClickListener {
-            val selectedAudio = adapter?.getSelectedItem()
-            val selectPositon = adapter?.getSelectedPosition()
-            if (selectedAudio != null) {
-                // 先停止
+            if(isPlayingAudio) {
                 allInOneService.stopPlayAudio()
                 adapter?.stopPlaying()
-                // 再播放
-                allInOneService.playAudio(selectedAudio)
-                adapter?.setPlayingPosition(selectPositon!!)
+                audioPlayBtn.setText(R.string.play)
             }
-        }
-        // 停止播放音频文件
-        audioStopPlayBtn.setOnClickListener {
-            allInOneService.stopPlayAudio()
-            adapter?.stopPlaying()
+            else {
+                val selectedAudio = adapter?.getSelectedItem()
+                val selectPositon = adapter?.getSelectedPosition()
+                if (selectedAudio != null) {
+                    adapter?.setPlayingPosition(selectPositon!!)
+                    if(audioLoopPlaybackCheckbox.isChecked) {
+                        allInOneService.startLoopPlayAudio(selectedAudio)
+                    }
+                    else {
+                        allInOneService.playAudio(selectedAudio)
+                    }
+                    audioPlayBtn.setText(R.string.stop_playing)
+                }
+            }
+            isPlayingAudio = !isPlayingAudio
         }
 
-        // 循环播放音频文件
-        audioLoopPlayBtn.setOnClickListener {
-            val selectedAudio = adapter?.getSelectedItem()
-            val selectPositon = adapter?.getSelectedPosition()
-            if (selectedAudio != null) {
-                // 先停止
-                allInOneService.stopPlayAudio()
-                adapter!!.stopPlaying()
-                // 再播放
-                allInOneService.startLoopPlayAudio(selectedAudio)
-                adapter!!.setPlayingPosition(selectPositon!!)
-            }
+        // 打开音频文件选择列表
+        openFileListBtn.setOnClickListener {
+            speakerMainPage.visibility = GONE
+            speakerSecondPage.visibility = VISIBLE
+            ttsSettingPage.visibility = GONE
+            audioFileListPage.visibility = VISIBLE
         }
 
         // 上传音频文件
@@ -288,28 +303,43 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 }
             }
         }
+
+        // 返回主界面
+        backBtn.setOnClickListener {
+            speakerMainPage.visibility = VISIBLE
+            speakerSecondPage.visibility = GONE
+        }
+
+        audioFileNameText.isSelected = true
         initStatus()
         setConnectState()
     }
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.all_in_one_speaker_weight, this, true)
+        speakerMainPage = findViewById(R.id.speakerMainPage)
+        speakerSecondPage = findViewById(R.id.speakerSecondPage)
+        ttsSettingPage = findViewById(R.id.tts_setting_page)
+        audioFileListPage = findViewById(R.id.audio_file_list_page)
         realTimeSpeakBtn = findViewById(R.id.real_time_speak_btn)
         playAlarmBtn = findViewById(R.id.play_alarm)
         mConnectState = findViewById(R.id.connectState)
+        ttsSettingBtn = findViewById(R.id.tts_setting_btn)
         ttsText = findViewById(R.id.tts_text)
         ttsPlayBtn = findViewById(R.id.tts_play)
         ttsRadioGroup = findViewById(R.id.radioGroup)
         ttsLoopPlaybackCheckbox = findViewById(R.id.tts_loop_playback_checkbox)
-        audioPlayBtn = findViewById(R.id.audio_play)
-        audioStopPlayBtn = findViewById(R.id.audio_stopPlay)
-        audioLoopPlayBtn = findViewById(R.id.audio_loopPlay)
+        openFileListBtn = findViewById(R.id.open_fileList_btn)
         addRecordBtn = findViewById(R.id.addRecordBtn)
         delAudioBtn = findViewById(R.id.del_audio)
+        audioFileNameText = findViewById(R.id.audio_file_name_text)
+        audioLoopPlaybackCheckbox = findViewById(R.id.audio_loop_playback_checkbox)
+        audioPlayBtn = findViewById(R.id.audio_play_btn)
         audioListView = findViewById(R.id.record_list)
         volumeSeekBar = findViewById(R.id.volume_seek_bar)
         volumeText = findViewById(R.id.volumeText)
         pitchSeekBar = findViewById(R.id.pitch_seek_bar)
         pitchText = findViewById(R.id.pitchText)
+        backBtn = findViewById(R.id.back_btn)
     }
 
     private fun getFileList() {
@@ -355,6 +385,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             audioListView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
                 // 更新选中状态
                 adapter?.setSelectedPosition(position)
+                audioFileNameText.text = adapter?.getSelectedItem()
             }
         }
         getFileList()
@@ -382,6 +413,10 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 if (allInOneService.getIsConnected()) {
                     handler.post {
                         mConnectState.setText(R.string.connection_status_connected)
+                    }
+                    if(isFirstConneted) {
+                        isFirstConneted = false
+                        allInOneService.setVolume(volumeSeekBar.progress)
                     }
                     // 如果没连接云台，尝试连接
                     if(!allInOneService.getIsPtzConnected() && !isConnectingPtz) {
@@ -461,6 +496,9 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 }
             }
         }
+
+        val ttstext: String = sharedPreferences.getString("ttstext", "")!!
+        ttsText.setText(ttstext)
     }
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)

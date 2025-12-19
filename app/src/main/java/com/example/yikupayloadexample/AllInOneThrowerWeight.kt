@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
@@ -33,6 +34,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     constructor(context: Context) : this(context, null, 0)
 
     private val TAG = "AllInOneThrowerWeight"
+    private lateinit var pageLayout: RelativeLayout
     private lateinit var throwerContent: LinearLayout
     private lateinit var fpvContent: LinearLayout
     private lateinit var throwerSafetySwitch: Switch
@@ -65,6 +67,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var isOpenThrowerAll: Boolean = false
     private var thisPayloadWeight: PayloadWeight? = null
     private var isInitPlayer: Boolean = false
+    private var isAdjusting = false
+    private var isFullScreen = false
 
     // 当窗口被加载时，加载视频
     override fun onAttachedToWindow() {
@@ -106,10 +110,17 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             }
         }
         backBtn.setOnClickListener {
-            throwerContent.visibility = VISIBLE
             fpvContent.visibility = GONE
             rtspPlayer.release() // 释放视频资源
             playerParentView.removeView(playerView)
+            pageLayout.layoutParams = pageLayout.layoutParams.apply {
+                width = 900
+                height = LayoutParams.WRAP_CONTENT
+            }
+            isFullScreen = false
+            isAdjusting = false
+            thisPayloadWeight?.recoverSize()
+            throwerContent.visibility = VISIBLE
         }
 
         // 消息订阅
@@ -142,6 +153,10 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // 1号开关
         thrower1Btn.setOnClickListener {
+            if(!isOpenSafetySwitch) {
+                showToast(R.string.need_to_open_safety_switch)
+                return@setOnClickListener
+            }
             thrower1Btn.isEnabled = false
             if(isOpenThrower1) {
                 thrower1Btn.setText(R.string.closing)
@@ -165,6 +180,10 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // fpv页面，1号开关
         thrower1FpvBtn.setOnClickListener {
+            if(!isOpenSafetySwitch) {
+                showToast(R.string.need_to_open_safety_switch)
+                return@setOnClickListener
+            }
             thrower1FpvBtn.isEnabled = false
             if(isOpenThrower1) {
                 thrower1FpvBtn.setText(R.string.closing)
@@ -188,6 +207,10 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // 2号开关
         thrower2Btn.setOnClickListener {
+            if(!isOpenSafetySwitch) {
+                showToast(R.string.need_to_open_safety_switch)
+                return@setOnClickListener
+            }
             thrower2Btn.isEnabled = false
             if(isOpenThrower2) {
                 thrower2Btn.setText(R.string.closing)
@@ -211,6 +234,10 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // fpv页面，2号开关
         thrower2FpvBtn.setOnClickListener {
+            if(!isOpenSafetySwitch) {
+                showToast(R.string.need_to_open_safety_switch)
+                return@setOnClickListener
+            }
             thrower2FpvBtn.isEnabled = false
             if(isOpenThrower2) {
                 thrower2FpvBtn.setText(R.string.closing)
@@ -234,6 +261,10 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // 全开全关
         throwerAllBtn.setOnClickListener {
+            if(!isOpenSafetySwitch) {
+                showToast(R.string.need_to_open_safety_switch)
+                return@setOnClickListener
+            }
             throwerAllBtn.isEnabled = false
             if(isOpenThrowerAll) {
                 throwerAllBtn.setText(R.string.closing)
@@ -257,6 +288,10 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // fpv页面，全开全关
         throwerAllFpvBtn.setOnClickListener {
+            if(!isOpenSafetySwitch) {
+                showToast(R.string.need_to_open_safety_switch)
+                return@setOnClickListener
+            }
             throwerAllFpvBtn.isEnabled = false
             if(isOpenThrowerAll) {
                 throwerAllFpvBtn.setText(R.string.closing)
@@ -264,7 +299,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             else {
                 throwerAllFpvBtn.setText(R.string.opening)
             }
-            allInOneService.throwerSwitch(0, isOpenThrowerAll)
+            allInOneService.throwerSwitch(0, !isOpenThrowerAll)
             thread {
                 Thread.sleep(2000)
                 val handler = Handler(Looper.getMainLooper())
@@ -343,6 +378,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     }
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.all_in_one_thrower_weight, this, true)
+        pageLayout = findViewById(R.id.allInOneThrowerWeight)
         throwerContent = findViewById(R.id.thrower_content)
         fpvContent = findViewById(R.id.fpv_content)
         throwerSafetySwitch = findViewById(R.id.throwerSafetySwitch)
@@ -372,6 +408,11 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         rtspPlayer = RtspPlayer(streamUrl, playerView, object : RtspPlayer.RtspPlayerEventListener {
             override fun onPlaying() {
 //                showToast("开始播放")
+                val (width, height) = rtspPlayer.getVideoResolution()
+                if (width > 0 && height > 0) {
+                    Log.d(TAG, "播放开始，原始分辨率: ${width}x${height}")
+                    adjustContainerAspectRatio()
+                }
             }
 
             override fun onStopped() {
@@ -547,21 +588,72 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     }
 
     /**
+     * 根据视频宽高比调整 video_container (FrameLayout) 的高度
+     */
+    private fun adjustContainerAspectRatio() {
+        if (isAdjusting) return
+        isAdjusting = true
+        var (maxWidth, maxHeight) = thisPayloadWeight!!.getScreenSize(includeSystemBars = false)
+        maxHeight = maxHeight - 84 // 去掉头部标题和内边距，才是这里可以使用的最大高度
+        val bottomControlHeight = 88 // 底部控件高度
+        val aspectRatio = rtspPlayer.getOriginalAspectRatio() // 视频原始宽高比
+        var targetWidthPx = 0
+        var targetHeightPx = 0
+        // 全屏时，按照最大宽度和高度计算
+        if(isFullScreen) {
+            // 先基于最大高度计算目标宽度
+            targetHeightPx = maxHeight
+            targetWidthPx = ((maxHeight - bottomControlHeight) * aspectRatio).toInt()
+            // 如果计算结果超出最大限值，那改为基于最大宽度计算
+            if(targetWidthPx > maxWidth) {
+                targetWidthPx = maxWidth
+                targetHeightPx = (maxWidth / aspectRatio).toInt() + bottomControlHeight
+            }
+        }
+        else { // 非全屏时，先将宽度定为900计算高度
+            targetWidthPx = 900
+            if(targetWidthPx > maxWidth) {
+                targetWidthPx = maxWidth
+            }
+            targetHeightPx = (targetWidthPx / aspectRatio).toInt() + bottomControlHeight
+            // 如果计算的高度超出限值，改用最大高度计算
+            if(targetHeightPx > maxHeight) {
+                targetHeightPx = maxHeight // 这是包括了底部组件的高度，减掉底部组件，才是视频高度
+                targetWidthPx = ((maxHeight - bottomControlHeight) * aspectRatio).toInt()
+            }
+        }
+
+        Log.d(TAG, "最大宽度：${maxWidth}, 最大高度：${maxHeight}")
+        Log.d(TAG, "目标宽度=${targetWidthPx}，目标高度：${targetHeightPx}")
+        // 更新UI：调整 video_container 的高度
+        updateVideoContainerHeight(targetWidthPx, targetHeightPx)
+    }
+
+    private fun updateVideoContainerHeight(targetWidthPx: Int, targetHeightPx: Int) {
+        Handler(Looper.getMainLooper()).post {
+            pageLayout.layoutParams = pageLayout.layoutParams.apply {
+                width = targetWidthPx
+                height = targetHeightPx
+            }
+        }
+    }
+
+    /**
      * 切换到全屏模式
      */
     private fun switchToFullScreen() {
-        try {
-            val intent = Intent(context, FullScreenVideoActivity::class.java).apply {
-                putExtra(FullScreenVideoActivity.EXTRA_STREAM_URL, streamUrl)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            context.startActivity(intent)
-            thisPayloadWeight?.allInOneThrowerBtn?.performClick()
-
-        } catch (e: Exception) {
-            Log.e(TAG, "切换到全屏失败: ${e.message}")
-            Toast.makeText(context, "全屏模式暂不可用", Toast.LENGTH_SHORT).show()
+        if(!isFullScreen) {
+            thisPayloadWeight?.fullScreen()
         }
+        else {
+            thisPayloadWeight?.recoverSize()
+        }
+        isFullScreen = !isFullScreen
+        // 延时一下，确保布局已应用
+        Handler(Looper.getMainLooper()).postDelayed({
+            isAdjusting = false
+            adjustContainerAspectRatio()
+        }, 50)
     }
 
     // 定时器，判断连接状态

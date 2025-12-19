@@ -315,4 +315,10 @@
     <string name="open_2">开2号</string>
     <string name="close_1">关1号</string>
     <string name="close_2">关2号</string>
+    <string name="real_time_shout">实时喊话</string>
+    <string name="audio">音频</string>
+    <string name="alarm">警报</string>
+    <string name="audio_file">音频文件</string>
+    <string name="list">列表</string>
+    <string name="content">内容</string>
 </resources>

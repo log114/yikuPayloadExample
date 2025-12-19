@@ -3,16 +3,21 @@ package com.example.yikupayloadexample
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Binder
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.*
+import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.Toolbar
 import com.example.yikupayloadexample.AllInOneSpeakerWeight
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.anim.DefaultAnimator
@@ -254,36 +259,24 @@ class PayloadWeight : Service() {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(17, allInOneSpeakerBtn)) {
                             allInOneSpeakerBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
-                            if(!isLockWindow) {
-                                lockBtn.performClick() // 默认锁定悬浮窗
-                            }
                         }
                     }
                     allInOneLightBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(18, allInOneLightBtn)) {
                             allInOneLightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
-                            if(isLockWindow) {
-                                lockBtn.performClick() // 默认不锁定悬浮窗
-                            }
                         }
                     }
                     allInOneThrowerBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(19, allInOneThrowerBtn)) {
                             allInOneThrowerBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
-                            if(isLockWindow) {
-                                lockBtn.performClick() // 默认不锁定悬浮窗
-                            }
                         }
                     }
                     allInOneFpvBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(20, allInOneFpvBtn)) {
                             allInOneFpvBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
-                            if(isLockWindow) {
-                                lockBtn.performClick() // 默认不锁定悬浮窗
-                            }
                         }
                     }
                 }
@@ -536,7 +529,7 @@ class PayloadWeight : Service() {
                     mShoutView = it.findViewById(R.id.shoutComp)
                     lockBtn = it.findViewById(R.id.lockBtn)
                     it.isFocusable = true;
-//                    // 初始化关闭喊话界面
+                    // 初始化关闭喊话界面
                     mShoutView.visibility = View.GONE
                     mWindowTitle = it.findViewById(R.id.windowTitle)
                     mShoutViewContent = it.findViewById(R.id.shout_view_content)
@@ -612,6 +605,192 @@ class PayloadWeight : Service() {
 
             isInit = true
         }
+    }
+
+    fun getScreenSize(includeSystemBars: Boolean = true): Pair<Int, Int> {
+        val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        val displayMetrics = DisplayMetrics()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // 获取当前窗口的metrics
+            val windowMetrics = windowManager.currentWindowMetrics
+            val bounds = windowMetrics.bounds
+            val windowInsets = windowMetrics.windowInsets
+
+            if (!includeSystemBars) {
+                // 获取系统栏的insets
+                val systemBarInsets = windowInsets.getInsets(
+                    WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()
+                )
+
+                // 计算可用区域
+                val availableWidth = bounds.width() - systemBarInsets.left - systemBarInsets.right
+                val availableHeight = bounds.height() - systemBarInsets.top - systemBarInsets.bottom
+
+                Log.d(TAG, "计算可用区域: 窗口${bounds.width()}x${bounds.height()}, " +
+                        "系统栏Insets[L=${systemBarInsets.left}, T=${systemBarInsets.top}, " +
+                        "R=${systemBarInsets.right}, B=${systemBarInsets.bottom}], " +
+                        "可用${availableWidth}x${availableHeight}")
+
+                return Pair(availableWidth, availableHeight)
+            }
+            return Pair(bounds.width(), bounds.height())
+
+        } else {
+            @Suppress("DEPRECATION")
+            windowManager.defaultDisplay.getRealMetrics(displayMetrics)
+
+            if (!includeSystemBars) {
+                val resources = resources
+
+                // 获取状态栏高度
+                val statusBarId = resources.getIdentifier("status_bar_height", "dimen", "android")
+                var statusBarHeight = 0
+                if (statusBarId > 0) {
+                    statusBarHeight = resources.getDimensionPixelSize(statusBarId)
+                }
+
+                // 获取导航栏尺寸
+                val navigationBarId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+                var navigationBarHeight = 0
+                if (navigationBarId > 0) {
+                    navigationBarHeight = resources.getDimensionPixelSize(navigationBarId)
+                }
+
+                // 获取导航栏宽度（用于横向导航栏）
+                val navigationBarWidthId = resources.getIdentifier("navigation_bar_width", "dimen", "android")
+                var navigationBarWidth = 0
+                if (navigationBarWidthId > 0) {
+                    navigationBarWidth = resources.getDimensionPixelSize(navigationBarWidthId)
+                }
+
+                // 判断设备方向
+                val display = windowManager.defaultDisplay
+                val rotation = display.rotation
+
+                // 判断导航栏位置
+                val isNavigationBarAtBottom = when (rotation) {
+                    Surface.ROTATION_0, Surface.ROTATION_180 -> {
+                        // 竖屏时，导航栏通常在底部
+                        true
+                    }
+                    Surface.ROTATION_90, Surface.ROTATION_270 -> {
+                        // 横屏时，导航栏可能在底部或右侧
+                        // 可以通过配置判断
+                        val config = resources.configuration
+                        val isLandscape = config.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+                        // 有些设备在横屏时导航栏在右侧
+                        if (isLandscape) {
+                            // 检查是否有导航栏高度（底部）和宽度（右侧）
+                            val hasBottomNav = navigationBarHeight > 0
+                            val hasSideNav = navigationBarWidth > 0
+
+                            // 通常如果导航栏宽度 > 0 且高度较小，可能在侧面
+                            hasSideNav && navigationBarWidth > navigationBarHeight
+                        } else {
+                            true
+                        }
+                    }
+                    else -> true
+                }
+
+                val availableWidth: Int
+                val availableHeight: Int
+
+                if (isNavigationBarAtBottom) {
+                    // 导航栏在底部
+                    availableWidth = displayMetrics.widthPixels
+                    availableHeight = displayMetrics.heightPixels - statusBarHeight - navigationBarHeight
+                    Log.d(TAG, "导航栏在底部: 状态栏${statusBarHeight}px, 导航栏${navigationBarHeight}px")
+                } else {
+                    // 导航栏在侧面（右侧或左侧）
+                    availableWidth = displayMetrics.widthPixels - navigationBarWidth
+                    availableHeight = displayMetrics.heightPixels - statusBarHeight
+                    Log.d(TAG, "导航栏在侧面: 状态栏${statusBarHeight}px, 导航栏宽度${navigationBarWidth}px")
+                }
+
+                Log.d(TAG, "计算可用区域: 屏幕${displayMetrics.widthPixels}x${displayMetrics.heightPixels}, " +
+                        "可用${availableWidth}x${availableHeight}")
+
+                return Pair(availableWidth, availableHeight)
+            }
+            return Pair(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        }
+    }
+
+    // 悬浮窗全屏 (使用可用区域)
+    fun fullScreen() {
+        // 关键修改：获取排除系统栏后的可用屏幕尺寸
+        val (screenWidth, screenHeight) = getScreenSize(includeSystemBars = false)
+
+        // 设置 shoutComp 的宽高为可用屏幕尺寸
+        val params = mShoutView.layoutParams
+        params.width = screenWidth
+        params.height = screenHeight
+        mShoutView.layoutParams = params
+
+        Log.d(TAG, "设置悬浮窗宽：${params.width}，高：${params.height}")
+
+        // 以下部分可以保留，但不再需要尝试隐藏系统栏的标志位
+        val floatWindowView = EasyFloat.getFloatView("yk_payload_weight_op")
+        floatWindowView?.let { view ->
+            val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+            val layoutParams = view.layoutParams as WindowManager.LayoutParams
+
+            // 只保留与窗口布局相关的标志位
+            layoutParams.flags = layoutParams.flags or
+                    (WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+
+            try {
+                windowManager.updateViewLayout(view, layoutParams)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e(TAG, "更新悬浮窗布局参数失败: ${e.message}")
+            }
+        }
+
+        // 内部视图的沉浸式设置可以保留，但作用有限
+        val decorView = mShoutView.rootView
+        val uiOptions = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+
+        decorView.systemUiVisibility = uiOptions
+    }
+
+    // 恢复原有尺寸
+    fun recoverSize() {
+        val params = mShoutView.layoutParams
+        params.width = 1080 // 恢复为固定宽度
+        params.height = RelativeLayout.LayoutParams.WRAP_CONTENT
+        mShoutView.layoutParams = params
+
+        val floatWindowView = EasyFloat.getFloatView("yk_payload_weight_op")
+        floatWindowView?.let { view ->
+            val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+            val layoutParams = view.layoutParams as WindowManager.LayoutParams
+
+            // 清除全屏和布局相关的标志位
+            layoutParams.flags = layoutParams.flags and
+                    (WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN.inv() and
+                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS.inv())
+
+            try {
+                windowManager.updateViewLayout(view, layoutParams)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e(TAG, "恢复悬浮窗布局参数失败: ${e.message}")
+            }
+        }
+
+        val decorView = mShoutView.rootView
+        decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+    }
+
+    fun setTitleText(textId: Int) {
+        mWindowTitle.setText(textId)
     }
 
     override fun onDestroy() {

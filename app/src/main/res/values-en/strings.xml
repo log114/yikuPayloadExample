@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Smart Load</string>
     <string name="close">close</string>
-    <string name="shout">Broadcast</string>
+    <string name="shout">Shout</string>
     <string name="light">light</string>
     <string name="yk_shout">Smart Load</string>
     <string name="yk_light">light</string>
@@ -271,4 +271,10 @@
     <string name="open_2">open No.2</string>
     <string name="close_1">close No.1</string>
     <string name="close_2">close No.2</string>
+    <string name="real_time_shout">Real-Time Shout</string>
+    <string name="audio">Audio</string>
+    <string name="alarm">Alarm</string>
+    <string name="audio_file">Audio File</string>
+    <string name="list">List</string>
+    <string name="content">Content</string>
 </resources>

@@ -68,6 +68,17 @@ class RtspPlayer(
     private var videoHeight = 0
     private var videoAspectRatio = 0f
 
+    // 添加视频原始分辨率属性
+    private var originalVideoWidth = 0
+    private var originalVideoHeight = 0
+    private var originalAspectRatio = 0f
+
+    // 添加获取方法
+    fun getOriginalVideoWidth(): Int = originalVideoWidth
+    fun getOriginalVideoHeight(): Int = originalVideoHeight
+    fun getOriginalAspectRatio(): Float = originalAspectRatio
+    fun getVideoResolution(): Pair<Int, Int> = Pair(originalVideoWidth, originalVideoHeight)
+
     init {
         // 设置Surface回调
         surfaceView.holder.addCallback(this)
@@ -106,7 +117,9 @@ class RtspPlayer(
                 val streamInfo = detectVideoStreamInfo(rtspUrl)
                 val isH265 = streamInfo.codecName.contains("hevc", true) ||
                         streamInfo.codecName.contains("h265", true)
-
+                originalVideoWidth = streamInfo.width
+                originalVideoHeight = streamInfo.height
+                originalAspectRatio = streamInfo.width.toFloat() / streamInfo.height.toFloat()
                 eventListener?.onLogMessage("检测到视频编码: ${streamInfo.codecName}")
                 eventListener?.onLogMessage("视频分辨率: ${streamInfo.width}x${streamInfo.height}")
                 eventListener?.onLogMessage("帧率: ${streamInfo.frameRate}")
