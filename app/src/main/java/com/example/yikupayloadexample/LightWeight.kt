@@ -22,6 +22,7 @@ import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.concurrent.thread
 
 
 class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
@@ -44,6 +45,8 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mPitchValueText: TextView
     private lateinit var mYawValueText: TextView
     private var lastRecvTime: Long = 0L
+    private var isFirstConnect = true
+    private var isConnecting = false
 
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
@@ -307,11 +310,11 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 //                    "lightService.getIsConnected() = ${lightService.getIsConnected()}"
 //                )
 //                Log.i(TAG, "Date().time - lastRecvTime = ${Date().time - lastRecvTime}")
-                if (lightService.getIsConnected() && lastRecvTime != 0L && Date().time - lastRecvTime > 4000) {
+                if (lightService.getIsConnected() && Date().time - lastRecvTime > 6000) {
                     // 断连，重新连接
-                    lightService.reConnect()
+                    lightService.disConnect()
                 }
-                if (lightService != null && lightService.getIsConnected()) {
+                if (lightService.getIsConnected()) {
                     lightService.fetchTemperature()
                 }
             }
@@ -349,12 +352,36 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         connectText.setText(R.string.connection_status_notconnected)
                     }
                     // 尝试重连
-                    lightService.connect()
+                    if(!isConnecting) {
+                        isConnecting = true
+                        thread {
+                            // 如果不是第一次连接，先休眠3秒，避免上一次连接内容还没清空
+                            if(!isFirstConnect) {
+                                Thread.sleep(3000)
+                            }
+                            isFirstConnect = false
+                            while (!lightService.getIsConnected()) {
+                                lightService.connect()
+                                Thread.sleep(1000)
+                            }
+                            isConnecting = false
+                            lastRecvTime = Date().time
+                        }
+                    }
                 }
                 Log.i(TAG, "灯光连接状态: ${lightService.getIsConnected()}")
             }
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
         timer.scheduleAtFixedRate(task, 100, 1000);
+    }
+
+    private fun showToast(msg: String) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            Toast.makeText(
+                MApplication.applicationContext, msg, Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }
