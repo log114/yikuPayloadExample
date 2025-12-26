@@ -274,6 +274,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
 
         })
+        mTemperature.text = "${context.resources.getString(R.string.temperature)} 0℃"
     }
 
     fun ByteArray.toHex(): String =

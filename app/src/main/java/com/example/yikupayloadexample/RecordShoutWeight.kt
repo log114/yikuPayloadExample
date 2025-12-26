@@ -259,6 +259,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             }
 
         })
+        mTemperature.text = "${context.resources.getString(R.string.temperature)} 0℃"
     }
 
     // 定时器，判断 megaphoneService不为null时，调用setCallbaks

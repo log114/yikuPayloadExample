@@ -387,6 +387,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             edit.apply()
             isStartSpeak = !isStartSpeak
         }
+        mTemperature.text = "${context.resources.getString(R.string.temperature)} 0℃"
         initStatus()
     }
 
