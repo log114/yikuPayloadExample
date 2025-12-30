@@ -56,8 +56,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var thrower1FpvBtn: Button
     private lateinit var thrower2FpvBtn: Button
     private lateinit var throwerAllFpvBtn: Button
-//    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
-    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
+    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
+//    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
     private lateinit var rtspPlayer: RtspPlayer
 
     private var isOpenSafetySwitch: Boolean = false
