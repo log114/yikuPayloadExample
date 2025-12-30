@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/allInOneThrowerWeight"
     android:layout_width="450dp"
-    android:layout_height="wrap_content">
+    android:layout_height="245dp">
 
     <LinearLayout
         android:id="@+id/thrower_content"
@@ -62,7 +62,7 @@
                 android:visibility="visible"
                 tools:ignore="UselessParent">
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="@string/throwing_switch"
@@ -149,7 +149,7 @@
                 android:visibility="visible"
                 tools:ignore="UselessParent">
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:gravity="center_vertical"
@@ -251,19 +251,17 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="50dp"
                             android:layout_marginEnd="4dp"
                             android:gravity="center_vertical"
                             android:visibility="visible"
                             tools:ignore="UselessParent">
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="100dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textAlignment="textEnd"
+                                android:textAlignment="textStart"
                                 android:layout_marginEnd="10dp"
                                 android:text="@string/detonate_height"
                                 android:textSize="13sp"
@@ -297,7 +295,7 @@
                         tools:ignore="UselessParent">
 
                         <TextView
-                            android:layout_width="100dp"
+                            android:layout_width="120dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:text="@string/allow_detonation"
@@ -338,7 +336,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="140dp"
+                android:layout_width="86dp"
                 android:layout_height="20dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/bomb_positioning"
@@ -376,8 +374,9 @@
 
             <LinearLayout
                 android:id="@+id/playerParentView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="236dp"
+                android:layout_height="193dp"
+                android:layout_gravity="center_horizontal"
                 tools:ignore="UselessParent">
                 <!-- 视频播放区域（底层） -->
                 <SurfaceView

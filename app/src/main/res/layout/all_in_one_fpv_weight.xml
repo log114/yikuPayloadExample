@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/allInOneFpvWeight"
     android:layout_width="450dp"
-    android:layout_height="291dp">
+    android:layout_height="245dp">
 
     <LinearLayout
         android:id="@+id/fpv_content"
@@ -20,13 +20,19 @@
             android:background="@drawable/boder"
             android:padding="0dp"
             tools:ignore="UselessParent">
+            <LinearLayout
+                android:id="@+id/playerParentView"
+                android:layout_width="253dp"
+                android:layout_height="207dp"
+                android:layout_gravity="center_horizontal">
+                <!-- 视频播放区域（底层） -->
+                <SurfaceView
+                    android:id="@+id/playerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"/>
 
-            <!-- 视频播放区域（底层） -->
-            <SurfaceView
-                android:id="@+id/playerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"/>
+            </LinearLayout>
 
             <!-- 控制按钮区域（顶层） -->
             <LinearLayout

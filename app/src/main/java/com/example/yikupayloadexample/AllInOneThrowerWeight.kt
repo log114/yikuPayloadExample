@@ -56,8 +56,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var thrower1FpvBtn: Button
     private lateinit var thrower2FpvBtn: Button
     private lateinit var throwerAllFpvBtn: Button
-    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
-//    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
+//    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
+    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
     private lateinit var rtspPlayer: RtspPlayer
 
     private var isOpenSafetySwitch: Boolean = false
@@ -115,7 +115,11 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             playerParentView.removeView(playerView)
             pageLayout.layoutParams = pageLayout.layoutParams.apply {
                 width = 900
-                height = LayoutParams.WRAP_CONTENT
+                height = 490
+            }
+            playerParentView.layoutParams = playerParentView.layoutParams.apply {
+                width = 472
+                height = 386
             }
             isFullScreen = false
             isAdjusting = false
@@ -596,44 +600,51 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         var (maxWidth, maxHeight) = thisPayloadWeight!!.getScreenSize(includeSystemBars = false)
         maxHeight = maxHeight - 84 // 去掉头部标题和内边距，才是这里可以使用的最大高度
         val bottomControlHeight = 88 // 底部控件高度
+        val pagePadding = 8
         val aspectRatio = rtspPlayer.getOriginalAspectRatio() // 视频原始宽高比
-        var targetWidthPx = 0
-        var targetHeightPx = 0
+        var targetPageWidthPx = 0
+        var targetPageHeightPx = 0
+        var targetPlayerWidthPx = 0
+        var targetPlayerHeightPx = 0
         // 全屏时，按照最大宽度和高度计算
         if(isFullScreen) {
             // 先基于最大高度计算目标宽度
-            targetHeightPx = maxHeight
-            targetWidthPx = ((maxHeight - bottomControlHeight) * aspectRatio).toInt()
+            targetPageHeightPx = maxHeight
+            targetPlayerHeightPx = targetPageHeightPx - bottomControlHeight - pagePadding*2
+            targetPlayerWidthPx = (targetPlayerHeightPx * aspectRatio).toInt()
+            targetPageWidthPx = targetPlayerWidthPx + pagePadding*2
             // 如果计算结果超出最大限值，那改为基于最大宽度计算
-            if(targetWidthPx > maxWidth) {
-                targetWidthPx = maxWidth
-                targetHeightPx = (maxWidth / aspectRatio).toInt() + bottomControlHeight
+            if(targetPageWidthPx > maxWidth) {
+                targetPageWidthPx = maxWidth
+                targetPlayerWidthPx = targetPageWidthPx - pagePadding*2
+                targetPlayerHeightPx = (targetPlayerWidthPx / aspectRatio).toInt()
+                targetPageHeightPx = targetPlayerHeightPx + bottomControlHeight + pagePadding*2
             }
         }
-        else { // 非全屏时，先将宽度定为900计算高度
-            targetWidthPx = 900
-            if(targetWidthPx > maxWidth) {
-                targetWidthPx = maxWidth
-            }
-            targetHeightPx = (targetWidthPx / aspectRatio).toInt() + bottomControlHeight
-            // 如果计算的高度超出限值，改用最大高度计算
-            if(targetHeightPx > maxHeight) {
-                targetHeightPx = maxHeight // 这是包括了底部组件的高度，减掉底部组件，才是视频高度
-                targetWidthPx = ((maxHeight - bottomControlHeight) * aspectRatio).toInt()
+        else { // 非全屏时，先将高度定为414计算高度
+            targetPageWidthPx = 900
+            targetPageHeightPx = 490
+            targetPlayerHeightPx = 386
+            targetPlayerWidthPx = (targetPlayerHeightPx * aspectRatio).toInt()
+            if(targetPlayerWidthPx > targetPageWidthPx - pagePadding*2) {
+                targetPlayerWidthPx = targetPageWidthPx - pagePadding*2
+                targetPlayerHeightPx = (targetPlayerWidthPx / aspectRatio).toInt()
             }
         }
-
-        Log.d(TAG, "最大宽度：${maxWidth}, 最大高度：${maxHeight}")
-        Log.d(TAG, "目标宽度=${targetWidthPx}，目标高度：${targetHeightPx}")
+        Log.d(TAG, "targetPageWidthPx=${targetPageWidthPx}, targetPageHeightPx=${targetPageHeightPx}, targetPlayerWidthPx=${targetPlayerWidthPx}, targetPlayerHeightPx=${targetPlayerHeightPx}")
         // 更新UI：调整 video_container 的高度
-        updateVideoContainerHeight(targetWidthPx, targetHeightPx)
+        updateVideoContainerHeight(targetPageWidthPx, targetPageHeightPx, targetPlayerWidthPx, targetPlayerHeightPx)
     }
 
-    private fun updateVideoContainerHeight(targetWidthPx: Int, targetHeightPx: Int) {
+    private fun updateVideoContainerHeight(targetPageWidthPx: Int, targetPageHeightPx: Int, targetPlayerWidthPx: Int, targetPlayerHeightPx: Int) {
         Handler(Looper.getMainLooper()).post {
             pageLayout.layoutParams = pageLayout.layoutParams.apply {
-                width = targetWidthPx
-                height = targetHeightPx
+                width = targetPageWidthPx
+                height = targetPageHeightPx
+            }
+            playerParentView.layoutParams = playerParentView.layoutParams.apply {
+                width = targetPlayerWidthPx
+                height = targetPlayerHeightPx
             }
         }
     }

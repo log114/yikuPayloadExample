@@ -38,8 +38,7 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var flashSwitchBtn: Button
     private lateinit var luminanceSeekBar: SeekBar
     private lateinit var luminanceText: TextView
-    private lateinit var redAndBlueOpenBtn: Button
-    private lateinit var redAndBlueCloseBtn: Button
+    private lateinit var redAndBlueBtn: Button
     private lateinit var modeSelectorLayout: LinearLayout
     private lateinit var currentModeText: TextView
     private lateinit var pitchSeekBar: SeekBar
@@ -163,17 +162,20 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                 }
             }
         })
-        // 开红蓝
-        redAndBlueOpenBtn.setOnClickListener {
-            allInOneService.redBlueLedControl(redAndBlueMode.toByte())
-            isOpenRedAndBlue = true
+        // 开、关红蓝
+        redAndBlueBtn.setOnClickListener {
+            // 已打开，关闭
+            if(isOpenRedAndBlue) {
+                redAndBlueBtn.setText(R.string.open)
+                allInOneService.redBlueLedControl(0)
+            }
+            // 未打开，打开
+            else {
+                redAndBlueBtn.setText(R.string.close)
+                allInOneService.redBlueLedControl(redAndBlueMode.toByte())
+            }
             isSettingRedAndBlueMode = false
-        }
-        // 关红蓝
-        redAndBlueCloseBtn.setOnClickListener {
-            allInOneService.redBlueLedControl(0)
-            isOpenRedAndBlue = false
-            isSettingRedAndBlueMode = false
+            isOpenRedAndBlue = !isOpenRedAndBlue
         }
         // 俯仰控制
         pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -260,8 +262,7 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         flashSwitchBtn = findViewById(R.id.flash_switch_btn)
         luminanceSeekBar = findViewById(R.id.luminance_seek_bar)
         luminanceText = findViewById(R.id.luminance_text)
-        redAndBlueOpenBtn = findViewById(R.id.redAndBlue_open_btn)
-        redAndBlueCloseBtn = findViewById(R.id.redAndBlue_close_btn)
+        redAndBlueBtn = findViewById(R.id.redAndBlueBtn)
         modeSelectorLayout = findViewById(R.id.mode_selector_layout)
         currentModeText = findViewById(R.id.current_mode_text)
         pitchSeekBar = findViewById(R.id.pitch_seek_bar)

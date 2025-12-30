@@ -23,6 +23,7 @@
                 android:id="@+id/real_time_speak_btn"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
+                android:layout_marginStart="4dp"
                 android:padding="0dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/play_btn"
@@ -72,8 +73,9 @@
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:textAlignment="textEnd"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textStart"
                     android:text="@string/tts"
                     android:textSize="13sp"
                     android:textColor="@color/white" />
@@ -108,7 +110,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="6dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
@@ -128,8 +130,9 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:textAlignment="textEnd"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textStart"
                 android:text="@string/audio_file"
                 android:textSize="13sp"
                 android:textColor="@color/white" />
@@ -149,7 +152,7 @@
                     tools:ignore="UselessParent">
                     <TextView
                         android:id="@+id/audio_file_name_text"
-                        android:layout_width="230dp"
+                        android:layout_width="236dp"
                         android:layout_height="wrap_content"
                         android:text=""
                         android:singleLine="true"
@@ -209,7 +212,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="6dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
@@ -225,8 +228,9 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="86dp"
                 android:layout_height="20dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/volume"
                 android:textSize="13sp"
@@ -259,8 +263,9 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="86dp"
                 android:layout_height="20dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/pitch_angle"
                 android:textSize="13sp"
