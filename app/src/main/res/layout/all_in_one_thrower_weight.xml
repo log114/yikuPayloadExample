@@ -221,7 +221,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="5dp"
                         android:baselineAligned="false"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -289,13 +289,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="5dp"
                         android:gravity="center_vertical"
                         android:visibility="visible"
                         tools:ignore="UselessParent">
 
                         <TextView
-                            android:layout_width="120dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:text="@string/allow_detonation"
@@ -311,6 +311,7 @@
                             android:text="@string/number_1"
                             android:textSize="13sp"
                             android:textColor="@color/white"
+                            android:enabled="false"
                             tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
                         <Switch
                             android:id="@+id/allow_detonation_2"
@@ -322,6 +323,7 @@
                             android:text="@string/number_2"
                             android:textSize="13sp"
                             android:textColor="@color/white"
+                            android:enabled="false"
                             tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
 
                     </LinearLayout>
@@ -374,7 +376,7 @@
 
             <LinearLayout
                 android:id="@+id/playerParentView"
-                android:layout_width="236dp"
+                android:layout_width="343dp"
                 android:layout_height="193dp"
                 android:layout_gravity="center_horizontal"
                 tools:ignore="UselessParent">

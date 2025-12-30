@@ -1,6 +1,7 @@
 package com.example.yikupayloadexample
 
 import android.content.Context
+import android.databinding.tool.ext.T
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -135,7 +136,7 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                 val (width, height) = rtspPlayer.getVideoResolution()
                 if (width > 0 && height > 0) {
                     Log.d(TAG, "播放开始，原始分辨率: ${width}x${height}")
-                    adjustContainerAspectRatio()
+//                    adjustContainerAspectRatio()
                 }
             }
 
@@ -171,7 +172,9 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         maxHeight = maxHeight - 84 // 去掉头部标题和内边距，才是这里可以使用的最大高度
         val bottomControlHeight = 76 // 底部控件高度
         val pagePadding = 8
-        val aspectRatio = rtspPlayer.getOriginalAspectRatio() // 视频原始宽高比
+//        val aspectRatio = rtspPlayer.getOriginalAspectRatio() // 视频原始宽高比
+        val aspectRatio: Float = (1280.00/720.00).toFloat() // 视频宽高比固定为1280*720
+        Log.d(TAG, "宽高比：${aspectRatio}")
         var targetPageWidthPx = 0
         var targetPageHeightPx = 0
         var targetPlayerWidthPx = 0

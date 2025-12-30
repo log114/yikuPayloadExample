@@ -69,6 +69,9 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var isInitPlayer: Boolean = false
     private var isAdjusting = false
     private var isFullScreen = false
+    private var isOpeningSafetySwitch = false
+    private var allowing1 = false
+    private var allowing2 = false
 
     // 当窗口被加载时，加载视频
     override fun onAttachedToWindow() {
@@ -146,13 +149,11 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         // 打开、关闭安全开关
         throwerSafetySwitch.setOnClickListener {
             throwerSafetySwitch.isEnabled = false
+            isOpeningSafetySwitch = true
             allInOneService.safetySwitch(throwerSafetySwitch.isChecked)
             thread {
                 Thread.sleep(2000)
-                val handler = Handler(Looper.getMainLooper())
-                handler.post {
-                    throwerSafetySwitch.isEnabled = true
-                }
+                isOpeningSafetySwitch = false
             }
         }
         // 1号开关
@@ -320,27 +321,23 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
 
         // 1号充电放电
         allowDetonationSwitch1.setOnClickListener {
+            allowing1 = true
             allowDetonationSwitch1.isEnabled = false
             allInOneService.allowDetonate(1, allowDetonationSwitch1.isChecked)
             thread {
                 Thread.sleep(2000)
-                val handler = Handler(Looper.getMainLooper())
-                handler.post {
-                    allowDetonationSwitch1.isEnabled = true
-                }
+                allowing1 = false
             }
         }
 
         // 2号充电放电
         allowDetonationSwitch2.setOnClickListener {
+            allowing2 = true
             allowDetonationSwitch2.isEnabled = false
             allInOneService.allowDetonate(2, allowDetonationSwitch2.isChecked)
             thread {
                 Thread.sleep(2000)
-                val handler = Handler(Looper.getMainLooper())
-                handler.post {
-                    allowDetonationSwitch2.isEnabled = true
-                }
+                allowing2 = false
             }
         }
 
@@ -415,7 +412,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 val (width, height) = rtspPlayer.getVideoResolution()
                 if (width > 0 && height > 0) {
                     Log.d(TAG, "播放开始，原始分辨率: ${width}x${height}")
-                    adjustContainerAspectRatio()
+//                    adjustContainerAspectRatio()
                 }
             }
 
@@ -446,8 +443,9 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             isOpenSafetySwitch = (msg[10].toInt() == 1)
-            if(throwerSafetySwitch.isEnabled) {
+            if(!isOpeningSafetySwitch) {
                 throwerSafetySwitch.isChecked = isOpenSafetySwitch
+                throwerSafetySwitch.isEnabled = true
             }
             heightText.text = "${msg[3].toInt()}m"
             if(!isSettingDetonateHeight) {
@@ -515,32 +513,43 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         val handler = Handler(Looper.getMainLooper())
         var bombStateText: TextView
         var allowSwitch: Switch
-        val stateText: String
-        val stateTextColor: Int
+        var stateText: String
+        var stateTextColor: Int
+        var allowing: Boolean
         when(index) {
             1 -> {
                 bombStateText = bomb1ConnectStateText
                 allowSwitch = allowDetonationSwitch1
+                allowing = allowing1
             }
             2 -> {
                 bombStateText = bomb2ConnectStateText
                 allowSwitch = allowDetonationSwitch2
+                allowing = allowing2
             }
             else -> {
                 bombStateText = bomb1ConnectStateText
                 allowSwitch = allowDetonationSwitch1
+                allowing = allowing1
             }
         }
         handler.post {
             if(stateMsg[0].toInt() == 0 || stateMsg[0].toInt() == 127) {
-                if(allowSwitch.isEnabled) {
+                if(!allowing) {
                     allowSwitch.isChecked = false
                 }
             }
             else {
-                if(allowSwitch.isEnabled) {
+                if(!allowing) {
                     allowSwitch.isChecked = true
                 }
+            }
+            // 已打开安全开关，才允许控制充电放电
+            if(isOpenSafetySwitch && !allowing) {
+                allowSwitch.isEnabled = true
+            }
+            if(!isOpenSafetySwitch) {
+                allowSwitch.isEnabled = false
             }
         }
         // 无法起爆
@@ -601,7 +610,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         maxHeight = maxHeight - 84 // 去掉头部标题和内边距，才是这里可以使用的最大高度
         val bottomControlHeight = 88 // 底部控件高度
         val pagePadding = 8
-        val aspectRatio = rtspPlayer.getOriginalAspectRatio() // 视频原始宽高比
+//        val aspectRatio = rtspPlayer.getOriginalAspectRatio() // 视频原始宽高比
+        val aspectRatio: Float = (1280.00/720.00).toFloat() // 视频宽高比固定为1280*720
         var targetPageWidthPx = 0
         var targetPageHeightPx = 0
         var targetPlayerWidthPx = 0

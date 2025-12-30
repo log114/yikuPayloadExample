@@ -22,7 +22,7 @@
             tools:ignore="UselessParent">
             <LinearLayout
                 android:id="@+id/playerParentView"
-                android:layout_width="253dp"
+                android:layout_width="368dp"
                 android:layout_height="207dp"
                 android:layout_gravity="center_horizontal">
                 <!-- 视频播放区域（底层） -->
