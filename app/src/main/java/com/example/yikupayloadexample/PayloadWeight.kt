@@ -742,7 +742,8 @@ class PayloadWeight : Service() {
             layoutParams.flags = layoutParams.flags or
                     (WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
+            layoutParams.x = if(layoutParams.x < 0) 0 else layoutParams.x
+            layoutParams.y = if(layoutParams.y < 0) 0 else layoutParams.y
             try {
                 windowManager.updateViewLayout(view, layoutParams)
             } catch (e: Exception) {
