@@ -321,4 +321,11 @@
     <string name="audio_file">音频文件</string>
     <string name="list">列表</string>
     <string name="content">内容</string>
+    <string name="firmware_update">固件升级</string>
+    <string name="current_device">当前设备：</string>
+    <string name="firmware_file">固件文件：</string>
+    <string name="current_firmware_version">当前版本：</string>
+    <string name="firmware_version">固件版本：</string>
+    <string name="start_upgrade">开始升级</string>
+    <string name="all_in_one">多合一</string>
 </resources>

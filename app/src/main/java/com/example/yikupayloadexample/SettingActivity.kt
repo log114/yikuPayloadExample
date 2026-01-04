@@ -1,6 +1,7 @@
 package com.example.yikupayloadexample
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -30,7 +31,7 @@ class SettingActivity : AppCompatActivity() {
         setContentView(R.layout.setting)
 
         val save = findViewById<Button>(R.id.save)
-        var shout  = findViewById<EditText>(R.id.ShoutHostIP)
+        val shout  = findViewById<EditText>(R.id.ShoutHostIP)
         val light = findViewById<EditText>(R.id.LightHostIP)
         val cacheNet = findViewById<EditText>(R.id.CacheNetHostIP)
         val emitter = findViewById<EditText>(R.id.EmitterHostIP)
@@ -46,6 +47,7 @@ class SettingActivity : AppCompatActivity() {
         val waterBranch = findViewById<EditText>(R.id.WaterBranchHostIP)
         val PL_Light = findViewById<EditText>(R.id.PL_LightHostIP)
         val allInOne = findViewById<EditText>(R.id.AllInOneHostIP)
+        val allInOneUpdateBtn = findViewById<Button>(R.id.allInOneUpdate)
 
         //        获取了 SharedPreferences 对象
 //        preferences = getSharedPreferences("myPreferences", MODE_PRIVATE)
@@ -157,6 +159,7 @@ class SettingActivity : AppCompatActivity() {
             allInOne.setText(valueAllInOneHost)
         }
 
+        // 保存设置
         save.setOnClickListener {
             val textShoutHost = shout.text.toString()
             val textLightHost = light.text.toString()
@@ -193,6 +196,7 @@ class SettingActivity : AppCompatActivity() {
             editer.apply()
             finish();  //直接关闭当前页面
         }
+        // 喊话器重启
         mRebootYmBtn.setOnClickListener{
             try {
                 if (megaphoneService == null){
@@ -210,6 +214,13 @@ class SettingActivity : AppCompatActivity() {
             }catch (e:Exception){
                 e.printStackTrace()
             }
+        }
+
+        // 多合一固件升级
+        allInOneUpdateBtn.setOnClickListener{
+            val intent = Intent(this@SettingActivity, FirmwareUpdateActivity::class.java)
+            intent.putExtra("deviceName", "allInOne") // 传参，设备名称
+            startActivity(intent)
         }
     }
 }

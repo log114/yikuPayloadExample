@@ -277,4 +277,11 @@
     <string name="audio_file">Audio File</string>
     <string name="list">List</string>
     <string name="content">Content</string>
+    <string name="firmware_update">firmware update</string>
+    <string name="current_device">"Current device: "</string>
+    <string name="firmware_file">"Firmware file: "</string>
+    <string name="current_firmware_version">"Current version: "</string>
+    <string name="firmware_version">"Firmware version: "</string>
+    <string name="start_upgrade">start upgrade</string>
+    <string name="all_in_one">All-in-one</string>
 </resources>
