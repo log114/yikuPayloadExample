@@ -284,4 +284,17 @@
     <string name="firmware_version">"Firmware version: "</string>
     <string name="start_upgrade">start upgrade</string>
     <string name="all_in_one">All-in-one</string>
+    <string name="upgrading">upgrading</string>
+    <string name="resetting_upgrade_info">Resetting upgrade information</string>
+    <string name="upgrade_info_reset_failed">Upgrade information reset failed</string>
+    <string name="version_error">Please enter the correct version number</string>
+    <string name="failed_to_obtain_file">Failed to obtain the file</string>
+    <string name="device_not_responding">The device is not responding</string>
+    <string name="requesting_upgrade">Requesting upgrade</string>
+    <string name="upgrade_request_failed">Upgrade request failed</string>
+    <string name="no_need_upgrade">The version is consistent, no upgrade is needed</string>
+    <string name="inconsistency_in_size">The size of the currently upgraded firmware is inconsistent with that of the previously upgraded firmware</string>
+    <string name="upgrade_failed">Upgrade failed</string>
+    <string name="upgrade_success">Upgrade successful, will take effect after restarting the device</string>
+    <string name="inconsistent_firmware_versions">The currently upgraded firmware is not consistent with the previously upgraded firmware version</string>
 </resources>

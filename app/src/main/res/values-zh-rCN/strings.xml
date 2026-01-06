@@ -284,4 +284,17 @@
     <string name="firmware_version">固件版本：</string>
     <string name="start_upgrade">开始升级</string>
     <string name="all_in_one">多合一</string>
+    <string name="upgrading">正在升级</string>
+    <string name="resetting_upgrade_info">正在重置升级信息</string>
+    <string name="upgrade_info_reset_failed">升级信息重置失败</string>
+    <string name="version_error">请输入正确版本号</string>
+    <string name="failed_to_obtain_file">获取文件失败</string>
+    <string name="device_not_responding">设备无响应</string>
+    <string name="requesting_upgrade">正在请求升级</string>
+    <string name="upgrade_request_failed">请求升级失败</string>
+    <string name="no_need_upgrade">版本一致，无需升级</string>
+    <string name="inconsistency_in_size">当前升级的固件与之前升级固件大小不一致</string>
+    <string name="upgrade_failed">升级失败</string>
+    <string name="upgrade_success">升级成功，重启设备后生效</string>
+    <string name="inconsistent_firmware_versions">当前升级的固件与之前升级的固件版本不一致</string>
 </resources>
