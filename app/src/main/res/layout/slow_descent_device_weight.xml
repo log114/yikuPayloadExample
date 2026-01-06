@@ -29,7 +29,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="2dp"
             android:visibility="visible">
             <TextView
                 android:layout_width="wrap_content"
@@ -43,7 +43,9 @@
             <Button
                 android:id="@+id/btn_open"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:layout_marginLeft="8dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/open"
@@ -52,7 +54,9 @@
             <Button
                 android:id="@+id/btn_close"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:layout_marginLeft="8dp"
                 android:background="@drawable/danger_btn"
                 android:text="@string/close"
@@ -113,26 +117,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:text='@string/line_retraction_and_release_method'
             android:textColor="@color/white" />
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="2dp"
             android:visibility="visible">
             <RadioGroup
                 android:id="@+id/by_speed_group"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <RadioButton
                     android:id="@+id/btn_by_speed"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textColor="@color/white"
                     android:text="@string/by_speed"
                     android:checked="true"/>
@@ -157,18 +159,18 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
             android:visibility="visible">
             <RadioGroup
                 android:id="@+id/by_length_group"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <RadioButton
                     android:id="@+id/btn_by_length"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textColor="@color/white"
                     android:text="@string/by_length"/>
             </RadioGroup>
@@ -208,12 +210,14 @@
                 android:id="@+id/btn_speed_contrl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:visibility="visible">
                 <Button
                     android:id="@+id/btn_rise"
                     android:layout_width="83dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:layout_marginLeft="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/rise"
@@ -221,7 +225,9 @@
                 <Button
                     android:id="@+id/btn_decline"
                     android:layout_width="83dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:layout_marginLeft="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/decline"
@@ -229,7 +235,9 @@
                 <Button
                     android:id="@+id/btn_stop"
                     android:layout_width="83dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:layout_marginLeft="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/stop"
@@ -244,7 +252,9 @@
                 <Button
                     android:id="@+id/btn_pulse_on"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:layout_marginLeft="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/pulse_on"
@@ -253,12 +263,14 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:visibility="visible">
                 <Button
                     android:id="@+id/btn_emergency_stop"
                     android:layout_width="130dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:layout_marginLeft="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/emergency_stop"
@@ -266,7 +278,9 @@
                 <Button
                     android:id="@+id/btn_fusing"
                     android:layout_width="130dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:layout_marginLeft="8dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/fuse"
@@ -283,7 +297,9 @@
             <Button
                 android:id="@+id/btn_release_emergency"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:layout_marginLeft="8dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/release_emergency"
@@ -322,7 +338,9 @@
             <Button
                 android:id="@+id/btn_ok"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/ok"
@@ -330,7 +348,9 @@
             <Button
                 android:id="@+id/btn_cancel"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/cancel"

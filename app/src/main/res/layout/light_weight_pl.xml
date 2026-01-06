@@ -51,7 +51,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="@string/brightness_adjustment"
         android:textColor="@color/white" />
     <LinearLayout
@@ -82,7 +82,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="4dp">
         <Switch
             android:id="@+id/flashingSwitch"
             android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="@string/rotating_speed"
         android:textColor="@color/white" />
     <LinearLayout
@@ -155,14 +155,18 @@
             <Button
                 android:id="@+id/toCenterBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/to_center"
                 android:textColor="@color/white" />
             <Button
                 android:id="@+id/downwardBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/downward"
