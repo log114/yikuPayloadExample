@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -20,6 +21,7 @@ import com.yiku.yikupayloadSDK.util.GetFilePathFromUri
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.bytesToHex
 import java.io.File
+import java.io.FileInputStream
 import java.util.Date
 import kotlin.concurrent.thread
 
@@ -43,7 +45,10 @@ class FirmwareUpdateActivity : AppCompatActivity() {
     private var hadUpgrading = false // 是否有正在升级的内容
     private var result_resetUpgradeInfo = -1
     private var result_startUpgrade = -1
+    private var result_transmission = -1
+    private var result_verify = -1
     private var errorCount = 0
+    private var maxPackageSize = 1024
 
     @SuppressLint("SourceLockedOrientationPortrait")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,15 +88,29 @@ class FirmwareUpdateActivity : AppCompatActivity() {
                         }
                         0x04 -> { // 升级数据包发送结果
                             Log.d(TAG, "升级数据包发送结果")
-
+                            result_transmission = msg[12].toInt()
                         }
                         0x05 -> { // 升级包校验结果
                             Log.d(TAG, "升级包校验结果")
-
+                            result_verify = msg[12].toInt()
                         }
                         0x06 -> { // 设备重启
                             Log.d(TAG, "设备重启")
-
+                            if (msg[12].toInt() == 0x00) {
+                                showToast(R.string.device_will_restart)
+                                thread {
+                                    Thread.sleep(5000)
+                                    upgradeService.disConnect()
+                                    Thread.sleep(2000)
+                                    connectDevice()
+                                }
+                            }
+                            else {
+                                showToast(R.string.please_restart_manually)
+                            }
+                            handler.post {
+                                restartBtn.isEnabled = true
+                            }
                         }
                         else -> {
                             Log.e(TAG, "反馈消息异常，msg= ${bytesToHex(msg)}")
@@ -140,7 +159,11 @@ class FirmwareUpdateActivity : AppCompatActivity() {
                 showToast(R.string.not_connected)
                 return@setOnClickListener
             }
-            if(!firmwareFile.isFile || firmwareFile.length().toInt() == 0) {
+            if(currentVersionText.text == "") {
+                showToast(R.string.unknown_current_version)
+                return@setOnClickListener
+            }
+            if(!::firmwareFile.isInitialized || firmwareFile.length().toInt() == 0) {
                 showToast(R.string.please_select_file)
                 return@setOnClickListener
             }
@@ -236,20 +259,174 @@ class FirmwareUpdateActivity : AppCompatActivity() {
                     return@thread
                 }
                 // 发送升级数据包
+                val packagesNum = (firmwareFile.length()/maxPackageSize + 1).toInt()
+                handler.post {
+                    updateText.setText(R.string.transmitted_firmware)
+                    progressBarUpdate.max = packagesNum
+                    progressBarUpdate.progress = 0
+                    progressBarUpdate.visibility = View.VISIBLE
+                }
+                Log.d(TAG, "包总数：${packagesNum}, 总大小：${firmwareFile.length()}")
+                val buffer = ByteArray(maxPackageSize)
+                var packageIndex = 1
+                FileInputStream(firmwareFile).use { inputStream ->
+                    var bytesRead: Int
+                    // 循环读取文件，直到读完所有内容
+                    while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                        // 精确复制实际读取的字节，避免末尾包包含旧数据
+                        val packageData = buffer.copyOf(bytesRead)
+                        result_transmission = -1 // 发送命令前，先重置状态
+                        upgradeService.transmissionPackage(packagesNum, packageIndex, packageData)
+                        errorCount = 0
+                        var retryCount = 0
+                        while (result_transmission == -1) {
+                            Thread.sleep(100)
+                            errorCount ++
+                            // 每次最多等待1.5秒
+                            if(errorCount > 15) {
+                                // 最多重试3次
+                                if(retryCount < 3) {
+                                    retryCount ++
+                                    errorCount = 0
+                                    upgradeService.transmissionPackage(packagesNum, packageIndex, packageData)
+                                }
+                                else {
+                                    handler.post {
+                                        updateText.setText(R.string.device_not_responding)
+                                        updateText.setTextColor(
+                                            ContextCompat.getColor(
+                                                this,
+                                                R.color.red
+                                            )
+                                        )
+                                        updateBtn.setText(R.string.start_upgrade)
+                                        componentEnabled(true)
+                                    }
+                                    return@thread
+                                }
+                            }
+                        }
+                        when(result_transmission) {
+                            0 -> {
+                                handler.post {
+                                    progressBarUpdate.progress = packageIndex
+                                }
+                                packageIndex ++
+                                continue
+                            }
+                            1 -> { // 总包数错误，直接退出
+                                handler.post {
+                                    updateText.setText(R.string.packages_number_error)
+                                    updateText.setTextColor(
+                                        ContextCompat.getColor(
+                                            this,
+                                            R.color.red
+                                        )
+                                    )
+                                    updateBtn.setText(R.string.start_upgrade)
+                                    componentEnabled(true)
+                                }
+                                return@thread
+                            }
+                            2 -> { // 重复写入，继续往下
+                                handler.post {
+                                    progressBarUpdate.progress = packageIndex
+                                }
+                                packageIndex ++
+                                continue
+                            }
+                            3 -> { // 跳包，直接退出
+                                handler.post {
+                                    updateText.setText(R.string.jumping_bag)
+                                    updateText.setTextColor(
+                                        ContextCompat.getColor(
+                                            this,
+                                            R.color.red
+                                        )
+                                    )
+                                    updateBtn.setText(R.string.start_upgrade)
+                                    componentEnabled(true)
+                                }
+                                return@thread
+                            }
+                        }
+                    }
+                }
+                // 固件包传输完成，开始校验
+                handler.post {
+                    updateText.setText(R.string.verifying_firmware_file)
+                }
+                result_verify = -1
+                upgradeService.packageVerification()
+                // 等待处理校验结果
+                errorCount = 0
+                var retryCount = 0
+                while(result_verify == -1) {
+                    errorCount ++
+                    // 超过5秒没有收到结果，提示设备无响应
+                    if(errorCount > 5) {// 最多重试3次
+                        if(retryCount < 3) {
+                            retryCount ++
+                            errorCount = 0
+                            upgradeService.packageVerification()
+                        }
+                        else {
+                            handler.post {
+                                updateText.setText(R.string.device_not_responding)
+                                updateText.setTextColor(ContextCompat.getColor(this, R.color.red))
+                                updateBtn.setText(R.string.start_upgrade)
+                                componentEnabled(true)
+                            }
+                            return@thread
+                        }
+                    }
+                    Thread.sleep(1000)
+                }
+                if(result_verify > 0) {
+                    val errorMsg =  when(result_verify) {
+                        0x01 -> {
+                            this.resources.getString(R.string.firmware_is_incomplete)
+                        }
+                        0x02 -> {
+                            this.resources.getString(R.string.firmware_verification_failed)
+                        }
+                        else -> {
+                            this.resources.getString(R.string.firmware_verification_failed)
+                        }
+                    }
+                    handler.post {
+                        updateText.text = errorMsg
+                        updateText.setTextColor(ContextCompat.getColor(this, R.color.red))
+                        updateBtn.setText(R.string.start_upgrade)
+                        componentEnabled(true)
+                    }
+                    return@thread
+                }
+                // 升级成功，重启后生效
+                handler.post {
+                    updateText.setText(R.string.upgrade_successful)
+                    updateBtn.setText(R.string.start_upgrade)
+                    componentEnabled(true)
 
+                }
             }
         }
         // 重启设备
         restartBtn.setOnClickListener {
-
+            restartBtn.isEnabled = false
+            upgradeService.restartDevice()
         }
     }
 
-    // 组件isEn
+    // 设置组件是否可用
     fun componentEnabled(isEnabled: Boolean) {
         selectFileBtn.isEnabled = isEnabled
         newVersionText.isEnabled = isEnabled
         updateBtn.isEnabled = isEnabled
+        restartBtn.isEnabled = isEnabled
+        if(isEnabled) {
+            progressBarUpdate.visibility = View.INVISIBLE
+        }
     }
 
     // 文件选择后的处理
@@ -346,19 +523,6 @@ class FirmwareUpdateActivity : AppCompatActivity() {
         val highByte = byteArray[startIndex + 1].toInt() and 0xFF
 
         return (highByte shl 8) or lowByte
-    }
-    /**
-     * Int → 小端序ByteArray(2)
-     */
-    fun intToLittleEndianByteArray(value: Int): ByteArray {
-        require(value >= -32768 && value <= 65535) {
-            "数值超出2字节表示范围: $value"
-        }
-
-        return byteArrayOf(
-            (value and 0xFF).toByte(),        // 低字节
-            ((value ushr 8) and 0xFF).toByte()  // 高字节
-        )
     }
 
     /**

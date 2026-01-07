@@ -341,4 +341,15 @@
     <string name="upgrade_failed">升级失败</string>
     <string name="upgrade_success">升级成功，重启设备后生效</string>
     <string name="inconsistent_firmware_versions">当前升级的固件与之前升级的固件版本不一致</string>
+    <string name="packages_number_error">包总数错误</string>
+    <string name="repeated_writing">重复写入</string>
+    <string name="jumping_bag">跳包</string>
+    <string name="firmware_is_incomplete">固件不完整</string>
+    <string name="firmware_verification_failed">固件校验失败</string>
+    <string name="device_will_restart">设备将在5S后重新启动</string>
+    <string name="upgrade_successful">升级成功，重启设备后生效</string>
+    <string name="transmitted_firmware">正在传输升级固件</string>
+    <string name="verifying_firmware_file">正在检验固件文件</string>
+    <string name="unknown_current_version">未获取到当前固件版本</string>
+    <string name="please_restart_manually">操作失败，请手动重启</string>
 </resources>

@@ -297,4 +297,15 @@
     <string name="upgrade_failed">Upgrade failed</string>
     <string name="upgrade_success">Upgrade successful, will take effect after restarting the device</string>
     <string name="inconsistent_firmware_versions">The currently upgraded firmware is not consistent with the previously upgraded firmware version</string>
+    <string name="packages_number_error">Error in total number of packages</string>
+    <string name="repeated_writing">Repeated writing</string>
+    <string name="jumping_bag">Jumping bag</string>
+    <string name="firmware_is_incomplete">Firmware is incomplete</string>
+    <string name="firmware_verification_failed">Firmware verification failed</string>
+    <string name="device_will_restart">The device will restart after 5 seconds</string>
+    <string name="upgrade_successful">Upgrade successful, will take effect after restarting the device</string>
+    <string name="transmitted_firmware">The upgrade firmware is being transmitted</string>
+    <string name="verifying_firmware_file">Verifying firmware file</string>
+    <string name="unknown_current_version">The current firmware version has not been obtained</string>
+    <string name="please_restart_manually">Operation failed, please restart manually</string>
 </resources>
