@@ -121,7 +121,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 height = 490
             }
             playerParentView.layoutParams = playerParentView.layoutParams.apply {
-                width = 472
+                width = 686
                 height = 386
             }
             isFullScreen = false
