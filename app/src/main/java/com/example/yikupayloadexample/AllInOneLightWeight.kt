@@ -43,6 +43,8 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var currentModeText: TextView
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
+    private val interval = 200 // 限制两次俯仰控制间隔时间不得小于200ms
+    private var lastTime = Date().time // 上一次控制俯仰的时间
     private val modeItems = listOf(
         ModeItem("1", "${context.resources.getString(R.string.mode)}1"),
         ModeItem("2", "${context.resources.getString(R.string.mode)}2"),
@@ -185,13 +187,17 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 pitchText.text = "${seekBar.progress/10}°"
-                allInOneService.pitchControl(seekBar.progress)
+                if(Date().time - lastTime > interval) {
+                    lastTime = Date().time
+                    allInOneService.pitchControl(seekBar.progress)
+                }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {
                 isSettingPitch = true
             }
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
+                allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
                 // 延迟一下，避免设置还未生效，导致滑条往回跳
                 thread {
                     Thread.sleep(1000)
