@@ -105,10 +105,14 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                         return
                     }
                     // 俯仰值，0-900
-                    val pitchValue = ((msg[3].toInt()  and 0xFF) shl 8) or (msg[4].toInt()  and 0xFF)
+                    var pitchValue = ((msg[3].toInt()  and 0xFF) shl 8) or (msg[4].toInt()  and 0xFF)
                     val handler = Handler(Looper.getMainLooper())
                     handler.post {
                         pitchSeekBar.progress = pitchValue
+                        // 俯仰小于3°的时候，显示为0°
+                        if(pitchValue < 3) {
+                            pitchValue = 0
+                        }
                         pitchText.text = "${pitchValue/10}°"
                     }
                 }
@@ -181,12 +185,12 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 pitchText.text = "${seekBar.progress/10}°"
+                allInOneService.pitchControl(seekBar.progress)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {
                 isSettingPitch = true
             }
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                allInOneService.pitchControl(seekBar.progress)
                 Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                 // 延迟一下，避免设置还未生效，导致滑条往回跳
                 thread {

@@ -100,10 +100,14 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                         return
                     }
                     // 俯仰值，0-900
-                    val pitchValue = ((msg[3].toInt()  and 0xFF) shl 8) or (msg[4].toInt()  and 0xFF)
+                    var pitchValue = ((msg[3].toInt()  and 0xFF) shl 8) or (msg[4].toInt()  and 0xFF)
                     val handler = Handler(Looper.getMainLooper())
                     handler.post {
                         pitchSeekBar.progress = pitchValue
+                        // 俯仰小于3°的时候，显示为0°
+                        if(pitchValue < 3) {
+                            pitchValue = 0
+                        }
                         pitchText.text = "${pitchValue/10}°"
                     }
                 }
@@ -229,12 +233,12 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 pitchText.text = "${seekBar.progress/10}°"
+                allInOneService.pitchControl(seekBar.progress)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {
                 isSettingPitch = true
             }
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                allInOneService.pitchControl(seekBar.progress)
                 Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                 // 延迟一下，避免设置还未生效，导致滑条往回跳
                 thread {
@@ -411,9 +415,6 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             override fun run() {
                 // 已连接
                 if (allInOneService.getIsConnected()) {
-                    handler.post {
-                        mConnectState.setText(R.string.connection_status_connected)
-                    }
                     if(isFirstConneted) {
                         isFirstConneted = false
                         allInOneService.setVolume(volumeSeekBar.progress)
@@ -441,9 +442,6 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                                 Thread.sleep(1000)
                             }
                             isConnecting = false
-                            handler.post {
-                                mConnectState.setText(R.string.connection_status_connected)
-                            }
                             // 默认音量与滑条值同步
                             allInOneService.setVolume(volumeSeekBar.progress)
                         }
@@ -468,6 +466,17 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                     if (Date().time - updateTime > 10000) {
                         // 断连
                         allInOneService.disConnectPtz()
+                    }
+                }
+                // 喊话器界面连接状态，显示成灯的连接状态（主要为了保持显示内容一致）
+                if(allInOneService.getMainIsConnected()) {
+                    handler.post {
+                        mConnectState.setText(R.string.connection_status_connected)
+                    }
+                }
+                else {
+                    handler.post {
+                        mConnectState.setText(R.string.connection_status_notconnected)
                     }
                 }
             }
