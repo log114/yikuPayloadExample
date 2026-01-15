@@ -40,7 +40,7 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private var isInitPlayer: Boolean = false
     private var isAdjusting = false
     private var isFullScreen = false
-    private val interval = 200 // 限制两次俯仰控制间隔时间不得小于200ms
+    private val interval = 50 // 限制两次俯仰控制间隔时间不得小于50ms
     private var lastTime = Date().time // 上一次控制俯仰的时间
 
     // 当窗口被加载时，加载视频

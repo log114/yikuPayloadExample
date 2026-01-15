@@ -72,10 +72,15 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var isOpeningSafetySwitch = false
     private var allowing1 = false
     private var allowing2 = false
+    private lateinit var pitchDownTimer: Timer
+    private var isOpenedFpv = false // 是否打开了fpv辅助
 
     // 当窗口被加载时，加载视频
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        if(isOpenedFpv) {
+            setPitchDown()
+        }
         if (streamUrl != "" && fpvContent.isVisible) {
             if(isInitPlayer) {
                 rtspPlayer.startPlayback(streamUrl)
@@ -89,6 +94,9 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     // 当窗口被移除时，释放视频资源
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        if(isOpenedFpv) {
+            pitchDownTimer.cancel()
+        }
         // 释放视频资源
         if(isInitPlayer) {
             rtspPlayer.stopPlayback()
@@ -100,10 +108,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         fpvOpenBtn.setOnClickListener {
             throwerContent.visibility = GONE
             fpvContent.visibility = VISIBLE
-            // 如果已连接云台，将俯仰调到90度
-            if(allInOneService.getIsPtzConnected()) {
-                allInOneService.pitchControl(900)
-            }
+            isOpenedFpv = true
+            setPitchDown()
             if(playerView.parent == null) {
                 playerParentView.addView(playerView)
             }
@@ -114,6 +120,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         backBtn.setOnClickListener {
             fpvContent.visibility = GONE
+            isOpenedFpv = false
+            pitchDownTimer.cancel()
             rtspPlayer.release() // 释放视频资源
             playerParentView.removeView(playerView)
             pageLayout.layoutParams = pageLayout.layoutParams.apply {
@@ -696,8 +704,24 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 }
             }
         }
-        // 定时器，100毫秒后开始执行，每1秒执行一次
+        // 定时器，100毫秒后开始执行，每2秒执行一次
         timer.scheduleAtFixedRate(task, 100, 2000);
+    }
+
+    // 定时器，保持俯仰朝下
+    private fun setPitchDown() {
+        pitchDownTimer = Timer();
+        val handler = Handler(Looper.getMainLooper())
+        val task = object : TimerTask() {
+            override fun run() {
+                // 如果俯仰已连接，俯仰朝下
+                if (allInOneService.getIsPtzConnected()) {
+                    allInOneService.pitchControl(900)
+                }
+            }
+        }
+        // 定时器，100毫秒后开始执行，每1秒执行一次
+        pitchDownTimer.scheduleAtFixedRate(task, 100, 1000);
     }
 
     private fun showToast(msg: Int) {

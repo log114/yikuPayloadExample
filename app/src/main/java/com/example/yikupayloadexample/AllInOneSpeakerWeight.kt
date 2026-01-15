@@ -76,7 +76,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var isInit: Boolean = false
     private var isFirstConneted: Boolean = true
     private var updateTime = Date().time
-    private val interval = 200 // 限制两次俯仰控制间隔时间不得小于200ms
+    private val interval = 50 // 限制两次俯仰控制间隔时间不得小于50ms
     private var lastTime = Date().time // 上一次控制俯仰的时间
 
     private var isPlayingAudio: Boolean = false
@@ -425,16 +425,6 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                         isFirstConneted = false
                         allInOneService.setVolume(volumeSeekBar.progress)
                     }
-                    // 如果没连接云台，尝试连接
-                    if(!allInOneService.getIsPtzConnected() && !isConnectingPtz) {
-                        isConnectingPtz = true
-                        thread {
-                            while (!allInOneService.ptzConnect()) {
-                                Thread.sleep(1000)
-                            }
-                            isConnectingPtz = false
-                        }
-                    }
                 }
                 else{// 未连接
                     if(!isConnecting){
@@ -459,7 +449,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                     isConnectingPtz = true
                     thread {
                         Thread.sleep(5000)
-                        while (!allInOneService.mainConnect()) {
+                        while (!allInOneService.ptzConnect()) {
                             Thread.sleep(1000)
                         }
                         isConnectingPtz = false
@@ -469,7 +459,8 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 // 已连接
                 if (allInOneService.getIsPtzConnected()) {
                     // 如果超过10s没收到消息，主动断开连接，等待重连
-                    if (Date().time - updateTime > 10000) {
+                    if (Date().time - updateTime > 10000 && !isConnectingPtz) {
+                        Log.d(TAG, "${Date().time}, ${updateTime}, ${Date().time - updateTime}")
                         // 断连
                         allInOneService.disConnectPtz()
                     }

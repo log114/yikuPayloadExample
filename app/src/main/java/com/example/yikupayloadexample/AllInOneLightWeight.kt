@@ -43,7 +43,7 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var currentModeText: TextView
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
-    private val interval = 200 // 限制两次俯仰控制间隔时间不得小于200ms
+    private val interval = 50 // 限制两次俯仰控制间隔时间不得小于50ms
     private var lastTime = Date().time // 上一次控制俯仰的时间
     private val modeItems = listOf(
         ModeItem("1", "${context.resources.getString(R.string.mode)}1"),
