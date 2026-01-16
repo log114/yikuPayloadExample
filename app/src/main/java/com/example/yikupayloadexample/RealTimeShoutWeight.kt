@@ -543,7 +543,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
-        timer.scheduleAtFixedRate(task, 100, 2000);
+        timer.schedule(task, 100, 2000);
     }
 
     // 设置默认音量
@@ -559,7 +559,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
-        timer.scheduleAtFixedRate(task, 100, 1000);
+        timer.schedule(task, 100, 1000);
     }
 
     // 释放资源

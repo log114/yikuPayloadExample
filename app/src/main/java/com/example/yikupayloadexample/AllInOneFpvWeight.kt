@@ -19,6 +19,8 @@ import kotlin.concurrent.thread
 import android.view.SurfaceView
 import android.widget.RelativeLayout
 import java.util.Date
+import java.util.Timer
+import java.util.TimerTask
 
 class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
@@ -42,6 +44,7 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private var isFullScreen = false
     private val interval = 50 // 限制两次俯仰控制间隔时间不得小于50ms
     private var lastTime = Date().time // 上一次控制俯仰的时间
+    private var settingTimer: Timer? = null
 
     // 当窗口被加载时，加载视频
     override fun onAttachedToWindow() {
@@ -103,6 +106,10 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         // 俯仰控制
         pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                // 如果不是手动拖动导致的更改，不重新发命令
+                if(!isSettingPitch) {
+                    return
+                }
                 pitchText.text = "${seekBar.progress/10}°"
                 if(Date().time - lastTime > interval) {
                     lastTime = Date().time
@@ -111,15 +118,12 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {
                 isSettingPitch = true
+                cancelResume()
             }
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 Log.i(TAG, "俯仰控制，当前俯仰值：${seekBar.progress}")
                 allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
-                // 延迟一下，避免设置还未生效，导致滑条往回跳
-                thread {
-                    Thread.sleep(1000)
-                    isSettingPitch = false
-                }
+                resumeMonitor()
             }
         })
     }
@@ -267,5 +271,22 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                 MApplication.applicationContext, msg, Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    // 恢复俯仰状态读取
+    private fun resumeMonitor() {
+        settingTimer = Timer();
+        val task = object : TimerTask() {
+            override fun run() {
+                isSettingPitch = false
+            }
+        }
+        settingTimer?.schedule(task, 4000);
+    }
+    // 取消恢复
+    private fun cancelResume() {
+        settingTimer?.cancel()
+        settingTimer?.purge()
+        settingTimer = null
     }
 }

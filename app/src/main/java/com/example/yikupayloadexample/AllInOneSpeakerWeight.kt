@@ -1,6 +1,7 @@
 package com.example.yikupayloadexample
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -34,9 +35,9 @@ import java.util.TimerTask
 import kotlin.concurrent.thread
 import androidx.core.content.edit
 import com.yiku.yikupayloadSDK.protocol.ALLINONE_PITCH_STATE
-import com.yiku.yikupayloadSDK.protocol.ALLINONE_STATE
 import com.yiku.yikupayloadSDK.util.MsgCallback
 
+@SuppressLint("ClickableViewAccessibility")
 class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
@@ -78,6 +79,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var updateTime = Date().time
     private val interval = 50 // 限制两次俯仰控制间隔时间不得小于50ms
     private var lastTime = Date().time // 上一次控制俯仰的时间
+    private var settingTimer: Timer? = null
 
     private var isPlayingAudio: Boolean = false
     private lateinit var audioListView: ListView
@@ -234,6 +236,10 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         // 俯仰控制
         pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                // 如果不是手动拖动导致的更改，不重新发命令
+                if(!isSettingPitch) {
+                    return
+                }
                 pitchText.text = "${seekBar.progress/10}°"
                 if(Date().time - lastTime > interval) {
                     lastTime = Date().time
@@ -242,15 +248,12 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {
                 isSettingPitch = true
+                cancelResume()
             }
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                 allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
-                // 延迟一下，避免设置还未生效，导致滑条往回跳
-                thread {
-                    Thread.sleep(1000)
-                    isSettingPitch = false
-                }
+                resumeMonitor()
             }
         })
 
@@ -401,6 +404,23 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         getFileList()
     }
 
+    // 恢复俯仰状态读取
+    private fun resumeMonitor() {
+        settingTimer = Timer();
+        val task = object : TimerTask() {
+            override fun run() {
+                isSettingPitch = false
+            }
+        }
+        settingTimer?.schedule(task, 4000);
+    }
+    // 取消恢复
+    private fun cancelResume() {
+        settingTimer?.cancel()
+        settingTimer?.purge()
+        settingTimer = null
+    }
+
     // 定时器，判断连接状态
     private fun setConnectState() {
         isConnecting = true
@@ -479,7 +499,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             }
         }
         // 定时器，100毫秒后开始执行，每2秒执行一次
-        timer.scheduleAtFixedRate(task, 100, 2000);
+        timer.schedule(task, 100, 2000);
     }
 
     private fun initStatus() {

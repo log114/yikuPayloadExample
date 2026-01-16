@@ -352,4 +352,5 @@
     <string name="verifying_firmware_file">正在检验固件文件</string>
     <string name="unknown_current_version">未获取到当前固件版本</string>
     <string name="please_restart_manually">操作失败，请手动重启</string>
+    <string name="upward">向上</string>
 </resources>

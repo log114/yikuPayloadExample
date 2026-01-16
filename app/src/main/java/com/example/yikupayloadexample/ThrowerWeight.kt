@@ -962,6 +962,6 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
         }
         // 定时器，100毫秒后开始执行，每2秒执行一次
-        timer.scheduleAtFixedRate(task, 100, 2000);
+        timer.schedule(task, 100, 2000);
     }
 }

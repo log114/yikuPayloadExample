@@ -45,6 +45,7 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var pitchText: TextView
     private val interval = 50 // 限制两次俯仰控制间隔时间不得小于50ms
     private var lastTime = Date().time // 上一次控制俯仰的时间
+    private var settingTimer: Timer? = null
     private val modeItems = listOf(
         ModeItem("1", "${context.resources.getString(R.string.mode)}1"),
         ModeItem("2", "${context.resources.getString(R.string.mode)}2"),
@@ -186,6 +187,10 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         // 俯仰控制
         pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                // 如果不是手动拖动导致的更改，不重新发命令
+                if(!isSettingPitch) {
+                    return
+                }
                 pitchText.text = "${seekBar.progress/10}°"
                 if(Date().time - lastTime > interval) {
                     lastTime = Date().time
@@ -194,15 +199,12 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {
                 isSettingPitch = true
+                cancelResume()
             }
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                 allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
-                // 延迟一下，避免设置还未生效，导致滑条往回跳
-                thread {
-                    Thread.sleep(1000)
-                    isSettingPitch = false
-                }
+                resumeMonitor()
             }
         })
         setConnectState()
@@ -302,6 +304,23 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         dialog.show()
     }
 
+    // 恢复俯仰状态读取
+    private fun resumeMonitor() {
+        settingTimer = Timer();
+        val task = object : TimerTask() {
+            override fun run() {
+                isSettingPitch = false
+            }
+        }
+        settingTimer?.schedule(task, 4000);
+    }
+    // 取消恢复
+    private fun cancelResume() {
+        settingTimer?.cancel()
+        settingTimer?.purge()
+        settingTimer = null
+    }
+
     // 定时器，判断连接状态
     private fun setConnectState() {
         val timer = Timer();
@@ -343,6 +362,6 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
-        timer.scheduleAtFixedRate(task, 100, 2000);
+        timer.schedule(task, 100, 2000);
     }
 }
