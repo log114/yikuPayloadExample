@@ -353,4 +353,5 @@
     <string name="unknown_current_version">未获取到当前固件版本</string>
     <string name="please_restart_manually">操作失败，请手动重启</string>
     <string name="upward">向上</string>
+    <string name="resume_failure">断点续传失败：文件可能已被修改</string>
 </resources>

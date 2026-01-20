@@ -309,4 +309,5 @@
     <string name="unknown_current_version">The current firmware version has not been obtained</string>
     <string name="please_restart_manually">Operation failed, please restart manually</string>
     <string name="upward">upward</string>
+    <string name="resume_failure">Resume failure: The file may have been modified</string>
 </resources>

@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.yiku.yikupayloadSDK.protocol.WATERGUN_STATE_RECEIVE
 import com.yiku.yikupayloadSDK.service.UpgradeService
 import com.yiku.yikupayloadSDK.util.AllInOneHost
 import com.yiku.yikupayloadSDK.util.GetFilePathFromUri
@@ -22,7 +21,6 @@ import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.bytesToHex
 import java.io.File
 import java.io.FileInputStream
-import java.util.Date
 import kotlin.concurrent.thread
 
 class FirmwareUpdateActivity : AppCompatActivity() {
@@ -46,9 +44,12 @@ class FirmwareUpdateActivity : AppCompatActivity() {
     private var result_resetUpgradeInfo = -1
     private var result_startUpgrade = -1
     private var result_transmission = -1
+    private var totalPackages = 0 // 上传的总包数
+    private var uploadedPackages = 0 // 已上传的包数
     private var result_verify = -1
     private var errorCount = 0
     private var maxPackageSize = 1024
+    private var retryCount_jumpPacket = 0; // 跳包重试次数
 
     @SuppressLint("SourceLockedOrientationPortrait")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +90,8 @@ class FirmwareUpdateActivity : AppCompatActivity() {
                         0x04 -> { // 升级数据包发送结果
                             Log.d(TAG, "升级数据包发送结果")
                             result_transmission = msg[12].toInt()
+                            totalPackages = littleEndianToInt(msg, 13)
+                            uploadedPackages = littleEndianToInt(msg, 15)
                         }
                         0x05 -> { // 升级包校验结果
                             Log.d(TAG, "升级包校验结果")
@@ -258,99 +261,10 @@ class FirmwareUpdateActivity : AppCompatActivity() {
                     }
                     return@thread
                 }
-                // 发送升级数据包
-                val packagesNum = (firmwareFile.length()/maxPackageSize + 1).toInt()
-                handler.post {
-                    updateText.setText(R.string.transmitted_firmware)
-                    progressBarUpdate.max = packagesNum
-                    progressBarUpdate.progress = 0
-                    progressBarUpdate.visibility = View.VISIBLE
-                }
-                Log.d(TAG, "包总数：${packagesNum}, 总大小：${firmwareFile.length()}")
-                val buffer = ByteArray(maxPackageSize)
-                var packageIndex = 1
-                FileInputStream(firmwareFile).use { inputStream ->
-                    var bytesRead: Int
-                    // 循环读取文件，直到读完所有内容
-                    while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                        // 精确复制实际读取的字节，避免末尾包包含旧数据
-                        val packageData = buffer.copyOf(bytesRead)
-                        result_transmission = -1 // 发送命令前，先重置状态
-                        upgradeService.transmissionPackage(packagesNum, packageIndex, packageData)
-                        errorCount = 0
-                        var retryCount = 0
-                        while (result_transmission == -1) {
-                            Thread.sleep(100)
-                            errorCount ++
-                            // 每次最多等待1.5秒
-                            if(errorCount > 15) {
-                                // 最多重试3次
-                                if(retryCount < 3) {
-                                    retryCount ++
-                                    errorCount = 0
-                                    upgradeService.transmissionPackage(packagesNum, packageIndex, packageData)
-                                }
-                                else {
-                                    handler.post {
-                                        updateText.setText(R.string.device_not_responding)
-                                        updateText.setTextColor(
-                                            ContextCompat.getColor(
-                                                this,
-                                                R.color.red
-                                            )
-                                        )
-                                        updateBtn.setText(R.string.start_upgrade)
-                                        componentEnabled(true)
-                                    }
-                                    return@thread
-                                }
-                            }
-                        }
-                        when(result_transmission) {
-                            0 -> {
-                                handler.post {
-                                    progressBarUpdate.progress = packageIndex
-                                }
-                                packageIndex ++
-                                continue
-                            }
-                            1 -> { // 总包数错误，直接退出
-                                handler.post {
-                                    updateText.setText(R.string.packages_number_error)
-                                    updateText.setTextColor(
-                                        ContextCompat.getColor(
-                                            this,
-                                            R.color.red
-                                        )
-                                    )
-                                    updateBtn.setText(R.string.start_upgrade)
-                                    componentEnabled(true)
-                                }
-                                return@thread
-                            }
-                            2 -> { // 重复写入，继续往下
-                                handler.post {
-                                    progressBarUpdate.progress = packageIndex
-                                }
-                                packageIndex ++
-                                continue
-                            }
-                            3 -> { // 跳包，直接退出
-                                handler.post {
-                                    updateText.setText(R.string.jumping_bag)
-                                    updateText.setTextColor(
-                                        ContextCompat.getColor(
-                                            this,
-                                            R.color.red
-                                        )
-                                    )
-                                    updateBtn.setText(R.string.start_upgrade)
-                                    componentEnabled(true)
-                                }
-                                return@thread
-                            }
-                        }
-                    }
+                // 发送升级数据包，支持断点续传
+                retryCount_jumpPacket = 0
+                if(!uploadFirmwareFile()){
+                    return@thread
                 }
                 // 固件包传输完成，开始校验
                 handler.post {
@@ -416,6 +330,126 @@ class FirmwareUpdateActivity : AppCompatActivity() {
             restartBtn.isEnabled = false
             upgradeService.restartDevice()
         }
+    }
+
+    // 发送升级数据包，支持断点续传
+    fun uploadFirmwareFile(): Boolean {
+        val handler = Handler(Looper.getMainLooper())
+        // 发送升级数据包
+        val packagesNum = (firmwareFile.length()/maxPackageSize + 1).toInt()
+        handler.post {
+            updateText.setText(R.string.transmitted_firmware)
+            progressBarUpdate.max = packagesNum
+            progressBarUpdate.progress = 0
+            progressBarUpdate.visibility = View.VISIBLE
+        }
+        Log.d(TAG, "包总数：${packagesNum}, 总大小：${firmwareFile.length()}")
+        val buffer = ByteArray(maxPackageSize)
+        var packageIndex = 1
+        FileInputStream(firmwareFile).use { inputStream ->
+            // 跳过已传输的字节
+            if (uploadedPackages > 0) {
+                val skipBytes = uploadedPackages.toLong() * maxPackageSize
+                val actualSkipped = inputStream.skip(skipBytes)
+                Log.d(TAG, "尝试跳过 $skipBytes 字节，实际跳过 $actualSkipped 字节")
+
+                if (actualSkipped < skipBytes) {
+                    // 如果跳过的字节数比预期少，认为异常
+                    handler.post {
+                        updateText.setText(R.string.resume_failure)
+                        updateText.setTextColor(ContextCompat.getColor(this, R.color.red))
+                        updateBtn.setText(R.string.start_upgrade)
+                        componentEnabled(true)
+                    }
+                    return false
+                }
+                packageIndex = uploadedPackages + 1
+            }
+            var bytesRead: Int
+            // 循环读取文件，直到读完所有内容
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                // 精确复制实际读取的字节，避免末尾包包含旧数据
+                val packageData = buffer.copyOf(bytesRead)
+                result_transmission = -1 // 发送命令前，先重置状态
+                upgradeService.transmissionPackage(packagesNum, packageIndex, packageData)
+                errorCount = 0
+                var retryCount = 0
+                while (result_transmission == -1) {
+                    Thread.sleep(200)
+                    errorCount ++
+                    // 每次最多等待3秒
+                    if(errorCount > 15) {
+                        // 最多重试3次
+                        if(retryCount < 3) {
+                            retryCount ++
+                            errorCount = 0
+                            upgradeService.transmissionPackage(packagesNum, packageIndex, packageData)
+                        }
+                        else {
+                            handler.post {
+                                updateText.setText(R.string.device_not_responding)
+                                updateText.setTextColor(
+                                    ContextCompat.getColor(
+                                        this,
+                                        R.color.red
+                                    )
+                                )
+                                updateBtn.setText(R.string.start_upgrade)
+                                componentEnabled(true)
+                            }
+                            return false
+                        }
+                    }
+                }
+                when(result_transmission) {
+                    0,2 -> { // 成功或者重复，都认为这个包已经上传成功，继续下一包
+                        handler.post {
+                            progressBarUpdate.progress = packageIndex
+                        }
+                        packageIndex ++
+                        continue
+                    }
+                    1 -> { // 总包数错误，直接退出
+                        handler.post {
+                            updateText.setText(R.string.packages_number_error)
+                            updateText.setTextColor(
+                                ContextCompat.getColor(
+                                    this,
+                                    R.color.red
+                                )
+                            )
+                            updateBtn.setText(R.string.start_upgrade)
+                            componentEnabled(true)
+                        }
+                        return false
+                    }
+                    3 -> { // 跳包，尝试续传，最多3次
+                        retryCount_jumpPacket ++
+                        if(retryCount_jumpPacket > 3) {
+                            handler.post {
+                                updateText.text = "${resources.getString(R.string.jumping_bag)}，（${retryCount_jumpPacket}/3）"
+                                updateText.setTextColor(
+                                    ContextCompat.getColor(
+                                        this,
+                                        R.color.red
+                                    )
+                                )
+                                updateBtn.setText(R.string.start_upgrade)
+                                componentEnabled(true)
+                            }
+                            return false
+                        }
+                        else {
+                            handler.post {
+                                updateText.text = "${resources.getString(R.string.jumping_bag)}，（${retryCount_jumpPacket}/3）"
+                            }
+                            return uploadFirmwareFile()
+                        }
+                    }
+                }
+            }
+        }
+        return true
     }
 
     // 设置组件是否可用
