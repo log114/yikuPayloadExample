@@ -84,6 +84,8 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var isPlayingAudio: Boolean = false
     private lateinit var audioListView: ListView
     private var adapter: AudioListAdapter? = null
+    private var lastSelectedPosition = -1
+    private var lastSelectedFileName = ""
     // 初始化数据
     private var audioItems: MutableList<String> = mutableListOf()
 
@@ -380,10 +382,23 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 mainHandler.post {
                     adapter?.updateAllItems(tempList)
                     Log.d(TAG, "更新：${tempList}")
+                    // 文件更新后恢复选中状态
+                    restoreSelectionAfterUpdate(tempList)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 e.message?.let { Log.e(TAG, it) }
+            }
+        }
+    }
+
+    private fun restoreSelectionAfterUpdate(fileList: List<String>) {
+        if (lastSelectedFileName.isNotEmpty() && fileList.contains(lastSelectedFileName)) {
+            val position = fileList.indexOf(lastSelectedFileName)
+            if (position >= 0) {
+                adapter?.setSelectedPosition(position)
+                audioListView.setSelection(position)
+                audioFileNameText.text = lastSelectedFileName
             }
         }
     }
@@ -399,9 +414,25 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 // 更新选中状态
                 adapter?.setSelectedPosition(position)
                 audioFileNameText.text = adapter?.getSelectedItem()
+                // 保存选中状态
+                lastSelectedPosition = position
+                lastSelectedFileName = adapter?.getSelectedItem() ?: ""
             }
         }
         getFileList()
+        // 文件加载完成后恢复选中状态
+        restoreSelection()
+    }
+
+    private fun restoreSelection() {
+        // 方式1：使用内存中的状态恢复
+        if (lastSelectedPosition >= 0 && lastSelectedFileName.isNotEmpty()) {
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                adapter?.setSelectedPosition(lastSelectedPosition)
+                audioListView.setSelection(lastSelectedPosition)
+            }, 300) // 延迟确保列表已加载完成
+        }
     }
 
     // 恢复俯仰状态读取
