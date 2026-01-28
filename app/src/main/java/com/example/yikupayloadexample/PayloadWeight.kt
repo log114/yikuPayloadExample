@@ -721,29 +721,25 @@ class PayloadWeight : Service() {
 
     // 悬浮窗全屏 (使用可用区域)
     fun fullScreen() {
-        // 关键修改：获取排除系统栏后的可用屏幕尺寸
         val (screenWidth, screenHeight) = getScreenSize(includeSystemBars = false)
 
-        // 设置 shoutComp 的宽高为可用屏幕尺寸
+        // 设置 shoutComp 的宽高（保留边距）
         val params = mShoutView.layoutParams
         params.width = screenWidth
         params.height = screenHeight
         mShoutView.layoutParams = params
 
-        Log.d(TAG, "设置悬浮窗宽：${params.width}，高：${params.height}")
-
-        // 以下部分可以保留，但不再需要尝试隐藏系统栏的标志位
         val floatWindowView = EasyFloat.getFloatView("yk_payload_weight_op")
         floatWindowView?.let { view ->
             val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
             val layoutParams = view.layoutParams as WindowManager.LayoutParams
 
-            // 只保留与窗口布局相关的标志位
-            layoutParams.flags = layoutParams.flags or
-                    (WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-            layoutParams.x = if(layoutParams.x < 0) 0 else layoutParams.x
-            layoutParams.y = if(layoutParams.y < 0) 0 else layoutParams.y
+            // 关键修改：移除 FLAG_LAYOUT_NO_LIMITS，避免坐标混乱
+            layoutParams.flags = layoutParams.flags or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+
+            // 移除 FLAG_LAYOUT_NO_LIMITS 避免边界问题
+            layoutParams.flags = layoutParams.flags and WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS.inv()
+
             try {
                 windowManager.updateViewLayout(view, layoutParams)
             } catch (e: Exception) {
@@ -752,7 +748,6 @@ class PayloadWeight : Service() {
             }
         }
 
-        // 内部视图的沉浸式设置可以保留，但作用有限
         val decorView = mShoutView.rootView
         val uiOptions = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
@@ -761,10 +756,17 @@ class PayloadWeight : Service() {
         decorView.systemUiVisibility = uiOptions
     }
 
+    private fun dpToPx(dp: Float): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
+
     // 恢复原有尺寸
     fun recoverSize() {
+        // 使用dp单位而不是固定像素值
+        val defaultWidthDp = 540f  // 保持原来的设计尺寸
+
         val params = mShoutView.layoutParams
-        params.width = 1080 // 恢复为固定宽度
+        params.width = dpToPx(defaultWidthDp)
         params.height = RelativeLayout.LayoutParams.WRAP_CONTENT
         mShoutView.layoutParams = params
 
@@ -788,6 +790,8 @@ class PayloadWeight : Service() {
 
         val decorView = mShoutView.rootView
         decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+
+        Log.d(TAG, "恢复尺寸完成: 宽度=${dpToPx(defaultWidthDp)}px (${defaultWidthDp}dp)")
     }
 
     fun setTitleText(textId: Int) {

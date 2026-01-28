@@ -77,7 +77,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var isInit: Boolean = false
     private var isFirstConneted: Boolean = true
     private var updateTime = Date().time
-    private val interval = 50 // 限制两次俯仰控制间隔时间不得小于50ms
+    private val interval = 100 // 限制两次俯仰控制间隔时间不得小于50ms
     private var lastTime = Date().time // 上一次控制俯仰的时间
     private var settingTimer: Timer? = null
 
@@ -254,7 +254,10 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             }
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
-                allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
+                thread {
+                    Thread.sleep(100)
+                    allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
+                }
                 resumeMonitor()
             }
         })

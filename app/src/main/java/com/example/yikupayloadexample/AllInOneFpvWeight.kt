@@ -42,7 +42,7 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private var isInitPlayer: Boolean = false
     private var isAdjusting = false
     private var isFullScreen = false
-    private val interval = 50 // 限制两次俯仰控制间隔时间不得小于50ms
+    private val interval = 100 // 限制两次俯仰控制间隔时间不得小于50ms
     private var lastTime = Date().time // 上一次控制俯仰的时间
     private var settingTimer: Timer? = null
 
@@ -66,7 +66,7 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
 
         // 释放视频资源
         if(isInitPlayer) {
-            rtspPlayer.stopPlayback()
+            rtspPlayer.release()
         }
     }
 
@@ -122,7 +122,10 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             }
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 Log.i(TAG, "俯仰控制，当前俯仰值：${seekBar.progress}")
-                allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
+                thread {
+                    Thread.sleep(100)
+                    allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
+                }
                 resumeMonitor()
             }
         })
@@ -184,10 +187,9 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         if (isAdjusting) return
         isAdjusting = true
         var (maxWidth, maxHeight) = thisPayloadWeight!!.getScreenSize(includeSystemBars = false)
-        maxHeight = maxHeight - 84 // 去掉头部标题和内边距，才是这里可以使用的最大高度
-        val bottomControlHeight = 76 // 底部控件高度
-        val pagePadding = 8
-//        val aspectRatio = rtspPlayer.getOriginalAspectRatio() // 视频原始宽高比
+        maxHeight = maxHeight - dpToPx(42f).toInt() // 去掉头部标题和内边距，才是这里可以使用的最大高度
+        val bottomControlHeight = dpToPx(38f).toInt() // 底部控件高度
+        val pagePadding = dpToPx(4f).toInt()
         val aspectRatio: Float = (1280.00/720.00).toFloat() // 视频宽高比固定为1280*720
         Log.d(TAG, "宽高比：${aspectRatio}")
         var targetPageWidthPx = 0
@@ -210,17 +212,15 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             }
         }
         else { // 非全屏时，先将高度定为414计算高度
-            targetPageWidthPx = 900
-            targetPageHeightPx = 490
-            targetPlayerHeightPx = 414
+            targetPageWidthPx = dpToPx(450f).toInt()
+            targetPageHeightPx = dpToPx(245f).toInt()
+            targetPlayerHeightPx = dpToPx(207f).toInt()
             targetPlayerWidthPx = (targetPlayerHeightPx * aspectRatio).toInt()
             if(targetPlayerWidthPx > targetPageWidthPx - pagePadding*2) {
                 targetPlayerWidthPx = targetPageWidthPx - pagePadding*2
                 targetPlayerHeightPx = (targetPlayerWidthPx / aspectRatio).toInt()
             }
         }
-        Log.d(TAG, "targetPageWidthPx=${targetPageWidthPx}, targetPageHeightPx=${targetPageHeightPx}, targetPlayerWidthPx=${targetPlayerWidthPx}, targetPlayerHeightPx=${targetPlayerHeightPx}")
-        // 更新UI：调整 video_container 的高度
         updateVideoContainerHeight(targetPageWidthPx, targetPageHeightPx, targetPlayerWidthPx, targetPlayerHeightPx)
     }
 
@@ -253,6 +253,11 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             isAdjusting = false
             adjustContainerAspectRatio()
         }, 50)
+    }
+
+    // dp转px工具方法
+    private fun dpToPx(dp: Float): Float {
+        return dp * resources.displayMetrics.density
     }
 
     private fun showToast(msg: Int) {

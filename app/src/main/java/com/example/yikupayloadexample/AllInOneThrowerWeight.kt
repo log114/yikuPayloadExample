@@ -75,6 +75,16 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var pitchDownTimer: Timer
     private var isOpenedFpv = false // 是否打开了fpv辅助
 
+    // 添加尺寸常量定义
+    companion object {
+        private const val DEFAULT_PAGE_WIDTH_DP = 450f
+        private const val DEFAULT_PAGE_HEIGHT_DP = 245f
+        private const val DEFAULT_PLAYER_WIDTH_DP = 343f
+        private const val DEFAULT_PLAYER_HEIGHT_DP = 193f
+        private const val BOTTOM_CONTROL_HEIGHT_DP = 44f
+        private const val PAGE_PADDING_DP = 4f
+    }
+
     // 当窗口被加载时，加载视频
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -99,7 +109,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // 释放视频资源
         if(isInitPlayer) {
-            rtspPlayer.stopPlayback()
+            rtspPlayer.release()
         }
     }
 
@@ -125,12 +135,12 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             rtspPlayer.release() // 释放视频资源
             playerParentView.removeView(playerView)
             pageLayout.layoutParams = pageLayout.layoutParams.apply {
-                width = 900
-                height = 490
+                width = dpToPx(DEFAULT_PAGE_WIDTH_DP).toInt()
+                height = dpToPx(DEFAULT_PAGE_HEIGHT_DP).toInt()
             }
             playerParentView.layoutParams = playerParentView.layoutParams.apply {
-                width = 686
-                height = 386
+                width = dpToPx(DEFAULT_PLAYER_WIDTH_DP).toInt()
+                height = dpToPx(DEFAULT_PLAYER_HEIGHT_DP).toInt()
             }
             isFullScreen = false
             isAdjusting = false
@@ -615,9 +625,9 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         if (isAdjusting) return
         isAdjusting = true
         var (maxWidth, maxHeight) = thisPayloadWeight!!.getScreenSize(includeSystemBars = false)
-        maxHeight = maxHeight - 84 // 去掉头部标题和内边距，才是这里可以使用的最大高度
-        val bottomControlHeight = 88 // 底部控件高度
-        val pagePadding = 8
+        maxHeight = maxHeight - dpToPx(42f).toInt() // 去掉头部标题和内边距，才是这里可以使用的最大高度
+        val bottomControlHeight = dpToPx(44f).toInt() // 底部控件高度
+        val pagePadding = dpToPx(4f).toInt()
 //        val aspectRatio = rtspPlayer.getOriginalAspectRatio() // 视频原始宽高比
         val aspectRatio: Float = (1280.00/720.00).toFloat() // 视频宽高比固定为1280*720
         var targetPageWidthPx = 0
@@ -640,9 +650,9 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             }
         }
         else { // 非全屏时，先将高度定为414计算高度
-            targetPageWidthPx = 900
-            targetPageHeightPx = 490
-            targetPlayerHeightPx = 386
+            targetPageWidthPx = dpToPx(450f).toInt()
+            targetPageHeightPx = dpToPx(245f).toInt()
+            targetPlayerHeightPx = dpToPx(193f).toInt()
             targetPlayerWidthPx = (targetPlayerHeightPx * aspectRatio).toInt()
             if(targetPlayerWidthPx > targetPageWidthPx - pagePadding*2) {
                 targetPlayerWidthPx = targetPageWidthPx - pagePadding*2
@@ -722,6 +732,16 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // 定时器，100毫秒后开始执行，每2秒执行一次
         pitchDownTimer.schedule(task, 100, 2000);
+    }
+
+    // dp转px工具方法
+    private fun dpToPx(dp: Float): Float {
+        return dp * resources.displayMetrics.density
+    }
+
+    // px转dp工具方法
+    private fun pxToDp(px: Int): Float {
+        return px / resources.displayMetrics.density
     }
 
     private fun showToast(msg: Int) {

@@ -43,7 +43,7 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private lateinit var currentModeText: TextView
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
-    private val interval = 50 // 限制两次俯仰控制间隔时间不得小于50ms
+    private val interval = 100 // 限制两次俯仰控制间隔时间不得小于100ms
     private var lastTime = Date().time // 上一次控制俯仰的时间
     private var settingTimer: Timer? = null
     private val modeItems = listOf(
@@ -203,7 +203,10 @@ class AllInOneLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
-                allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
+                thread {
+                    Thread.sleep(100)
+                    allInOneService.pitchControl(seekBar.progress) // 结束的时候也发一下，避免不统一
+                }
                 resumeMonitor()
             }
         })
