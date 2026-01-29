@@ -802,6 +802,7 @@ class PayloadWeight : Service() {
         super.onDestroy()
         Log.w(TAG, "onDestroy........")
         realTimeShoutWeight.releaseResources()
+        allInOneSpeakerWeight.releaseResources()
     }
 
     override fun onUnbind(intent: Intent?): Boolean {

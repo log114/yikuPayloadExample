@@ -24,6 +24,7 @@ import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
@@ -37,6 +38,7 @@ import androidx.core.content.edit
 import com.yiku.yikupayloadSDK.protocol.ALLINONE_PITCH_STATE
 import com.yiku.yikupayloadSDK.util.MsgCallback
 
+@RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("ClickableViewAccessibility")
 class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
@@ -120,41 +122,6 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             }
         })
 
-        sharedPreferences = context.getSharedPreferences("RealTimeShoutWeight", Context.MODE_PRIVATE)
-
-        // 实时喊话
-        realTimeSpeakBtn.setOnClickListener {
-            val edit = sharedPreferences.edit()
-            Log.i(TAG, "isStartSpeak:${isStartSpeak}")
-            if (allInOneService.isRecording) {
-                realTimeSpeakBtn.setText(R.string.start_speak)
-                Log.i(TAG, "stopRecord...")
-                stopForegroundService()
-                allInOneService.stopRealTimeShout()
-                edit.putBoolean("record", false)
-            } else {
-                // 麦克风权限检查
-                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
-                    != PackageManager.PERMISSION_GRANTED) {
-                    showToast(R.string.lack_of_permissions)
-                    return@setOnClickListener
-                }
-
-                // 启动前台服务
-                startForegroundService()
-
-                RecordingForegroundService.onServiceStarted = {
-                    Handler(Looper.getMainLooper()).post {
-                        // 服务已启动，开始录音
-                        startRecordingProcess()
-                    }
-                }
-
-                edit.putBoolean("record", true)
-            }
-            edit.apply()
-            isStartSpeak = !isStartSpeak
-        }
         // 播放警报
         playAlarmBtn.setOnClickListener {
             val edit = sharedPreferences.edit()
@@ -332,7 +299,9 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         initStatus()
         setConnectState()
     }
-    private fun initView(context: Context?) {
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun initView(context: Context) {
         LayoutInflater.from(context).inflate(R.layout.all_in_one_speaker_weight, this, true)
         speakerMainPage = findViewById(R.id.speakerMainPage)
         speakerSecondPage = findViewById(R.id.speakerSecondPage)
@@ -358,6 +327,41 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         pitchSeekBar = findViewById(R.id.pitch_seek_bar)
         pitchText = findViewById(R.id.pitchText)
         backBtn = findViewById(R.id.back_btn)
+
+        sharedPreferences = context.getSharedPreferences("RealTimeShoutWeight", Context.MODE_PRIVATE)
+        // 实时喊话
+        realTimeSpeakBtn.setOnClickListener {
+            val edit = sharedPreferences.edit()
+            Log.i(TAG, "isStartSpeak:${isStartSpeak}")
+            if (allInOneService.isRecording) {
+                realTimeSpeakBtn.setText(R.string.start_speak)
+                Log.i(TAG, "stopRecord...")
+                stopForegroundService()
+                allInOneService.stopRealTimeShout()
+                edit.putBoolean("record", false)
+            } else {
+                // 麦克风权限检查
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                    showToast(R.string.lack_of_permissions)
+                    return@setOnClickListener
+                }
+
+                // 启动前台服务
+                startForegroundService()
+
+                RecordingForegroundService.onServiceStarted = {
+                    Handler(Looper.getMainLooper()).post {
+                        // 服务已启动，开始录音
+                        startRecordingProcess()
+                    }
+                }
+
+                edit.putBoolean("record", true)
+            }
+            edit.apply()
+            isStartSpeak = !isStartSpeak
+        }
     }
 
     private fun getFileList() {
@@ -477,6 +481,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 if (allInOneService.getIsConnected()) {
                     if(isFirstConneted) {
                         isFirstConneted = false
+                        allInOneService.setContext(context)
                         allInOneService.setVolume(volumeSeekBar.progress)
                     }
                 }
@@ -627,5 +632,11 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 Toast.LENGTH_LONG
             ).show()
         }
+    }
+
+    // 释放资源
+    fun releaseResources() {
+        stopForegroundService()
+        allInOneService.stopRealTimeShout()
     }
 }
