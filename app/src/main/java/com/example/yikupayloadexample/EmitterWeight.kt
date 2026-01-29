@@ -233,6 +233,6 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
-        timer.scheduleAtFixedRate(task, 100, 1000);
+        timer.schedule(task, 100, 1000);
     }
 }

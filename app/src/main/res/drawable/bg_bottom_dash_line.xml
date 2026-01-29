@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 底层：可选的内容区域背景（例如白色），如果不需要可省略此层 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#00FFFFFF" />
+            <!-- 设置圆角，不需要可删除 -->
+            <corners android:radius="0dp" />
+        </shape>
+    </item>
+
+    <!-- 顶层：底部虚线 -->
+    <item android:top="-2dp" android:left="-2dp" android:right="-2dp" android:bottom="0dp">
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="1.5dp"
+                android:color="#FFFFFF"
+                android:dashWidth="8dp"
+                android:dashGap="5dp" />
+            <solid android:color="@android:color/transparent" />
+            <!-- 为使虚线显示完整，建议设置与底层相同的圆角 -->
+            <corners android:radius="0dp" />
+        </shape>
+    </item>
+</layer-list>

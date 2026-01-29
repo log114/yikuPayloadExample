@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/allInOneFpvWeight"
+    android:layout_width="450dp"
+    android:layout_height="245dp">
+
+    <LinearLayout
+        android:id="@+id/fpv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        tools:ignore="UselessParent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/boder"
+            android:padding="0dp"
+            tools:ignore="UselessParent">
+            <LinearLayout
+                android:id="@+id/playerParentView"
+                android:layout_width="368dp"
+                android:layout_height="207dp"
+                android:layout_gravity="center_horizontal">
+                <!-- 视频播放区域（底层） -->
+                <SurfaceView
+                    android:id="@+id/playerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+            <!-- 控制按钮区域（顶层） -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:visibility="visible">
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+                <ImageView
+                    android:id="@+id/enlarge_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="全屏或恢复悬浮窗状态"
+                    android:src="@drawable/picture_in_picture" />
+            </LinearLayout>
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_bottom_dash_line"
+            android:visibility="visible"
+            tools:ignore="UselessParent">
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:visibility="visible"
+            tools:ignore="UselessParent">
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/pitch_angle"
+                android:textSize="13sp"
+                android:textColor="@color/white" />
+
+            <SeekBar
+                android:id="@+id/pitch_seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:minHeight="2dp"
+                android:maxHeight="2dp"
+                android:progressDrawable="@drawable/bg_adjust_seek_bar"
+                android:thumb="@drawable/bg_seek_bar_thumb"
+                android:max="900"
+                android:progress="0" />
+
+            <TextView
+                android:id="@+id/pitch_text"
+                android:layout_width="60dp"
+                android:layout_height="20dp"
+                android:text="0°"
+                android:textSize="13sp"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

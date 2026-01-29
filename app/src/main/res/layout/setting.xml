@@ -27,9 +27,6 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 />
-
-
-
         </LinearLayout>
 
     </ScrollView>
@@ -64,7 +61,7 @@
                     />
                 <Button
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
                     android:id="@+id/reboot_ym_btn"
                     android:layout_height="match_parent"
                     android:text="@string/reboot_device"/>
@@ -351,11 +348,37 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <TextView
+                    android:layout_width="140dp"
+                    android:layout_height="20dp"
+                    android:textAlignment="center"
+                    android:text="@string/AllInOneHost_name" />
+
+                <EditText
+                    android:id="@+id/AllInOneHostIP"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:background="@drawable/boder"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:id="@+id/allInOneUpdate"
+                    android:layout_height="match_parent"
+                    android:text="@string/firmware_update"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:orientation="vertical"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:gravity="right">
+                android:gravity="center">
 
                 <Button
                     android:id="@+id/save"

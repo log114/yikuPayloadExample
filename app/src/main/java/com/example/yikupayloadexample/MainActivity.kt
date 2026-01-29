@@ -31,9 +31,11 @@ import com.yiku.yikupayloadSDK.service.MegaphoneService
 import android.text.InputType
 import com.example.yikupayloadexample.util.AppUpdateManager
 import com.example.yikupayloadexample.util.VersionData
+import com.yiku.yikupayloadSDK.service.AllInOneService
 import java.io.File
 
 var megaphoneService: BaseMegaphoneService? = null
+var allInOneService: AllInOneService = AllInOneService()
 var preferences: SharedPreferences? = null
 
 
@@ -91,9 +93,13 @@ class MainActivity : AppCompatActivity() {
                         serviceBinder.showWindow()
                         serviceBinder.openFloatingWindow()
                         megaphoneService = MegaphoneService()
-                        val host = preferences?.getString("ShoutHost", "")
-                        if(host != null && "" != host) {
-                            megaphoneService?.setIp(host)
+                        val shoutHost = preferences?.getString("ShoutHost", "")
+                        if(shoutHost != null && "" != shoutHost) {
+                            megaphoneService?.setIp(shoutHost)
+                        }
+                        val allInOneHost = preferences?.getString("AllInOneHost", "")
+                        if(allInOneHost != null && "" != allInOneHost) {
+                            allInOneService.setIp(allInOneHost)
                         }
                     }
                 }
@@ -104,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                 PayloadWeight::class.java
             )
 
-            this.bindService(intent, conn!!, Context.BIND_AUTO_CREATE)
+            this.bindService(intent!!, conn!!, Context.BIND_AUTO_CREATE)
 //            this.startActivity(intent)
 
             run {

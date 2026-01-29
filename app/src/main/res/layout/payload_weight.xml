@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shoutComp"
     android:layout_width="540dp"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="false">
 
 
     <LinearLayout
@@ -22,6 +23,7 @@
             tools:ignore="UselessParent">
 
             <TextView
+                android:id="@+id/windowTitle"
                 android:layout_width="0dp"
                 android:layout_height="24dp"
                 android:layout_weight="1"
