@@ -1,22 +1,18 @@
 package com.example.yikupayloadexample
 
 import android.Manifest
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.media.AudioDeviceInfo
 import android.media.AudioFormat
-import android.media.AudioManager
 import android.media.AudioTrack
 import android.media.AudioTrack.MODE_STREAM
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.provider.Settings
 import android.util.AttributeSet
 import android.util.Log
@@ -24,7 +20,6 @@ import android.view.LayoutInflater
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.yikupayloadexample.MApplication.applicationContext
 import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
@@ -32,11 +27,11 @@ import com.yiku.yikupayloadSDK.service.FourInOneService
 import com.yiku.yikupayloadSDK.service.MegaphoneService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.OpusUtils
-import com.yiku.yikupayloadSDK.util.main
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.concurrent.thread
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -69,6 +64,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private var volumeReal = 0;
     private var volumeLimit = 100
     private var temperature = "0"
+    private var lastRecvTimeRef: AtomicLong = AtomicLong(0)
 
     companion object {
         private const val REQUEST_CODE_RECORD_AUDIO = 123 // 定义请求码
@@ -208,13 +204,92 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 
     }
 
+    private fun startRadio() {
+        isRadio = true
+        mRadioBtn.setText(R.string.stop_listening)
+
+        initAudioTrack()
+        audioTrack.play()
+        megaphoneService?.registMsgCallback(object : MsgCallback {
+            val opusUtils = OpusUtils.getInstant()
+            val createDecoder = opusUtils.createDecoder(radioRate, channels)// 新收音麦的数据opus编码使用的是16000采样率
+            override fun getId(): String {
+                return "radioCallback"
+            }
+
+            override fun onMsg(msg: ByteArray) {
+                lastRecvTimeRef.set(SystemClock.elapsedRealtime())
+                Log.i(TAG, "收音数据长度："+ msg.size)
+                if (msg.size > 4 && String(msg.slice(0..3).toByteArray()) == "[40]") {
+                    if(!isRadio) {
+                        Log.d(TAG, "收音已关闭")
+                        return
+                    }
+                    try {
+                        val data = ShortArray(frameSize)
+                        val rc = opusUtils.decode(
+                            createDecoder, msg.slice(4 until msg.size).toByteArray(), data
+                        )
+                        // 检查AudioTrack状态
+                        if (audioTrack.playState != AudioTrack.PLAYSTATE_PLAYING) {
+                            Log.w(TAG, "AudioTrack未播放，尝试恢复")
+                            audioTrack.play()
+                        }
+
+                        val written = audioTrack.write(data, 0, rc)
+                        if (written <= 0) {
+                            Log.e(TAG, "AudioTrack写入失败，错误码：$written")
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "音频处理异常", e)
+                    }
+                }
+            }
+        })
+        megaphoneService?.startRadio()
+        // 独立监控线程
+        monitorRadioStatus()
+    }
+
     private fun stopRadio() {
         isRadio = false
         megaphoneService?.unRegistMsgCallback("radioCallback")
         audioTrack.stop()
-//        audioTrack.release()
+        audioTrack.release()
         megaphoneService?.stopRadio()
         mRadioBtn.setText(R.string.start_listening)
+    }
+
+    // 收音监控
+    private fun monitorRadioStatus() {
+        lastRecvTimeRef.set(SystemClock.elapsedRealtime())
+        Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
+            override fun run() {
+                if (!isRadio) {
+                    Log.d(TAG, "收音已停止，监控退出")
+                    return
+                }
+
+                val currentTime = SystemClock.elapsedRealtime()
+                val lastRecvTime = lastRecvTimeRef.get()
+                val elapsed = currentTime - lastRecvTime
+
+                Log.d(TAG, "收音监控: 距上次接收=${elapsed}ms, 状态=${audioTrack?.playState}")
+
+                when {
+                    elapsed > 3000 -> {
+                        Log.w(TAG, "收音超时(${elapsed}ms)")
+                        stopRadio()
+                        showToast(R.string.radio_stops_abnormally)
+                        return
+                    }
+                    else -> {
+                        // 继续监控
+                        Handler(Looper.getMainLooper()).postDelayed(this, 1000)
+                    }
+                }
+            }
+        }, 1000)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -238,36 +313,14 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                 megaphoneService?.restartRadio()
             }
         }
+        // 收音
         mRadioBtn.setOnClickListener {
             if (!isRadio) {
 //                megaphoneService?.stopRealTimeShout()
 //                if (isRadio) {
 //                    megaphoneService?.stopRadio()
 //                }
-                isRadio = true
-                mRadioBtn.setText(R.string.stop_listening)
-
-                initAudioTrack()
-                audioTrack.play()
-                megaphoneService?.registMsgCallback(object : MsgCallback {
-                    val opusUtils = OpusUtils.getInstant()
-                    val createDecoder = opusUtils.createDecoder(radioRate, channels)// 新收音麦的数据opus编码使用的是16000采样率
-                    override fun getId(): String {
-                        return "radioCallback"
-                    }
-
-                    override fun onMsg(msg: ByteArray) {
-                        Log.i(TAG, "收音数据长度："+ msg.size)
-                        if (msg.size > 4 && String(msg.slice(0..3).toByteArray()) == "[40]") {
-                            val data = ShortArray(frameSize)
-                            val rc = opusUtils.decode(
-                                createDecoder, msg.slice(4 until msg.size).toByteArray(), data
-                            )
-                            audioTrack.write(data, 0, rc)
-                        }
-                    }
-                })
-                megaphoneService?.startRadio()
+                startRadio()
             } else {
                 stopRadio()
             }
