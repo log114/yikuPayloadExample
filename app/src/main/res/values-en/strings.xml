@@ -310,4 +310,5 @@
     <string name="please_restart_manually">Operation failed, please restart manually</string>
     <string name="upward">upward</string>
     <string name="resume_failure">Resume failure: The file may have been modified</string>
+    <string name="radio_stops_abnormally">The radio function stops abnormally</string>
 </resources>

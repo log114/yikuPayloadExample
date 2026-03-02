@@ -53,7 +53,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
 
             override fun onMsg(msg: ByteArray) {
-                Log.i(TAG, "msg:${msg.toHex()}")
+//                Log.i(TAG, "msg:${msg.toHex()}")
                 if (msg.isNotEmpty() && msg[0] == 0x8d.toByte()) {
                     if (msg[2] == 0x18.toByte()) {
                         Log.i(TAG, "recv 0x18!")
