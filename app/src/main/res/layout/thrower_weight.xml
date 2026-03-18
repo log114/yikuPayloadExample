@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/thWeight"
     android:layout_width="500dp"
     android:layout_height="300dp">
@@ -74,6 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:baselineAligned="false"
             android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -126,9 +129,11 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/statusRow2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:baselineAligned="false"
             android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -210,108 +215,222 @@
                     android:padding="0dp"
                     android:text="@string/update"
                     android:textColor="@color/white" />
+
+                <LinearLayout
+                    android:id="@+id/mode_selector_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/boder"
+                    android:gravity="center_vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/current_mode_text"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:layout_marginEnd="4dp" />
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:src="@drawable/ic_arrow_down"
+                        app:tint="@color/white" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/thrower_6_way"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
-
-                <Button
-                    android:id="@+id/openAll"
+                android:orientation="vertical"
+                android:visibility="visible">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open_all"
-                    android:textColor="@color/white" />
+                    android:layout_marginTop="8dp">
 
-                <Button
-                    android:id="@+id/switchLeft"
+                    <Button
+                        android:id="@+id/openAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open_all"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/switchLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/switchCenter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/switchRight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/switch1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
+                    android:layout_marginTop="8dp">
 
-                <Button
-                    android:id="@+id/switchCenter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
+                    <Button
+                        android:id="@+id/switch2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
 
-                <Button
-                    android:id="@+id/switchRight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
+                    <Button
+                        android:id="@+id/switch3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
 
-                <Button
-                    android:id="@+id/switch1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
+                    <Button
+                        android:id="@+id/switch4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/switch5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/switch6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+                </LinearLayout>
             </LinearLayout>
-
             <LinearLayout
+                android:id="@+id/thrower_4_way"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
-
-                <Button
-                    android:id="@+id/switch2"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
+                    android:layout_marginTop="8dp">
 
-                <Button
-                    android:id="@+id/switch3"
+                    <Button
+                        android:id="@+id/openAll_4_way"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open_all"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/switchLeft_4_way"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/switchRight_4_way"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
+                    android:layout_marginTop="8dp">
 
-                <Button
-                    android:id="@+id/switch4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
+                    <Button
+                        android:id="@+id/switch1_4_way"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+                    <Button
+                        android:id="@+id/switch2_4_way"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
 
-                <Button
-                    android:id="@+id/switch5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
+                    <Button
+                        android:id="@+id/switch3_4_way"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
 
-                <Button
-                    android:id="@+id/switch6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/open"
-                    android:textColor="@color/white" />
+                    <Button
+                        android:id="@+id/switch4_4_way"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/play_btn"
+                        android:text="@string/open"
+                        android:textColor="@color/white" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -338,11 +457,12 @@
                 android:id="@+id/throwerAllowDetonationSwitch_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
                 android:scaleX="1.2"
                 android:scaleY="1.2"
                 android:text="@string/allow_detonation"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -360,55 +480,66 @@
                 android:id="@+id/throwerAllowDetonationSwitch_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
                 android:scaleX="1.2"
                 android:scaleY="1.2"
                 android:text="@string/allow_detonation"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/bombSettingRow2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="2dp"
+            android:orientation="vertical"
             android:visibility="visible">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:text="@string/bomb_3"
-                android:textColor="@color/white"
-                android:textSize="16sp"/>
-            <Switch
-                android:id="@+id/throwerAllowDetonationSwitch_3"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:scaleX="1.2"
-                android:scaleY="1.2"
-                android:text="@string/allow_detonation"
-                android:textColor="@color/white" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="2dp"
-            android:visibility="visible">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:text="@string/bomb_4"
-                android:textColor="@color/white"
-                android:textSize="16sp"/>
-            <Switch
-                android:id="@+id/throwerAllowDetonationSwitch_4"
-                android:layout_width="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="2dp"
+                android:visibility="visible">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/bomb_3"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+                <Switch
+                    android:id="@+id/throwerAllowDetonationSwitch_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2"
+                    android:text="@string/allow_detonation"
+                    android:textColor="@color/white"
+                    tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:scaleX="1.2"
-                android:scaleY="1.2"
-                android:text="@string/allow_detonation"
-                android:textColor="@color/white" />
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="2dp"
+                android:visibility="visible">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/bomb_4"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+                <Switch
+                    android:id="@+id/throwerAllowDetonationSwitch_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2"
+                    android:text="@string/allow_detonation"
+                    android:textColor="@color/white"
+                    tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"

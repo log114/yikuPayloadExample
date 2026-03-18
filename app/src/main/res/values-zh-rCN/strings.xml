@@ -311,4 +311,6 @@
     <string name="upward">向上</string>
     <string name="resume_failure">断点续传失败：文件可能已被修改</string>
     <string name="radio_stops_abnormally">收音功能异常停止</string>
+    <string name="throw_4_way">4路抛投</string>
+    <string name="throw_6_way">6路抛投</string>
 </resources>

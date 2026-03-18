@@ -311,4 +311,6 @@
     <string name="upward">upward</string>
     <string name="resume_failure">Resume failure: The file may have been modified</string>
     <string name="radio_stops_abnormally">The radio function stops abnormally</string>
+    <string name="throw_4_way">4-way thrower</string>
+    <string name="throw_6_way">6-way thrower</string>
 </resources>

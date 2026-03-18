@@ -13,6 +13,8 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import com.example.yikupayloadexample.component.ModeItem
+import com.example.yikupayloadexample.component.ModeSelectionDialog
 import com.yiku.yikupayloadSDK.protocol.THROWER_STATE
 import com.yiku.yikupayloadSDK.service.ThrowerService
 import com.yiku.yikupayloadSDK.util.MsgCallback
@@ -27,6 +29,10 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "ThrowerWeight"
     var throwerService: ThrowerService
+    private lateinit var mThrower_6_way: LinearLayout
+    private lateinit var mThrower_4_way: LinearLayout
+    private lateinit var mBombSettingRow2: LinearLayout
+    private lateinit var mStatusRow2: LinearLayout
     private lateinit var mThrowerSafetySwitch: Switch
     private lateinit var mDetonationSettingsBtn: Button
     private lateinit var mThrowerAllowDetonationSwitch_1: Switch
@@ -56,7 +62,6 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mCenterBtn: Button
     private lateinit var mLeftBtn: Button
     private lateinit var mRightBtn: Button
-    private var mPassagewayBoxArr = arrayOfNulls<LinearLayout>(6)
     private var updateTime = Date().time
     private var canDetonate_1 = false // 1号弹是否可以引爆
     private var canDetonate_2 = false // 2号弹是否可以引爆
@@ -70,6 +75,15 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private var isCharging_2: Boolean = false
     private var isCharging_3: Boolean = false
     private var isCharging_4: Boolean = false
+
+    private val modeItems = listOf(
+        ModeItem("4", context.resources.getString(R.string.throw_4_way)),
+        ModeItem("6", context.resources.getString(R.string.throw_6_way))
+    )
+    private var currentMode = modeItems[1]
+    private lateinit var modeSelectorLayout: LinearLayout
+    private lateinit var currentModeText: TextView
+    private var throwerMode: Int = 6
 
     //
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
@@ -100,6 +114,10 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
 
         })
+        currentModeText.text = currentMode.name
+        modeSelectorLayout.setOnClickListener {
+            showModeSelectionDialog()
+        }
     }
 
 
@@ -120,6 +138,21 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             updateBombStateText(3, msg.slice(27 until 35).toByteArray())
             updateBombStateText(4, msg.slice(35 until 43).toByteArray())
         }
+    }
+
+    private fun showModeSelectionDialog() {
+        val dialog = ModeSelectionDialog(
+            context = context,
+            modes = modeItems,
+            currentMode = currentMode
+        ) {
+            selectedMode ->
+                currentMode = selectedMode
+                currentModeText.text = currentMode.name
+                throwerMode = currentMode.id.toInt()
+                initModeView()
+        }
+        dialog.show()
     }
 
     private fun updateBombStateText(bombIndex: Int, stateData: ByteArray) {
@@ -227,7 +260,13 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         if (!mThrowerSafetySwitch.isChecked) {
             showToast(R.string.need_to_open_safety_switch)
         } else {
-            if(canDetonate_1 && canDetonate_2 && canDetonate_3 && canDetonate_4) {
+            val isCanDetonate = when(throwerMode) {
+                6 -> canDetonate_1 && canDetonate_2 && canDetonate_3 && canDetonate_4
+                4 -> canDetonate_1 && canDetonate_2
+                else -> canDetonate_1 && canDetonate_2
+            }
+            // 如果可以引爆就直接打开，如果不可以引爆就弹提示窗口，确认后再打开
+            if(isCanDetonate) {
                 open(index)
             }
             else {
@@ -247,6 +286,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     fun open(index: Int) {
         throwerService.open(index)
         mBtnArr[index]?.setText(R.string.opening)
+        mBtnArr[index]?.isEnabled = false
 
         val timer = Timer()
         val task = object : TimerTask() {
@@ -295,8 +335,12 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         }
     }
 
-    private fun initView(context: Context?) {
+    private fun initView(context: Context) {
         LayoutInflater.from(context).inflate(R.layout.thrower_weight, this, true)
+        mThrower_6_way = findViewById(R.id.thrower_6_way)
+        mThrower_4_way = findViewById(R.id.thrower_4_way)
+        mBombSettingRow2 = findViewById(R.id.bombSettingRow2)
+        mStatusRow2 = findViewById(R.id.statusRow2)
         mThrowerView = findViewById(R.id.throwerWeight)
         mDetonationSettingsView = findViewById(R.id.detonationSettingsView)
         mPromptView = findViewById(R.id.promptView)
@@ -313,62 +357,26 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 //        mTemperature = findViewById(R.id.temperature)
         mConnectState = findViewById(R.id.connectState)
         mHeight = findViewById(R.id.height)
-        mOpenAll = findViewById(R.id.openAll)
         mDetonateHeightEditText = findViewById(R.id.detonateHeight)
         mOKBtn = findViewById(R.id.OKBtn)
         mPromptOkBtn = findViewById(R.id.promptOkBtn)
         mPromptCancelBtn = findViewById(R.id.promptCancelBtn)
         mCenterBtn = findViewById(R.id.switchCenter)
-        mLeftBtn = findViewById(R.id.switchLeft)
-        mRightBtn = findViewById(R.id.switchRight)
         mThrowerUpdate = findViewById(R.id.throwerUpdate)
         mUpdateView = findViewById(R.id.updateView)
         mUpdateOkBtn = findViewById(R.id.updateOkBtn)
         mUpdateCancelBtn = findViewById(R.id.updateCancelBtn)
-        if (context != null) {
-            // 按键
-            for (btnIndex in mBtnArr.indices) {
-                mBtnArr[btnIndex] = findViewById(
-                    context.resources.getIdentifier(
-                        "switch${btnIndex + 1}",
-                        "id",
-                        context.packageName
-                    )
-                )
-                updateBtn("toOpen", btnIndex)
-            }
+        modeSelectorLayout = findViewById(R.id.mode_selector_layout)
+        currentModeText = findViewById(R.id.current_mode_text)
 
-            // 控制按键的显示与隐藏
-            for (passagewayBoxIndex in mPassagewayBoxArr.indices) {
-                mPassagewayBoxArr[passagewayBoxIndex] = findViewById(
-                    context.resources.getIdentifier(
-                        "passagewayBox${passagewayBoxIndex + 1}",
-                        "id",
-                        context.packageName
-                    )
-                )
-            }
-            // 中间双舵机
-            mCenterBtn.text = "${context.resources.getString(R.string.center)}:${
-                context.resources.getString(R.string.open)
-            }"
-            mCenterBtn.setOnClickListener {
-                toOpenTwo("center")
-            }
-            // 左侧双舵机
-            mLeftBtn.text = "${context.resources.getString(R.string.left)}:${
-                context.resources.getString(R.string.open)
-            }"
-            mLeftBtn.setOnClickListener {
-                toOpenTwo("left")
-            }
-            // 右侧双舵机
-            mRightBtn.text = "${context.resources.getString(R.string.right)}:${
-                context.resources.getString(R.string.open)
-            }"
-            mRightBtn.setOnClickListener {
-                toOpenTwo("right")
-            }
+        initModeView()
+
+        // 中间双舵机
+        mCenterBtn.text = "${context.resources.getString(R.string.center)}:${
+            context.resources.getString(R.string.open)
+        }"
+        mCenterBtn.setOnClickListener {
+            toOpenTwo("center")
         }
         // 打开起爆设置页面
         mDetonationSettingsBtn.setOnClickListener {
@@ -394,10 +402,6 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mPromptCancelBtn.setOnClickListener {
             mThrowerView.visibility = VISIBLE
             mPromptView.visibility = GONE
-        }
-        // 打开全部通道
-        mOpenAll.setOnClickListener {
-            toOpenAll()
         }
         // 打开更新程序确认窗口
         mThrowerUpdate.setOnClickListener {
@@ -482,6 +486,73 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         setConnectState()
     }
 
+    private fun initModeView() {
+        // 6路抛投
+        if(throwerMode == 6) {
+            mThrower_6_way.visibility = VISIBLE
+            mThrower_4_way.visibility = GONE
+            mBombSettingRow2.visibility = VISIBLE
+            mStatusRow2.visibility = VISIBLE
+            mOpenAll = findViewById(R.id.openAll)
+            mLeftBtn = findViewById(R.id.switchLeft)
+            mRightBtn = findViewById(R.id.switchRight)
+            mRightBtn.setOnClickListener {
+                toOpenTwo("right")
+            }
+
+            // 按键
+            for (btnIndex in 0 until throwerMode) {
+                mBtnArr[btnIndex] = findViewById(
+                    context.resources.getIdentifier(
+                        "switch${btnIndex + 1}",
+                        "id",
+                        context.packageName
+                    )
+                )
+                updateBtn("toOpen", btnIndex)
+            }
+        }
+        // 4路抛投
+        else if(throwerMode == 4) {
+            mThrower_6_way.visibility = GONE
+            mThrower_4_way.visibility = VISIBLE
+            mBombSettingRow2.visibility = GONE
+            mStatusRow2.visibility = GONE
+            mOpenAll = findViewById(R.id.openAll_4_way)
+            mLeftBtn = findViewById(R.id.switchLeft_4_way)
+            mRightBtn = findViewById(R.id.switchRight_4_way)
+            mRightBtn.setOnClickListener {
+                toOpenTwo("center")
+            }
+            // 按键
+            for (btnIndex in 0 until throwerMode) {
+                mBtnArr[btnIndex] = findViewById(
+                    context.resources.getIdentifier(
+                        "switch${btnIndex + 1}_4_way",
+                        "id",
+                        context.packageName
+                    )
+                )
+                updateBtn("toOpen", btnIndex)
+            }
+        }
+        // 打开全部通道
+        mOpenAll.setOnClickListener {
+            toOpenAll()
+        }
+        // 左侧双舵机
+        mLeftBtn.text = "${context.resources.getString(R.string.left)}:${
+            context.resources.getString(R.string.open)
+        }"
+        mLeftBtn.setOnClickListener {
+            toOpenTwo("left")
+        }
+        // 右侧双舵机
+        mRightBtn.text = "${context.resources.getString(R.string.right)}:${
+            context.resources.getString(R.string.open)
+        }"
+    }
+
     // 将所有按键重置
     private fun resetThrowerBtn() {
         throwerService.closeAll()
@@ -516,8 +587,13 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             if (!mThrowerSafetySwitch.isChecked) {
                 showToast(R.string.need_to_open_safety_switch)
             } else {
+                val isCanDetonate = when(throwerMode) {
+                    6 -> canDetonate_1 && canDetonate_2 && canDetonate_3 && canDetonate_4
+                    4 -> canDetonate_1 && canDetonate_2
+                    else -> canDetonate_1 && canDetonate_2
+                }
                 // 如果可以引爆就直接打开，如果不可以引爆就弹提示窗口，确认后再打开
-                if(canDetonate_1 && canDetonate_2 && canDetonate_3 && canDetonate_4) {
+                if(isCanDetonate) {
                     openTwo(type)
                 }
                 else {
@@ -543,8 +619,14 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             when (type) {
                 "center" -> {
                     throwerService.openCenter()
-                    mCenterBtn.setText(R.string.opening)
-                    mCenterBtn.isEnabled = false
+                    if(throwerMode == 6) {
+                        mCenterBtn.setText(R.string.opening)
+                        mCenterBtn.isEnabled = false
+                    }
+                    else if(throwerMode == 4) {
+                        mRightBtn.setText(R.string.opening)
+                        mRightBtn.isEnabled = false
+                    }
                     // 第3通道
                     updateBtn("opening", 2)
                     // 第6通道
@@ -576,10 +658,19 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     mThrowerView.post {
                         when (type) {
                             "center" -> {
-                                mCenterBtn.isEnabled = true
-                                mCenterBtn?.text ="${context.resources.getString(R.string.center)}:${ context.resources.getString(R.string.close)}"
-                                mCenterBtn.setOnClickListener {
-                                    closeTwo("center")
+                                if(throwerMode == 6) {
+                                    mCenterBtn.isEnabled = true
+                                    mCenterBtn.text ="${context.resources.getString(R.string.center)}:${ context.resources.getString(R.string.close)}"
+                                    mCenterBtn.setOnClickListener {
+                                        closeTwo("center")
+                                    }
+                                }
+                                else if(throwerMode == 4) {
+                                    mRightBtn.isEnabled = true
+                                    mRightBtn.text ="${context.resources.getString(R.string.right)}:${ context.resources.getString(R.string.close)}"
+                                    mRightBtn.setOnClickListener {
+                                        closeTwo("center")
+                                    }
                                 }
                                 // 第3通道
                                 updateBtn("toClose", 2)
@@ -588,7 +679,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             }
                             "left" -> {
                                 mLeftBtn.isEnabled = true
-                                mLeftBtn?.text ="${context.resources.getString(R.string.left)}:${ context.resources.getString(R.string.close)}"
+                                mLeftBtn.text ="${context.resources.getString(R.string.left)}:${ context.resources.getString(R.string.close)}"
                                 mLeftBtn.setOnClickListener {
                                     closeTwo("left")
                                 }
@@ -599,7 +690,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             }
                             "right" -> {
                                 mRightBtn.isEnabled = true
-                                mRightBtn?.text ="${context.resources.getString(R.string.right)}:${ context.resources.getString(R.string.close)}"
+                                mRightBtn.text ="${context.resources.getString(R.string.right)}:${ context.resources.getString(R.string.close)}"
                                 mRightBtn.setOnClickListener {
                                     closeTwo("right")
                                 }
@@ -707,8 +798,13 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             if (!mThrowerSafetySwitch.isChecked) {
                 showToast(R.string.need_to_open_safety_switch)
             } else {
+                val isCanDetonate = when(throwerMode) {
+                    6 -> canDetonate_1 && canDetonate_2 && canDetonate_3 && canDetonate_4
+                    4 -> canDetonate_1 && canDetonate_2
+                    else -> canDetonate_1 && canDetonate_2
+                }
                 // 如果可以引爆就直接打开，如果不可以引爆就弹提示窗口，确认后再打开
-                if(canDetonate_1 && canDetonate_2 && canDetonate_3 && canDetonate_4) {
+                if(isCanDetonate) {
                     openAll()
                 }
                 else {
