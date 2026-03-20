@@ -265,7 +265,7 @@
     <string name="fpv_assistance">FPV 辅助</string>
     <string name="sound">声音</string>
     <string name="lamplight">灯光</string>
-    <string name="AllInOneHost_name">"多合一IP: "</string>
+    <string name="AllInOneHost_name">"五技吊舱IP: "</string>
     <string name="openAll">全开</string>
     <string name="open_1">开1号</string>
     <string name="open_2">开2号</string>
@@ -313,4 +313,5 @@
     <string name="radio_stops_abnormally">收音功能异常停止</string>
     <string name="throw_4_way">4路抛投</string>
     <string name="throw_6_way">6路抛投</string>
+    <string name="four_in_one_2_ip">"机器狗多合一-二代IP: "</string>
 </resources>

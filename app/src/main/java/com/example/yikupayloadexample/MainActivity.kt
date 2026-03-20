@@ -32,10 +32,12 @@ import android.text.InputType
 import com.example.yikupayloadexample.util.AppUpdateManager
 import com.example.yikupayloadexample.util.VersionData
 import com.yiku.yikupayloadSDK.service.AllInOneService
+import com.yiku.yikupayloadSDK.service.FourInOne2Service
 import java.io.File
 
 var megaphoneService: BaseMegaphoneService? = null
 var allInOneService: AllInOneService = AllInOneService()
+var fourInOne2Service: FourInOne2Service = FourInOne2Service()
 var preferences: SharedPreferences? = null
 
 
@@ -100,6 +102,10 @@ class MainActivity : AppCompatActivity() {
                         val allInOneHost = preferences?.getString("AllInOneHost", "")
                         if(allInOneHost != null && "" != allInOneHost) {
                             allInOneService.setIp(allInOneHost)
+                        }
+                        val fourInOne2Host = preferences?.getString("FourInOne2Host", "")
+                        if(fourInOne2Host != null && "" != fourInOne2Host) {
+                            fourInOne2Service.setIp(fourInOne2Host)
                         }
                     }
                 }

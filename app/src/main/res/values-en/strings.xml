@@ -265,7 +265,7 @@
     <string name="fpv_assistance">FPV Assistance</string>
     <string name="sound">Sound</string>
     <string name="lamplight">Lamplight</string>
-    <string name="AllInOneHost_name">"All-In-One Host IP: "</string>
+    <string name="AllInOneHost_name">"Five-skill Pod Host IP: "</string>
     <string name="openAll">open all</string>
     <string name="open_1">open No.1</string>
     <string name="open_2">open No.2</string>
@@ -313,4 +313,5 @@
     <string name="radio_stops_abnormally">The radio function stops abnormally</string>
     <string name="throw_4_way">4-way thrower</string>
     <string name="throw_6_way">6-way thrower</string>
+    <string name="four_in_one_2_ip">"Four-In-One 2 IP: "</string>
 </resources>

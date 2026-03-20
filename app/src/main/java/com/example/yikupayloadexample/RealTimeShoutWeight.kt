@@ -31,7 +31,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
-import java.util.concurrent.atomic.AtomicLong
 import kotlin.concurrent.thread
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -64,11 +63,6 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private var volumeReal = 0;
     private var volumeLimit = 100
     private var temperature = "0"
-    private var lastRecvTimeRef: AtomicLong = AtomicLong(0)
-
-    companion object {
-        private const val REQUEST_CODE_RECORD_AUDIO = 123 // 定义请求码
-    }
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -218,7 +212,6 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
 
             override fun onMsg(msg: ByteArray) {
-                lastRecvTimeRef.set(SystemClock.elapsedRealtime())
                 Log.i(TAG, "收音数据长度："+ msg.size)
                 if (msg.size > 4 && String(msg.slice(0..3).toByteArray()) == "[40]") {
                     if(!isRadio) {
@@ -247,8 +240,6 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
         })
         megaphoneService?.startRadio()
-        // 独立监控线程
-        monitorRadioStatus()
     }
 
     private fun stopRadio() {
@@ -258,38 +249,6 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         audioTrack.release()
         megaphoneService?.stopRadio()
         mRadioBtn.setText(R.string.start_listening)
-    }
-
-    // 收音监控
-    private fun monitorRadioStatus() {
-        lastRecvTimeRef.set(SystemClock.elapsedRealtime())
-        Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
-            override fun run() {
-                if (!isRadio) {
-                    Log.d(TAG, "收音已停止，监控退出")
-                    return
-                }
-
-                val currentTime = SystemClock.elapsedRealtime()
-                val lastRecvTime = lastRecvTimeRef.get()
-                val elapsed = currentTime - lastRecvTime
-
-                Log.d(TAG, "收音监控: 距上次接收=${elapsed}ms, 状态=${audioTrack?.playState}")
-
-                when {
-                    elapsed > 3000 -> {
-                        Log.w(TAG, "收音超时(${elapsed}ms)")
-                        stopRadio()
-                        showToast(R.string.radio_stops_abnormally)
-                        return
-                    }
-                    else -> {
-                        // 继续监控
-                        Handler(Looper.getMainLooper()).postDelayed(this, 1000)
-                    }
-                }
-            }
-        }, 1000)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)

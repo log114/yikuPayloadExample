@@ -218,7 +218,7 @@
         android:contentDescription="多合一喊话"
         android:src="@drawable/laba"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/waterBranchBtn"
+        app:layout_constraintStart_toEndOf="@id/light_pl_Btn"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone" />
     <!--多合一照明-->
@@ -258,6 +258,32 @@
         android:src="@drawable/fpv"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/all_in_on_thrower_Btn"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
+    <!--四合一.二代喊话-->
+    <ImageView
+        android:id="@+id/four_in_one_2_speaker_Btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/yk_shout_btn"
+        android:contentDescription="四合一.二代喊话"
+        android:src="@drawable/laba"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/all_in_on_fpv_Btn"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
+    <!--四合一.二代照明-->
+    <ImageView
+        android:id="@+id/four_in_one_2_light_Btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/yk_shout_btn"
+        android:contentDescription="四合一.二代灯光"
+        android:src="@drawable/light"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/four_in_one_2_speaker_Btn"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone" />
 

@@ -374,6 +374,26 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <TextView
+                    android:layout_width="140dp"
+                    android:layout_height="20dp"
+                    android:textAlignment="center"
+                    android:text="@string/four_in_one_2_ip" />
+
+                <EditText
+                    android:id="@+id/FourInOne2HostIP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:background="@drawable/boder"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:orientation="vertical"
                 android:paddingLeft="8dp"

@@ -59,6 +59,8 @@ class PayloadWeight : Service() {
     private lateinit var allInOneLightWeight: AllInOneLightWeight
     private lateinit var allInOneThrowerWeight: AllInOneThrowerWeight
     private lateinit var allInOneFpvWeight: AllInOneFpvWeight
+    private lateinit var fourInOne2SpeakerWeight: FourInOne2SpeakerWeight
+    private lateinit var fourInOne2LightWeight: FourInOne2LightWeight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -84,6 +86,8 @@ class PayloadWeight : Service() {
     private lateinit var allInOneLightBtn: ImageView
     public lateinit var allInOneThrowerBtn: ImageView
     public lateinit var allInOneFpvBtn: ImageView
+    private lateinit var fourInOne2SpeakerBtn: ImageView
+    private lateinit var fourInOne2LightBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
 
@@ -116,6 +120,8 @@ class PayloadWeight : Service() {
         allInOneLightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         allInOneThrowerBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         allInOneFpvBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        fourInOne2SpeakerBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        fourInOne2LightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
     }
 
     private fun openFloatingWindow() {
@@ -147,6 +153,8 @@ class PayloadWeight : Service() {
                     allInOneLightBtn = it.findViewById(R.id.all_in_on_light_Btn)
                     allInOneThrowerBtn = it.findViewById(R.id.all_in_on_thrower_Btn)
                     allInOneFpvBtn = it.findViewById(R.id.all_in_on_fpv_Btn)
+                    fourInOne2SpeakerBtn = it.findViewById(R.id.four_in_one_2_speaker_Btn)
+                    fourInOne2LightBtn = it.findViewById(R.id.four_in_one_2_light_Btn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -279,6 +287,18 @@ class PayloadWeight : Service() {
                             allInOneFpvBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
                         }
                     }
+                    fourInOne2SpeakerBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(21, fourInOne2SpeakerBtn)) {
+                            fourInOne2SpeakerBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                        }
+                    }
+                    fourInOne2LightBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(22, fourInOne2LightBtn)) {
+                            fourInOne2LightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                        }
+                    }
                 }
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -355,6 +375,25 @@ class PayloadWeight : Service() {
             if (mShoutView.isVisible) {
                 mShoutViewContent.removeAllViews()
                 when(type) {
+                    22 -> {
+                        opened = 22
+                        mWindowTitle.setText(R.string.lamplight)
+                        mShoutViewContent.addView(fourInOne2LightWeight)
+                    }
+                    21 -> {
+                        opened = 21
+                        mWindowTitle.setText(R.string.sound)
+                        mShoutViewContent.addView(fourInOne2SpeakerWeight)
+                        val speedEditText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
+                        speedEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                speedEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                        fourInOne2SpeakerWeight.onShow()
+                    }
                     20 -> {
                         opened = 20
                         mWindowTitle.text = "FPV"
@@ -521,6 +560,8 @@ class PayloadWeight : Service() {
         allInOneThrowerWeight.attachFloatingWindow(this)
         allInOneFpvWeight = AllInOneFpvWeight(this)
         allInOneFpvWeight.attachFloatingWindow(this)
+        fourInOne2SpeakerWeight = FourInOne2SpeakerWeight(this)
+        fourInOne2LightWeight = FourInOne2LightWeight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -803,6 +844,7 @@ class PayloadWeight : Service() {
         Log.w(TAG, "onDestroy........")
         realTimeShoutWeight.releaseResources()
         allInOneSpeakerWeight.releaseResources()
+        fourInOne2SpeakerWeight.releaseResources()
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
@@ -866,6 +908,7 @@ class PayloadWeight : Service() {
                 val isConnectedWaterBranch = waterBranchWeight.waterBranchService.getIsConnected(); // 消防水枪
                 val isConnectedPLLight = plLightweight.plLightService.getIsConnected(); // 品灵探照灯
                 val isConnectedAllInOne = allInOneService.getIsConnected(); // 多合一
+                val isConnectedFourInOne2 = fourInOne2Service.getIsConnected(); // 四合一二代
 
 //                val isConnectedMegaphone = true;// 喊话器
 //                val isConnectedYA3 = true; // 四合一
@@ -882,6 +925,7 @@ class PayloadWeight : Service() {
 //                val isConnectedWaterBranch = true; // 消防水枪
 //                val isConnectedPLLight = true; // 品灵探照灯
 //                val isConnectedAllInOne = true; // 多合一
+//                val isConnectedFourInOne2 = true; // 四合一二代
                     // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示
@@ -996,6 +1040,14 @@ class PayloadWeight : Service() {
                         allInOneLightBtn.visibility = VISIBLE
                         allInOneThrowerBtn.visibility = VISIBLE
                         allInOneFpvBtn.visibility = VISIBLE
+                        emptyText.visibility = GONE;
+                    }
+                }
+                // 四合一二代
+                if(isConnectedFourInOne2){
+                    handler.post {
+                        fourInOne2SpeakerBtn.visibility = VISIBLE;
+                        fourInOne2LightBtn.visibility = VISIBLE
                         emptyText.visibility = GONE;
                     }
                 }
