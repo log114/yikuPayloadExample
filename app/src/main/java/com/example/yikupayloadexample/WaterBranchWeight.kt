@@ -31,23 +31,14 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     var waterBranchService: WaterBranchService = WaterBranchService()
     private lateinit var mSafetySwitchSwitch: Switch
     private lateinit var mHoseReleaseBtn: Button
-//    private lateinit var mHoseDetachmentBtn: Button
-    private lateinit var mManualEscapeBtn: Button
+    private lateinit var mHoseDetachmentBtn: Button
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
     private var updateTime = Date().time
-    // 0关，1开
-    private var operate: Int = 1
     private var isHoseRelease: Boolean = false
     private var isHoseDetachment: Boolean = false
     private val hoseThread: AtomicReference<Thread> = AtomicReference()
     private val isButtonDown = AtomicBoolean(false)
-
-    // 定义一个阈值，表示允许手指轻微移动但不触发拖动的最大像素值
-    private val MOVE_TOLERANCE = 20
-    // 记录手指按下的初始坐标
-    private var downX = 0f
-    private var downY = 0f
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -81,7 +72,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             isHoseRelease = 0x01 == msg[0 + 4].toInt()
-            isHoseDetachment = 0x01 == msg[0 + 5].toInt()
+//            isHoseDetachment = 0x01 == msg[0 + 5].toInt()
         }
     }
 
@@ -91,14 +82,12 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         mLightView = findViewById(R.id.waterBranch_view)
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
         mHoseReleaseBtn = findViewById(R.id.hoseReleaseBtn)
-//        mHoseDetachmentBtn = findViewById(R.id.hoseDetachmentBtn)
-        mManualEscapeBtn = findViewById(R.id.manualEscapeBtn)
+        mHoseDetachmentBtn = findViewById(R.id.hoseDetachmentBtn)
         setConnectState()
 
         mSafetySwitchSwitch.setOnClickListener {
             mHoseReleaseBtn.isEnabled = mSafetySwitchSwitch.isChecked
-//            mHoseDetachmentBtn.isEnabled = mSafetySwitchSwitch.isChecked
-            mManualEscapeBtn.isEnabled = mSafetySwitchSwitch.isChecked
+            mHoseDetachmentBtn.isEnabled = mSafetySwitchSwitch.isChecked
         }
         // 释放水带
         mHoseReleaseBtn.setOnClickListener {
@@ -126,69 +115,33 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             }
         }
         // 水带脱困
-//        mHoseDetachmentBtn.setOnClickListener {
-//            if(!mSafetySwitchSwitch.isChecked) {
-//                showToast(R.string.need_to_open_safety_switch)
-//                return@setOnClickListener
-//            }
-//            waterBranchService.hoseDetachment(1)
-//
-//            mHoseDetachmentBtn.setText( R.string.executing )
-//            mHoseDetachmentBtn.isEnabled = false
-//            thread {
-//                Thread.sleep(3000)
-//                val handler = Handler(Looper.getMainLooper())
-//                handler.post {
-//                    mHoseDetachmentBtn.isEnabled = true
-//                    mHoseDetachmentBtn.setText(R.string.hoseDetachment )
-//                }
-//            }
-//        }
+        mHoseDetachmentBtn.setOnClickListener {
+            if(!mSafetySwitchSwitch.isChecked) {
+                showToast(R.string.need_to_open_safety_switch)
+                return@setOnClickListener
+            }
+            if(isHoseDetachment) {
+                waterBranchService.hoseDetachment(0) // 复位
+            }
+            else {
+                waterBranchService.hoseDetachment(1) // 水带脱困
+            }
+            isHoseDetachment = !isHoseDetachment
 
-
-        // 手动脱困
-        mManualEscapeBtn.setOnTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    // 1. 记录手指按下的初始位置
-                    downX = event.rawX
-                    downY = event.rawY
-
-                    if (!mSafetySwitchSwitch.isChecked) {
-                        showToast(R.string.need_to_open_safety_switch)
-                        false // 不消费事件，允许后续处理（但也可能触发悬浮窗拖动）
-                    } else {
-                        isButtonDown.set(true)
-                        v.setPressed(true);
-                        val thread = Thread {
-                            try {
-                                while (isButtonDown.get() && !Thread.currentThread().isInterrupted) {
-                                    waterBranchService.hoseDetachment(0)
-                                    // 添加短暂休眠，避免循环过紧占用资源
-                                    Thread.sleep(200)
-                                }
-                            } catch (e: InterruptedException) {
-                                // 线程被中断，正常退出
-                                Log.d("HoseThread", "Thread interrupted, stopping.")
-                            } catch (e: Exception) {
-                                Log.e("HoseThread", "Error in hoseDetachment thread", e)
-                            }
-                        }
-                        thread.start()
-                        hoseThread.set(thread)
-                        true // 重要：告诉系统这个按钮消费了ACTION_DOWN事件
+            mHoseDetachmentBtn.setText( R.string.executing )
+            mHoseDetachmentBtn.isEnabled = false
+            thread {
+                Thread.sleep(5000)
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    mHoseDetachmentBtn.isEnabled = true
+                    if(isHoseDetachment) {
+                        mHoseDetachmentBtn.setText(R.string.reset )
+                    }
+                    else {
+                        mHoseDetachmentBtn.setText(R.string.hoseDetachment )
                     }
                 }
-                MotionEvent.ACTION_MOVE -> {
-                    true
-                }
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    isButtonDown.set(false)
-                    releaseButton(v)
-                    v.setPressed(false);
-                    true // 消费抬起事件
-                }
-                else -> false
             }
         }
     }
