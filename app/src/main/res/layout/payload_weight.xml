@@ -28,7 +28,7 @@
                 android:layout_height="24dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/unitree_control"
+                android:text="无人机抛投器控制APP"
                 android:textColor="@color/shout_font_color" />
             <ImageView
                 android:id="@+id/lockBtn"

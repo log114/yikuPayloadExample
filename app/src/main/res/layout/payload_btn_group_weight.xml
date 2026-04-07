@@ -302,7 +302,7 @@
             android:layout_height="24dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/empty_text"
+            android:text="未连接到抛投器"
             android:textColor="@color/white" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

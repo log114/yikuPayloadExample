@@ -43,6 +43,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -73,6 +74,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -95,6 +97,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -117,6 +120,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -139,6 +143,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -183,6 +188,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -205,6 +211,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -227,6 +234,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -249,6 +257,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -271,6 +280,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -291,6 +301,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -311,6 +322,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -331,6 +343,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -351,6 +364,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView
@@ -377,6 +391,7 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
+                android:visibility="gone"
                 android:paddingRight="8dp">
 
                 <TextView

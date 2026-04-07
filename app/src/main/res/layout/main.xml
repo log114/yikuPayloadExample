@@ -4,7 +4,6 @@
     android:id="@+id/mainview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -40,6 +39,13 @@
                 android:layout_height="80dp"
                 android:src="@drawable/siyi"
                 android:background="@drawable/siyi_btn_backgound"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="点击连接设备"
+                android:textAlignment="center"
+                tools:ignore="RtlCompat" />
     </LinearLayout>
 
     <LinearLayout
@@ -55,7 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:text="version"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            tools:ignore="RtlCompat" />
 
     </LinearLayout>
 
