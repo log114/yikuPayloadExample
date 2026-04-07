@@ -716,8 +716,14 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             when (type) {
                 "center" -> {
                     throwerService.closeCenter()
-                    mCenterBtn.setText(R.string.closing)
-                    mCenterBtn.isEnabled = false
+                    if(throwerMode == 6) {
+                        mCenterBtn.setText(R.string.closing)
+                        mCenterBtn.isEnabled = false
+                    }
+                    else if(throwerMode == 4) {
+                        mRightBtn.setText(R.string.closing)
+                        mRightBtn.isEnabled = false
+                    }
                     // 第3通道
                     updateBtn("closing", 2)
                     // 第6通道
@@ -749,10 +755,19 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     mThrowerView.post {
                         when (type) {
                             "center" -> {
-                                mCenterBtn.isEnabled = true
-                                mCenterBtn?.text ="${context.resources.getString(R.string.center)}:${ context.resources.getString(R.string.open)}"
-                                mCenterBtn.setOnClickListener {
-                                    toOpenTwo("center")
+                                if(throwerMode == 6) {
+                                    mCenterBtn.isEnabled = true
+                                    mCenterBtn?.text ="${context.resources.getString(R.string.center)}:${ context.resources.getString(R.string.open)}"
+                                    mCenterBtn.setOnClickListener {
+                                        toOpenTwo("center")
+                                    }
+                                }
+                                else if(throwerMode == 4) {
+                                    mRightBtn.isEnabled = true
+                                    mRightBtn.text ="${context.resources.getString(R.string.right)}:${ context.resources.getString(R.string.open)}"
+                                    mRightBtn.setOnClickListener {
+                                        toOpenTwo("center")
+                                    }
                                 }
                                 // 第3通道
                                 updateBtn("toOpen", 2)
@@ -879,8 +894,15 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mRightBtn.text = "${context.resources.getString(R.string.right)}:${
                             context.resources.getString(R.string.close)
                         }"
-                        mRightBtn.setOnClickListener {
-                            closeTwo("right")
+                        if(throwerMode == 6) {
+                            mRightBtn.setOnClickListener {
+                                closeTwo("right")
+                            }
+                        }
+                        else {
+                            mRightBtn.setOnClickListener {
+                                closeTwo("center")
+                            }
                         }
                         mRightBtn.isEnabled = true
                         // 全开、全关
@@ -954,8 +976,16 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mRightBtn.text = "${context.resources.getString(R.string.right)}:${
                             context.resources.getString(R.string.open)
                         }"
-                        mRightBtn.setOnClickListener {
-                            toOpenTwo("right")
+
+                        if(throwerMode == 6) {
+                            mRightBtn.setOnClickListener {
+                                toOpenTwo("right")
+                            }
+                        }
+                        else {
+                            mRightBtn.setOnClickListener {
+                                toOpenTwo("center")
+                            }
                         }
                         mRightBtn.isEnabled = true
                         // 全开、全关
