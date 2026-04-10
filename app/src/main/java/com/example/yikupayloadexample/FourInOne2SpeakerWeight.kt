@@ -389,8 +389,8 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private fun getFileList() {
         thread {
             try {
-//                val files = fourInOne2Service.fetchFiles()
-                val files = arrayOf("康姆-我在画中走.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3")
+                val files = fourInOne2Service.fetchFiles()
+//                val files = arrayOf("康姆-我在画中走.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3")
                 if (files == null) {
 //                    showToast("获取文件列表失败!")
                     return@thread
