@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/eWeight"
-    android:layout_width="300dp"
+    android:layout_width="340dp"
     android:layout_height="match_parent">
 
 
     <LinearLayout
         android:id="@+id/emitter_view"
-        android:layout_width="320dp"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical"

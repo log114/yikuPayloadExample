@@ -358,4 +358,6 @@
     <string name="throw_4_way">4路抛投</string>
     <string name="throw_6_way">6路抛投</string>
     <string name="four_in_one_2_ip">"机器狗多合一-二代IP: "</string>
+    <string name="off">关</string>
+    <string name="off_all">全关</string>
 </resources>

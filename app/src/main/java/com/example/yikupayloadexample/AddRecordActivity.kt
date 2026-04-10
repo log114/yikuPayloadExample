@@ -54,6 +54,7 @@ class AddRecordActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                showToast("上传失败：${e.message}")
             } finally {
                 runOnUiThread {
                     mUploadBtn.text = "上传"

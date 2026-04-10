@@ -237,7 +237,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             "toClose" -> {
                 mBtnArr[index]?.text =
                     "${context.resources.getString(R.string.passageway)}${index + 1}:${
-                        context.resources.getString(R.string.close)
+                        context.resources.getString(R.string.off)
                     }"
                 mBtnArr[index]?.isEnabled = true
                 mBtnArr[index]?.setOnClickListener {
@@ -294,7 +294,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 mThrowerView.post {
                     mBtnArr[index]?.text =
                         "${context.resources.getString(R.string.passageway)}${index + 1}:${
-                            context.resources.getString(R.string.close)
+                            context.resources.getString(R.string.off)
                         }"
                     mBtnArr[index]?.isEnabled = true
                     mBtnArr[index]?.setOnClickListener {
@@ -660,14 +660,14 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             "center" -> {
                                 if(throwerMode == 6) {
                                     mCenterBtn.isEnabled = true
-                                    mCenterBtn.text ="${context.resources.getString(R.string.center)}:${ context.resources.getString(R.string.close)}"
+                                    mCenterBtn.text ="${context.resources.getString(R.string.center)}:${ context.resources.getString(R.string.off)}"
                                     mCenterBtn.setOnClickListener {
                                         closeTwo("center")
                                     }
                                 }
                                 else if(throwerMode == 4) {
                                     mRightBtn.isEnabled = true
-                                    mRightBtn.text ="${context.resources.getString(R.string.right)}:${ context.resources.getString(R.string.close)}"
+                                    mRightBtn.text ="${context.resources.getString(R.string.right)}:${ context.resources.getString(R.string.off)}"
                                     mRightBtn.setOnClickListener {
                                         closeTwo("center")
                                     }
@@ -679,7 +679,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             }
                             "left" -> {
                                 mLeftBtn.isEnabled = true
-                                mLeftBtn.text ="${context.resources.getString(R.string.left)}:${ context.resources.getString(R.string.close)}"
+                                mLeftBtn.text ="${context.resources.getString(R.string.left)}:${ context.resources.getString(R.string.off)}"
                                 mLeftBtn.setOnClickListener {
                                     closeTwo("left")
                                 }
@@ -690,7 +690,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             }
                             "right" -> {
                                 mRightBtn.isEnabled = true
-                                mRightBtn.text ="${context.resources.getString(R.string.right)}:${ context.resources.getString(R.string.close)}"
+                                mRightBtn.text ="${context.resources.getString(R.string.right)}:${ context.resources.getString(R.string.off)}"
                                 mRightBtn.setOnClickListener {
                                     closeTwo("right")
                                 }
@@ -866,7 +866,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         for (btnIndex in mBtnArr.indices) {
                             mBtnArr[btnIndex]?.text =
                                 "${context.resources.getString(R.string.passageway)}${btnIndex + 1}:${
-                                    context.resources.getString(R.string.close)
+                                    context.resources.getString(R.string.off)
                                 }"
                             mBtnArr[btnIndex]?.isEnabled = true
                             mBtnArr[btnIndex]?.setOnClickListener {
@@ -876,7 +876,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
                         // 中间双舵机
                         mCenterBtn.text = "${context.resources.getString(R.string.center)}:${
-                            context.resources.getString(R.string.close)
+                            context.resources.getString(R.string.off)
                         }"
                         mCenterBtn.setOnClickListener {
                             closeTwo("center")
@@ -884,7 +884,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mCenterBtn.isEnabled = true
                         // 左侧双舵机
                         mLeftBtn.text = "${context.resources.getString(R.string.left)}:${
-                            context.resources.getString(R.string.close)
+                            context.resources.getString(R.string.off)
                         }"
                         mLeftBtn.setOnClickListener {
                             closeTwo("left")
@@ -892,7 +892,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mLeftBtn.isEnabled = true
                         // 右侧双舵机
                         mRightBtn.text = "${context.resources.getString(R.string.right)}:${
-                            context.resources.getString(R.string.close)
+                            context.resources.getString(R.string.off)
                         }"
                         if(throwerMode == 6) {
                             mRightBtn.setOnClickListener {
@@ -907,7 +907,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mRightBtn.isEnabled = true
                         // 全开、全关
                         mOpenAll.isEnabled = true
-                        mOpenAll.setText(R.string.close_all)
+                        mOpenAll.setText(R.string.off_all)
                         mOpenAll.setOnClickListener {
                             closeAll()
                         }

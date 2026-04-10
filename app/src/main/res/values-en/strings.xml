@@ -91,14 +91,14 @@
     <string name="by_length">By length</string>
     <string name="rise">rise</string>
     <string name="decline">decline</string>
-    <string name="fuse">Emergency fusing</string>
+    <string name="fuse">Urgent fusing</string>
     <string name="stop">Stop</string>
-    <string name="emergency_stop">Emergency stop</string>
+    <string name="emergency_stop">Urgent stop</string>
     <string name="operation_failed">Operation failed!</string>
     <string name="ThrowerHost_name">ThrowerHost IP:</string>
     <string name="SlowDescentDeviceHost_name">SlowDescentDeviceHost IP:</string>
     <string name="stuck">Stuck!</string>
-    <string name="short_position">short position</string>
+    <string name="short_position">Empty</string>
     <string name="launching">Launching</string>
     <string name="opening">opening</string>
     <string name="open_all">All:ON</string>
@@ -169,7 +169,7 @@
     <string name="ExtinguisherHost_name">"ExtinguisherHost IP: "</string>
     <string name="closed">Closed</string>
     <string name="opened">Opened</string>
-    <string name="not_detected">Not detected</string>
+    <string name="not_detected">Undetected</string>
     <string name="waterGun">water gun</string>
     <string name="WaterGunHost_name">"WaterGunHost IP: "</string>
     <string name="BucketHost_name">"BucketHost IP: "</string>
@@ -314,4 +314,6 @@
     <string name="throw_4_way">4-way thrower</string>
     <string name="throw_6_way">6-way thrower</string>
     <string name="four_in_one_2_ip">"Four-In-One 2 IP: "</string>
+    <string name="off">OFF</string>
+    <string name="off_all">ALL:OFF</string>
 </resources>
