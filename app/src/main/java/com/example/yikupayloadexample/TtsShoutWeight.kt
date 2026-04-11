@@ -46,79 +46,33 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         setCallbacksTask()
     }
 
-    private fun setCallbacks() {
-        megaphoneService!!.msgCallbacks += object : MsgCallback {
-            override fun getId(): String {
-                return "TtsShoutWeightCallback"
-            }
-
-            override fun onMsg(msg: ByteArray) {
-//                Log.i(TAG, "msg:${msg.toHex()}")
-                if (msg.isNotEmpty() && msg[0] == 0x8d.toByte()) {
-                    if (msg[2] == 0x18.toByte()) {
-                        Log.i(TAG, "recv 0x18!")
-                        val handler = Handler(Looper.getMainLooper())
-                        // 喊话器温度状态
-                        handler.post {
-                            updateTemperatureStatus(msg)
-                        }
-                    }
-                    return
-                }
-                // 温度、音量返回
-                if (msg.size > 6 && String(msg.slice(0..3).toByteArray()) == "[99]") {
-                    // 假设 msg 是一个 ByteArray
-                    val dataLength = msg.size - 2 - 4
-                    // 使用 Kotlin 的 sliceArray 方法提取子数组，更简洁
-                    val valueBytes = msg.sliceArray(5 until 5 + dataLength)
-                    // 将字节数组（ASCII字符）转换为字符串
-                    val jsonString = valueBytes.toString(Charsets.US_ASCII)
-                    try {
-                        // 使用 Kotlin 标准库的 JSONObject 进行解析
-                        val jsonObject = JSONObject(jsonString)
-                        // 从JSON对象中提取数据
-                        volumeReal = jsonObject.getInt("volume_real")
-                        volumeLimit = jsonObject.getInt("volume_limit")
-                        temperature = jsonObject.getString("temperature")
-                        // 记录日志以便调试
-                        Log.i(TAG, "解析结果 - 实际音量: $volumeReal, 音量上限: $volumeLimit, 温度: $temperature")
-                        // 更新到主线程
-                        val handler = Handler(Looper.getMainLooper())
-                        handler.post {
-                            // 更新音量进度条
-                            if (!isSettingVolume) {
-                                mVolumeSeekBar.progress = volumeReal
-                            }
-                            mTemperature.text = "${context.resources.getString(R.string.temperature)} ${temperature}℃"
-                            if(volumeLimit < 100) {
-                                mStatus.setText(R.string.excessive_temperature)
-                                mStatus.setTextColor(Color.RED)
-                            }
-                            else {
-                                mStatus.setText(R.string.normal_temperature)
-                                mStatus.setTextColor(Color.WHITE)
-                            }
-                        }
-                    } catch (e: JSONException) {
-                        // 处理JSON解析错误（如键不存在、类型不匹配、格式错误等）
-                        Log.e(TAG, "JSON解析失败: ${e.message}")
-                    } catch (e: Exception) {
-                        // 处理其他潜在异常
-                        Log.e(TAG, "处理消息时发生未知错误: ${e.message}")
-                    }
-                }
-            }
-        }
-    }
-
-    // 定时器，判断 megaphoneService不为null时，调用setCallbaks
+    // 定时器，同步更新音量、温度等
     private fun setCallbacksTask() {
         val timer = Timer();
         val task = object : TimerTask() {
             override fun run() {
-                if(megaphoneService?.getIsConnected() == true || megaphoneService?.getIsConnectedYA3() == true) {
-                    setCallbacks()
-                    timer.cancel()
+                // 每秒从内存里拿出状态消息更新
+                if (sharedPreferences != null) {
+                    volumeReal = sharedPreferences!!.getInt("volume_real", 0)
+                    volumeLimit = sharedPreferences!!.getInt("volume_limit", 100)
+                    temperature = sharedPreferences!!.getString("temperature", "0").toString()
+                    // 更新到主线程
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        // 更新音量进度条
+                        if (!isSettingVolume) {
+                            mVolumeSeekBar.progress = volumeReal
+                        }
+                        mTemperature.text = "${context.resources.getString(R.string.temperature)} ${temperature}℃"
+                        if(volumeLimit < 100) {
+                            mStatus.setText(R.string.excessive_temperature)
+                            mStatus.setTextColor(Color.RED)
+                        }
+                        else {
+                            mStatus.setText(R.string.normal_temperature)
+                            mStatus.setTextColor(Color.WHITE)
+                        }
+                    }
                 }
             }
         }
@@ -234,12 +188,10 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
         }}
         mTtsLoopPlaybackCheckbox = this.findViewById(R.id.tts_loop_playback_checkbox)
-        if (context != null) {
-            sharedPreferences = context.getSharedPreferences("TtsShoutWeight", MODE_PRIVATE)
-            val ttstext: String = sharedPreferences!!.getString("ttstext", "")!!
-            Log.i(TAG, "ttstext:$ttstext")
-            mTextView.setText(ttstext)
-        }
+        sharedPreferences = context.getSharedPreferences("Megaphone", MODE_PRIVATE)
+        val ttstext: String = sharedPreferences!!.getString("ttstext", "")!!
+        Log.i(TAG, "ttstext:$ttstext")
+        mTextView.setText(ttstext)
 
         mTtsPlayBtn.setOnClickListener {
             if (isPlaying) {

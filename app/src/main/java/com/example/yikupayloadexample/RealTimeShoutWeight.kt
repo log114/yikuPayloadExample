@@ -32,6 +32,7 @@ import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
+import androidx.core.content.edit
 
 @RequiresApi(Build.VERSION_CODES.S)
 class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
@@ -123,6 +124,12 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                                 mStatus.setTextColor(Color.WHITE)
                             }
                         }
+                        // 将内容更新到内存里
+                        sharedPreferences.edit {
+                            putInt("volume_real", volumeReal);
+                            putInt("volume_limit", volumeLimit);
+                            putString("temperature", temperature);
+                        }
                     } catch (e: JSONException) {
                         // 处理JSON解析错误（如键不存在、类型不匹配、格式错误等）
                         Log.e(TAG, "JSON解析失败: ${e.message}")
@@ -178,6 +185,28 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                 val edit = sharedPreferences.edit()
                 edit.putBoolean("record", false)
                 edit.apply()
+            }
+        }
+
+        // 初始化的时候更新一次，避免和其他界面不一致
+        volumeReal = sharedPreferences.getInt("volume_real", 0)
+        volumeLimit = sharedPreferences.getInt("volume_limit", 100)
+        temperature = sharedPreferences.getString("temperature", "0").toString()
+        // 更新到主线程
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            // 更新音量进度条
+            if (!isSettingVolume) {
+                mVolumeSeekBar.progress = volumeReal
+            }
+            mTemperature.text = "${context.resources.getString(R.string.temperature)} ${temperature}℃"
+            if(volumeLimit < 100) {
+                mStatus.setText(R.string.excessive_temperature)
+                mStatus.setTextColor(Color.RED)
+            }
+            else {
+                mStatus.setText(R.string.normal_temperature)
+                mStatus.setTextColor(Color.WHITE)
             }
         }
     }
@@ -285,9 +314,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
             }
 
         }
-        sharedPreferences =
-            context?.getSharedPreferences("RealTimeShoutWeight", Context.MODE_PRIVATE)!!
-
+        sharedPreferences = context?.getSharedPreferences("Megaphone", Context.MODE_PRIVATE)!!
 
         mServoControlSeekbar = findViewById(R.id.servo_control_seekbar)
         mServoControlSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
