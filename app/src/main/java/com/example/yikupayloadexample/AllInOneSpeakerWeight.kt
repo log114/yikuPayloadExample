@@ -35,6 +35,7 @@ import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
 import androidx.core.content.edit
+import com.jxj.ffmpegrtsp.lib.FFmpegRTSPLibrary
 import com.yiku.yikupayloadSDK.protocol.ALLINONE_PITCH_STATE
 import com.yiku.yikupayloadSDK.util.MsgCallback
 
@@ -639,5 +640,6 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     fun releaseResources() {
         stopForegroundService()
         allInOneService.stopRealTimeShout()
+        FFmpegRTSPLibrary.destroyAllStreams()
     }
 }

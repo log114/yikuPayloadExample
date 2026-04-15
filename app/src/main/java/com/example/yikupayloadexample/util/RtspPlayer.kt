@@ -1,7 +1,8 @@
 package com.example.yikupayloadexample.util
 
-import android.view.SurfaceHolder
-import android.view.SurfaceView
+import android.graphics.SurfaceTexture
+import android.view.Surface
+import android.view.TextureView
 import com.jxj.ffmpegrtsp.lib.FFmpegCallbacks
 import com.jxj.ffmpegrtsp.lib.FFmpegRTSPLibrary
 import com.jxj.ffmpegrtsp.lib.VideoInfo
@@ -12,9 +13,9 @@ import com.jxj.ffmpegrtsp.lib.VideoInfo
  */
 class RtspPlayer(
     private val url: String,
-    private val surfaceView: SurfaceView,
+    private val textureView: TextureView,  // 改为TextureView
     private val eventListener: RtspPlayerEventListener? = null
-) : SurfaceHolder.Callback {
+) : TextureView.SurfaceTextureListener {  // 改为实现SurfaceTextureListener
 
     /**
      * RTSP播放器事件监听接口
@@ -32,6 +33,7 @@ class RtspPlayer(
     private var isPlaying = false
     private var surfaceReady = false
     private var streamId = -1
+    private var surface: Surface? = null
 
     // 添加视频原始分辨率属性
     private var originalVideoWidth = 0
@@ -42,7 +44,11 @@ class RtspPlayer(
 
     init {
         // 设置Surface回调
-        surfaceView.holder.addCallback(this)
+        textureView.surfaceTextureListener = this
+    }
+
+    fun getStreamId(): Int {
+        return streamId
     }
 
     /**
@@ -50,7 +56,14 @@ class RtspPlayer(
      * @param rtspUrl RTSP流地址
      */
     fun startPlayback(rtspUrl: String) {
-        streamId = FFmpegRTSPLibrary.createStream(rtspUrl)
+        if (streamId < 0) {
+            streamId = FFmpegRTSPLibrary.createStreamWithDecodeMode(rtspUrl, false)
+            if (streamId < 0) {
+                eventListener?.onError("创建流失败，streamId=$streamId")
+                return
+            }
+        }
+
         if (isPlaying) {
             eventListener?.onLogMessage("正在播放中，请先停止当前播放")
             return
@@ -67,7 +80,11 @@ class RtspPlayer(
         }
 
         if(!isPlaying) {
-            val result = FFmpegRTSPLibrary.setSurface(streamId, surfaceView.holder.surface)
+            if (surface == null) {
+                eventListener?.onError("Surface未创建")
+                return
+            }
+            val result = FFmpegRTSPLibrary.setSurface(streamId, surface!!)
             if (result == 0) {
                 eventListener?.onLogMessage("Surface设置成功")
             } else {
@@ -79,6 +96,7 @@ class RtspPlayer(
                 object : FFmpegCallbacks.PlaybackStartCallback {
                     override fun onPlaybackStarted(streamId: Int, videoInfo: VideoInfo?) {
                         isPlaying = true
+                        eventListener?.onPlaying()
                     }
 
                     override fun onPlaybackError(
@@ -86,12 +104,12 @@ class RtspPlayer(
                         errorCode: Int,
                         errorMessage: String
                     ) {
-                        isPlaying = false
+                        release()
+                        eventListener?.onError("播放错误: $errorMessage")
                     }
                 }
             )
         }
-
     }
 
     /**
@@ -102,10 +120,12 @@ class RtspPlayer(
             FFmpegRTSPLibrary.stopPlayAsync(streamId, object : FFmpegCallbacks.PlaybackStopCallback {
                 override fun onPlaybackStopped(streamId: Int) {
                     isPlaying = false
+                    eventListener?.onStopped()
                 }
 
                 override fun onPlaybackError(streamId: Int, errorCode: Int, errorMessage: String) {
                     isPlaying = false
+                    eventListener?.onError("停止播放错误: $errorMessage")
                 }
             })
         }
@@ -116,9 +136,18 @@ class RtspPlayer(
      */
     fun release() {
         if (streamId >= 0) {
-            stopPlayback()
-            FFmpegRTSPLibrary.destroyAllStreamsAsync()
+            try{
+                stopPlayback()
+                FFmpegRTSPLibrary.destroyStream(streamId)
+            }
+            catch (e: Exception) {
+                eventListener?.onError("释放资源时出错：${e.message}")
+            }
         }
+        surface?.release()
+        surface = null
+        streamId = -1
+        isPlaying = false
         eventListener?.onLogMessage("RTSP播放器资源已释放")
     }
 
@@ -127,24 +156,31 @@ class RtspPlayer(
      */
     fun isPlaying(): Boolean = isPlaying
 
-    // SurfaceHolder.Callback实现
-    override fun surfaceCreated(holder: SurfaceHolder) {
+    // SurfaceTextureListener实现
+    override fun onSurfaceTextureAvailable(surfaceTexture: SurfaceTexture, width: Int, height: Int) {
         surfaceReady = true
-        eventListener?.onLogMessage("Surface已创建")
+        surface = Surface(surfaceTexture)
+        eventListener?.onLogMessage("SurfaceTexture已创建")
         startPlayback(url)
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        eventListener?.onLogMessage("Surface尺寸变化: ${width}x$height")
+    override fun onSurfaceTextureSizeChanged(surfaceTexture: SurfaceTexture, width: Int, height: Int) {
+        eventListener?.onLogMessage("SurfaceTexture尺寸变化: ${width}x$height")
         eventListener?.onVideoSizeChanged(width, height)
     }
 
-    override fun surfaceDestroyed(holder: SurfaceHolder) {
+    override fun onSurfaceTextureDestroyed(surfaceTexture: SurfaceTexture): Boolean {
         surfaceReady = false
-        eventListener?.onLogMessage("Surface被销毁")
+        eventListener?.onLogMessage("SurfaceTexture被销毁")
         if (streamId >= 0) {
             FFmpegRTSPLibrary.onSurfaceDestroyed(streamId)
         }
+        surface?.release()
+        surface = null
+        return true
     }
 
+    override fun onSurfaceTextureUpdated(surfaceTexture: SurfaceTexture) {
+        // 每一帧更新时调用
+    }
 }

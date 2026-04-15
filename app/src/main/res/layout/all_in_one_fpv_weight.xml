@@ -26,12 +26,11 @@
                 android:layout_height="207dp"
                 android:layout_gravity="center_horizontal">
                 <!-- 视频播放区域（底层） -->
-                <SurfaceView
+                <TextureView
                     android:id="@+id/playerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"/>
-
             </LinearLayout>
 
             <!-- 控制按钮区域（顶层） -->
@@ -44,6 +43,13 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
+                <ImageView
+                    android:id="@+id/flip_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="翻转视频画面180度"
+                    android:src="@drawable/fpv_flip" />
                 <ImageView
                     android:id="@+id/enlarge_btn"
                     android:layout_width="30dp"

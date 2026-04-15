@@ -38,7 +38,7 @@
         android:name=".MApplication"
         android:allowBackup="true"
         android:extractNativeLibs="true"
-        android:hardwareAccelerated="false"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/logo"
         android:label="@string/yiku_shout"
         android:largeHeap="true"

@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.SurfaceView
+import android.view.TextureView
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
@@ -19,7 +20,7 @@ import com.example.yikupayloadexample.MApplication
 
 class FullScreenVideoActivity : AppCompatActivity() {
     private val TAG = "FullScreenVideoActivity"
-    private lateinit var playerView: SurfaceView
+    private lateinit var playerView: TextureView
     private lateinit var exitFullScreenBtn: ImageView
     private lateinit var controlsLayout: LinearLayout
 

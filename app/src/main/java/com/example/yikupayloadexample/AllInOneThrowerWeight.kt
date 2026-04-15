@@ -2,12 +2,15 @@ package com.example.yikupayloadexample
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.SurfaceTexture
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.SurfaceView
+import android.view.TextureView
+import android.view.TextureView.SurfaceTextureListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -29,7 +32,7 @@ import java.util.TimerTask
 import kotlin.concurrent.thread
 
 class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
-    LinearLayout(context, attr, defStyleAttr) {
+    LinearLayout(context, attr, defStyleAttr), SurfaceTextureListener {
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
 
@@ -51,7 +54,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var fpvOpenBtn: Button
     private lateinit var backBtn: ImageView
     private lateinit var enlargeBtn: ImageView
-    private lateinit var playerView: SurfaceView
+    private lateinit var playerView: TextureView
     private lateinit var playerParentView: LinearLayout
     private lateinit var thrower1FpvBtn: Button
     private lateinit var thrower2FpvBtn: Button
@@ -74,6 +77,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private var allowing2 = false
     private lateinit var pitchDownTimer: Timer
     private var isOpenedFpv = false // 是否打开了fpv辅助
+    private var isFlipped180 = false
+    private lateinit var flipBtn: ImageView
 
     // 添加尺寸常量定义
     companion object {
@@ -109,7 +114,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // 释放视频资源
         if(isInitPlayer) {
-            rtspPlayer.release()
+//            rtspPlayer.release()
+            rtspPlayer.stopPlayback()
         }
     }
 
@@ -391,9 +397,48 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
         // 打开全屏
         enlargeBtn.setOnClickListener {
+            // 如果已经旋转了180度，先旋转回来
+            if(isFlipped180) {
+                playerView.post {
+                    // 恢复正常
+                    playerView.rotation = 0f
+                }
+            }
             switchToFullScreen()
+            // 全屏设置完后，再旋转回去
+            if(isFlipped180) {
+                playerView.post {
+                    // 旋转180度
+                    playerView.rotation = 180f
+                }
+            }
+        }
+
+        // 视频窗口翻转
+        flipBtn.setOnClickListener {
+            flipVideo180()
         }
         setConnectState()
+    }
+
+    // 翻转视频的方法
+    private fun flipVideo180() {
+        isFlipped180 = !isFlipped180
+        applyVideoRotation()
+        showToast(if (isFlipped180) "画面已翻转180度" else "画面已恢复")
+    }
+
+    // 应用视频翻转
+    private fun applyVideoRotation() {
+        playerView.post {
+            if (isFlipped180) {
+                // 旋转180度
+                playerView.rotation = 180f
+            } else {
+                // 恢复正常
+                playerView.rotation = 0f
+            }
+        }
     }
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.all_in_one_thrower_weight, this, true)
@@ -419,6 +464,9 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         thrower1FpvBtn = findViewById(R.id.thrower1_fpv_btn)
         thrower2FpvBtn = findViewById(R.id.thrower2_fpv_btn)
         throwerAllFpvBtn = findViewById(R.id.throwerAll_fpv_btn)
+        flipBtn = findViewById(R.id.flip_btn)
+        // 设置TextureView的回调
+        playerView.surfaceTextureListener = this
     }
 
     // 创建播放器
@@ -439,7 +487,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             }
 
             override fun onError(errorMessage: String) {
-//                showToast("错误: $errorMessage")
+                Log.e(TAG, errorMessage)
             }
 
             override fun onLogMessage(message: String) {
@@ -760,5 +808,29 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 MApplication.applicationContext, msg, Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+        Log.i(TAG, "🎬 TextureView可用: $width x $height")
+        if (isInitPlayer) {
+            // 如果播放器已初始化，设置新的surface
+            rtspPlayer.onSurfaceTextureAvailable(surface, width, height)
+        }
+    }
+
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+        Log.i(TAG, "📏 TextureView尺寸变化: $width x $height")
+    }
+
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+        Log.i(TAG, "🗑️ TextureView销毁")
+        if (isInitPlayer) {
+            rtspPlayer.onSurfaceTextureDestroyed(surface)
+        }
+        return true
+    }
+
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
+        // 每一帧更新时调用
     }
 }

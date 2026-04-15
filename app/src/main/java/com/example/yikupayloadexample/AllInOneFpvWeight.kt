@@ -2,13 +2,16 @@ package com.example.yikupayloadexample
 
 import android.content.Context
 import android.databinding.tool.ext.T
+import android.graphics.SurfaceTexture
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -16,14 +19,13 @@ import com.example.yikupayloadexample.util.RtspPlayer
 import com.yiku.yikupayloadSDK.protocol.ALLINONE_PITCH_STATE
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import kotlin.concurrent.thread
-import android.view.SurfaceView
-import android.widget.RelativeLayout
 import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
+import android.view.TextureView.SurfaceTextureListener  // 添加这个导入
 
 class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
-    LinearLayout(context, attr, defStyleAttr) {
+    LinearLayout(context, attr, defStyleAttr), SurfaceTextureListener {  // 实现SurfaceTextureListener接口
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
 
@@ -31,10 +33,9 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private lateinit var pageLayout: RelativeLayout
     private lateinit var enlargeBtn: ImageView
     private lateinit var playerParentView: LinearLayout
-    private lateinit var playerView: SurfaceView
+    private lateinit var playerView: TextureView  // 改为TextureView
     private lateinit var rtspPlayer: RtspPlayer
     private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
-//    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
     private var isSettingPitch: Boolean = false
@@ -42,9 +43,35 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private var isInitPlayer: Boolean = false
     private var isAdjusting = false
     private var isFullScreen = false
-    private val interval = 100 // 限制两次俯仰控制间隔时间不得小于50ms
-    private var lastTime = Date().time // 上一次控制俯仰的时间
+    private val interval = 100
+    private var lastTime = Date().time
     private var settingTimer: Timer? = null
+    private var isFlipped180 = false
+    private lateinit var flipBtn: ImageView
+
+    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+        Log.i(TAG, "🎬 TextureView可用: $width x $height")
+        if (isInitPlayer) {
+            // 如果播放器已初始化，设置新的surface
+            rtspPlayer.onSurfaceTextureAvailable(surface, width, height)
+        }
+    }
+
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+        Log.i(TAG, "📏 TextureView尺寸变化: $width x $height")
+    }
+
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+        Log.i(TAG, "🗑️ TextureView销毁")
+        if (isInitPlayer) {
+            rtspPlayer.onSurfaceTextureDestroyed(surface)
+        }
+        return true
+    }
+
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
+        // 每一帧更新时调用
+    }
 
     // 当窗口被加载时，加载视频
     override fun onAttachedToWindow() {
@@ -66,7 +93,8 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
 
         // 释放视频资源
         if(isInitPlayer) {
-            rtspPlayer.release()
+//            rtspPlayer.release()
+            rtspPlayer.stopPlayback()
         }
     }
 
@@ -101,7 +129,21 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         })
         // 放大窗口
         enlargeBtn.setOnClickListener {
+            // 如果已经旋转了180度，先旋转回来
+            if(isFlipped180) {
+                playerView.post {
+                    // 恢复正常
+                    playerView.rotation = 0f
+                }
+            }
             switchToFullScreen()
+            // 全屏设置完后，再旋转回去
+            if(isFlipped180) {
+                playerView.post {
+                    // 旋转180度
+                    playerView.rotation = 180f
+                }
+            }
         }
         // 俯仰控制
         pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -129,15 +171,24 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                 resumeMonitor()
             }
         })
+
+        // 视频窗口翻转
+        flipBtn.setOnClickListener {
+            flipVideo180()
+        }
     }
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.all_in_one_fpv_weight, this, true)
         pageLayout = findViewById(R.id.allInOneFpvWeight)
         enlargeBtn = findViewById(R.id.enlarge_btn)
         playerParentView = findViewById(R.id.playerParentView)
-        playerView = findViewById(R.id.playerView)
+        playerView = findViewById(R.id.playerView)  // 现在是TextureView
         pitchSeekBar = findViewById(R.id.pitch_seek_bar)
         pitchText = findViewById(R.id.pitch_text)
+        flipBtn = findViewById(R.id.flip_btn)
+
+        // 设置TextureView的回调
+        playerView.surfaceTextureListener = this
     }
 
     fun attachFloatingWindow(service: PayloadWeight) {
@@ -146,38 +197,52 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
 
     // 创建播放器
     private fun initPlayer() {
-        // 创建播放器（使用简化的事件监听）
+        // 创建播放器，传递TextureView
         rtspPlayer = RtspPlayer(streamUrl, playerView, object : RtspPlayer.RtspPlayerEventListener {
             override fun onPlaying() {
-//                showToast("开始播放")
                 // 获取并保存原始分辨率
                 val (width, height) = rtspPlayer.getVideoResolution()
                 if (width > 0 && height > 0) {
                     Log.d(TAG, "播放开始，原始分辨率: ${width}x${height}")
-//                    adjustContainerAspectRatio()
                 }
             }
 
             override fun onStopped() {
-//                showToast("播放停止")
             }
 
             override fun onError(errorMessage: String) {
-//                showToast("错误: $errorMessage")
+                Log.e(TAG, errorMessage)
             }
 
             override fun onLogMessage(message: String) {
-//                Log.d("RtspPlayer", message)
             }
 
             override fun onVideoSizeChanged(width: Int, height: Int) {
-
             }
 
             override fun onFrameRendered(frameCount: Int) {
-                // 可选的帧渲染回调
             }
         })
+    }
+
+    // 翻转视频的方法
+    private fun flipVideo180() {
+        isFlipped180 = !isFlipped180
+        applyVideoRotation()
+        showToast(if (isFlipped180) "画面已翻转180度" else "画面已恢复")
+    }
+
+    // 应用视频翻转
+    private fun applyVideoRotation() {
+        playerView.post {
+            if (isFlipped180) {
+                // 旋转180度
+                playerView.rotation = 180f
+            } else {
+                // 恢复正常
+                playerView.rotation = 0f
+            }
+        }
     }
 
     /**
@@ -190,7 +255,7 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         maxHeight = maxHeight - dpToPx(42f).toInt() // 去掉头部标题和内边距，才是这里可以使用的最大高度
         val bottomControlHeight = dpToPx(38f).toInt() // 底部控件高度
         val pagePadding = dpToPx(4f).toInt()
-        val aspectRatio: Float = (1280.00/720.00).toFloat() // 视频宽高比固定为1280*720
+        val aspectRatio: Float = (1280.00/720.00).toFloat() // 视频宽高比固定为1280 * 720
         Log.d(TAG, "宽高比：${aspectRatio}")
         var targetPageWidthPx = 0
         var targetPageHeightPx = 0
