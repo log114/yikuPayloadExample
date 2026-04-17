@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shoutComp"
-    android:layout_width="540dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:fitsSystemWindows="false">
-
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:id="@+id/shoutView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:background="@drawable/yk_shout_model"
         android:minWidth="300dp"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <LinearLayout
+            android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="24dp"
             tools:ignore="UselessParent">
@@ -45,10 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
-            android:gravity="center_vertical"
             android:minWidth="300dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal" />
 
-        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

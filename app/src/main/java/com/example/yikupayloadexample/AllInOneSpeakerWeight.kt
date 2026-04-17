@@ -465,7 +465,15 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private fun setConnectState() {
         isConnecting = true
         thread {
-            while (!allInOneService.connect()) {
+            Log.d(TAG, "5连接0")
+            val allInOneHost = preferences?.getString("AllInOneHost", "")
+            if(allInOneHost != null && "" != allInOneHost) {
+                allInOneService.setIp(allInOneHost)
+            }
+            while (!allInOneService.getIsConnected()) {
+                Log.d(TAG, "5连接1 ${allInOneService.getHost()}")
+
+                allInOneService.connect()
                 Thread.sleep(1000)
             }
             isConnecting = false
@@ -495,7 +503,9 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                                 Thread.sleep(5000)// 先等待5s，防止刚断连就重连，报错
                             }
                             isInit = true
+                            Log.d(TAG, "5连接2")
                             while (!allInOneService.connect()) {
+                                Log.d(TAG, "5连接3")
                                 Thread.sleep(1000)
                             }
                             isConnecting = false

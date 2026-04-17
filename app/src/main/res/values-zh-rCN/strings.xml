@@ -316,4 +316,7 @@
     <string name="four_in_one_2_ip">"机器狗多合一-二代IP: "</string>
     <string name="off">关</string>
     <string name="off_all">全关</string>
+    <string name="flipped_180_degrees">画面已翻转180度</string>
+    <string name="screen_restored">画面已恢复</string>
+    <string name="not_support">当前设备不支持这个功能</string>
 </resources>

@@ -486,6 +486,10 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private fun setConnectState() {
         isConnecting = true
         thread {
+            val fourInOne2Host = preferences?.getString("FourInOne2Host", "")
+            if(fourInOne2Host != null && "" != fourInOne2Host) {
+                fourInOne2Service.setIp(fourInOne2Host)
+            }
             while (!fourInOne2Service.connect()) {
                 Thread.sleep(1000)
             }

@@ -316,4 +316,7 @@
     <string name="four_in_one_2_ip">"Four-In-One 2 IP: "</string>
     <string name="off">OFF</string>
     <string name="off_all">ALL:OFF</string>
+    <string name="flipped_180_degrees">The image has been flipped 180 degrees</string>
+    <string name="screen_restored">The screen has been restored</string>
+    <string name="not_support">The current device does not support this function</string>
 </resources>

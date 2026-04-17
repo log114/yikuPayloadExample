@@ -425,7 +425,7 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private fun flipVideo180() {
         isFlipped180 = !isFlipped180
         applyVideoRotation()
-        showToast(if (isFlipped180) "画面已翻转180度" else "画面已恢复")
+        showToast(if (isFlipped180) R.string.flipped_180_degrees else R.string.screen_restored)
     }
 
     // 应用视频翻转
@@ -729,6 +729,10 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
      * 切换到全屏模式
      */
     private fun switchToFullScreen() {
+        if(thisPayloadWeight?.getIsRotated() == true) {
+            showToast(R.string.not_support)
+            return;
+        }
         if(!isFullScreen) {
             thisPayloadWeight?.fullScreen()
         }

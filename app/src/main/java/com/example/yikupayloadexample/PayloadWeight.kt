@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
 import android.content.res.Configuration
+import android.databinding.tool.ext.T
 import android.os.Binder
 import android.os.Build
 import android.os.Handler
@@ -28,11 +29,14 @@ import com.lzf.easyfloat.utils.InputMethodUtils
 import java.util.Timer
 import java.util.TimerTask
 import androidx.core.view.isVisible
+import androidx.core.view.isGone
+import kotlin.concurrent.thread
 
 
 class PayloadWeight : Service() {
-    private val TAG = "ShoutWeight"
-    private lateinit var mShoutView: View
+    private val TAG = "PayloadWeight"
+    private lateinit var mShoutComp: View
+    private lateinit var mShoutView: LinearLayout
     private val binder = PayloadWeightBinder()
     private lateinit var mWindowTitle: TextView
     private lateinit var mShoutViewContent: LinearLayout
@@ -84,12 +88,15 @@ class PayloadWeight : Service() {
     private lateinit var plLightBtn: ImageView
     private lateinit var allInOneSpeakerBtn: ImageView
     private lateinit var allInOneLightBtn: ImageView
-    public lateinit var allInOneThrowerBtn: ImageView
-    public lateinit var allInOneFpvBtn: ImageView
+    lateinit var allInOneThrowerBtn: ImageView
+    lateinit var allInOneFpvBtn: ImageView
     private lateinit var fourInOne2SpeakerBtn: ImageView
     private lateinit var fourInOne2LightBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
+    var isRotated = false
+    private var originalContentWidth = 0
+    private var originalContentHeight = 0
 
     // 空状态
     private lateinit var emptyText: View
@@ -252,9 +259,6 @@ class PayloadWeight : Service() {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(15, waterBranchBtn)) {
                             waterBranchBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
-                            if(!isLockWindow) {
-                                lockBtn.performClick() // 默认锁定悬浮窗
-                            }
                         }
                     }
                     plLightBtn.setOnClickListener {
@@ -361,26 +365,30 @@ class PayloadWeight : Service() {
      */
     @SuppressLint("ClickableViewAccessibility")
     fun setSVVisibility(type: Int, view: View): Boolean {
-        Log.i(TAG, "mShoutView. setSVVisibility:${mShoutView.visibility}, opened:${opened}")
-        if (mShoutView.visibility == GONE || opened != type) {
-            mShoutView.visibility = VISIBLE
+        Log.i(TAG, "mShoutComp. setSVVisibility:${mShoutComp.visibility}, opened:${opened}")
+        if (mShoutComp.isGone || opened != type) {
+            mShoutComp.visibility = VISIBLE
         } else {
-            mShoutView.visibility = GONE
+            mShoutComp.visibility = GONE
             EasyFloat.hide("yk_payload_weight_op")
             EasyFloat.hide("video_window")
 //            popupWindow.dismiss()
             opened = 0
         }
         try {
-            if (mShoutView.isVisible) {
+            // 重置旋转状态
+            resetRotation()
+            if (mShoutComp.isVisible) {
                 mShoutViewContent.removeAllViews()
                 when(type) {
-                    22 -> {
+                    22 -> { // 机器狗多合一二代，灯光
                         opened = 22
                         mWindowTitle.setText(R.string.lamplight)
                         mShoutViewContent.addView(fourInOne2LightWeight)
+                        // 测量内容并决定是否旋转
+                        measureAndAdjustLayout()
                     }
-                    21 -> {
+                    21 -> { // 机器狗多合一二代，声音
                         opened = 21
                         mWindowTitle.setText(R.string.sound)
                         mShoutViewContent.addView(fourInOne2SpeakerWeight)
@@ -392,14 +400,18 @@ class PayloadWeight : Service() {
                             )
                             false
                         }
+                        // 测量内容并决定是否旋转
+                        measureAndAdjustLayout()
                         fourInOne2SpeakerWeight.onShow()
                     }
-                    20 -> {
+                    20 -> { // 五技吊舱，FPV
                         opened = 20
                         mWindowTitle.text = "FPV"
                         mShoutViewContent.addView(allInOneFpvWeight)
+                        // 测量内容并决定是否旋转
+                        measureAndAdjustLayout()
                     }
-                    19 -> {
+                    19 -> { // 五技吊舱，抛投器
                         opened = 19
                         mWindowTitle.setText(R.string.thrower)
                         mShoutViewContent.addView(allInOneThrowerWeight)
@@ -411,13 +423,17 @@ class PayloadWeight : Service() {
                             )
                             false
                         }
+                        // 测量内容并决定是否旋转
+                        measureAndAdjustLayout()
                     }
-                    18 -> {
+                    18 -> { // 五技吊舱，灯光
                         opened = 18
                         mWindowTitle.setText(R.string.lamplight)
                         mShoutViewContent.addView(allInOneLightWeight)
+                        // 测量内容并决定是否旋转
+                        measureAndAdjustLayout()
                     }
-                    17 -> {
+                    17 -> { // 五技吊舱，声音
                         opened = 17
                         mWindowTitle.setText(R.string.sound)
                         mShoutViewContent.addView(allInOneSpeakerWeight)
@@ -429,6 +445,8 @@ class PayloadWeight : Service() {
                             )
                             false
                         }
+                        // 测量内容并决定是否旋转
+                        measureAndAdjustLayout()
                         allInOneSpeakerWeight.onShow()
                     }
                     16 -> {
@@ -479,7 +497,7 @@ class PayloadWeight : Service() {
                             false
                         }
                     }
-                    8 -> {
+                    8 -> { // 抛投器
                         opened = 8
                         mShoutViewContent.addView(throwerweight)
                         val detonateHeightEditText = mShoutViewContent.findViewById<EditText>(R.id.detonateHeight)
@@ -490,6 +508,8 @@ class PayloadWeight : Service() {
                             )
                             false
                         }
+                        // 测量内容并决定是否旋转
+                        measureAndAdjustLayout()
                     }
                     7 -> {
                         opened = 7
@@ -534,7 +554,156 @@ class PayloadWeight : Service() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return mShoutView.isVisible
+        return mShoutComp.isVisible
+    }
+
+    fun getIsRotated(): Boolean {
+        return this.isRotated
+    }
+
+    // 测量内容并调整布局
+    fun measureAndAdjustLayout() {
+        // 等待布局完成
+        mShoutComp.post {
+            // 测量内容实际尺寸
+            mShoutViewContent.measure(
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            )
+
+            val contentWidth = mShoutViewContent.measuredWidth
+            val contentHeight = mShoutViewContent.measuredHeight
+
+            Log.d(TAG, "Measured content: ${contentWidth}px x ${contentHeight}px")
+
+            // 获取屏幕宽度
+            val screenWidth = getScreenSize().first
+            Log.d(TAG, "Screen width: ${screenWidth}px")
+
+            // 将dp转换为px
+            val minWidthPx = dpToPx(300f)
+
+            if (contentWidth > minWidthPx) {
+                // 内容宽度超过300dp，需要处理
+                if (contentWidth <= screenWidth) {
+                    // 1. 宽度不超过屏幕：直接扩展悬浮窗
+                    expandFloatWindow(contentWidth, contentHeight)
+                } else {
+                    // 2. 宽度超过屏幕：旋转90度显示
+                    rotateContent90Degrees(contentWidth, contentHeight)
+                }
+            } else {
+                // 3. 宽度不超过300dp：保持原样
+                keepOriginalLayout()
+            }
+        }
+    }
+
+    // 扩展悬浮窗宽度
+    private fun expandFloatWindow(contentWidth: Int, contentHeight: Int) {
+        Log.d(TAG, "Expanding float window to fit content: ${contentWidth}px")
+
+        // 保存原始尺寸
+        originalContentWidth = contentWidth
+        originalContentHeight = contentHeight
+
+        // 设置悬浮窗的宽度为内容宽度（加上一些内边距）
+        val padding = dpToPx(20f)
+        val newWidth = contentWidth + padding
+
+        val params = mShoutComp.layoutParams
+        params.width = newWidth
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        mShoutComp.layoutParams = params
+
+        // 重新测量和布局
+        mShoutComp.requestLayout()
+
+        Log.d(TAG, "Float window expanded to: ${newWidth}px")
+    }
+
+    // 旋转内容90度
+    @SuppressLint("ClickableViewAccessibility")
+    private fun rotateContent90Degrees(contentWidth: Int, contentHeight: Int) {
+        Log.d(TAG, "Rotating content 90 degrees. Original: ${contentWidth}px x ${contentHeight}px")
+
+        // 保存原始尺寸
+        originalContentWidth = contentWidth
+        originalContentHeight = contentHeight
+
+        // 标记为已旋转
+        isRotated = true
+
+        // 1. 先设置新的尺寸，再旋转
+        val rotatedWidth = contentHeight + dpToPx(24f + 10f)
+        val rotatedHeight = contentWidth + dpToPx(10f)
+
+        // 2. 先设置新尺寸
+        val params = mShoutComp.layoutParams
+        params.width = rotatedWidth
+        params.height = rotatedHeight
+        mShoutComp.layoutParams = params
+
+        // 3. 等待布局更新后再旋转
+        mShoutComp.post {
+            // 设置旋转中心为视图中心
+            mShoutView.pivotX = mShoutView.width / 2f
+            mShoutView.pivotY = mShoutView.height / 2f
+
+            // 执行旋转动画
+            mShoutView.animate()
+                .rotation(90f)
+                .setDuration(300)
+                .withStartAction {
+                    // 旋转前确保视图可见
+                    mShoutView.visibility = VISIBLE
+                    mShoutView.alpha = 0f
+                }
+                .withEndAction {
+                    mShoutView.alpha = 1f
+                }
+                .start()
+
+            val paramsShoutView = mShoutView.layoutParams
+            paramsShoutView.width = rotatedHeight
+            paramsShoutView.height = rotatedWidth
+            mShoutView.layoutParams = paramsShoutView
+        }
+    }
+
+    // 重置旋转状态
+    private fun resetRotation() {
+        if (isRotated) {
+            mShoutView.rotation = 0f
+            mShoutView.pivotX = mShoutView.width / 2f
+            mShoutView.pivotY = mShoutView.height / 2f
+
+            keepOriginalLayout()
+
+            isRotated = false
+            Log.d(TAG, "Rotation reset")
+        }
+    }
+
+    // 保持原始布局
+    private fun keepOriginalLayout() {
+        val params = mShoutComp.layoutParams
+        params.width = ViewGroup.LayoutParams.WRAP_CONTENT
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        mShoutComp.layoutParams = params
+        mShoutComp.requestLayout()
+
+        val paramsShoutView = mShoutView.layoutParams
+        paramsShoutView.width = ViewGroup.LayoutParams.WRAP_CONTENT
+        paramsShoutView.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        mShoutView.layoutParams = paramsShoutView
+        mShoutView.requestLayout()
+
+        val paramsShoutContent = mShoutViewContent.layoutParams
+        paramsShoutContent.width = ViewGroup.LayoutParams.WRAP_CONTENT
+        paramsShoutContent.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        mShoutViewContent.layoutParams = paramsShoutContent
+        mShoutViewContent.requestLayout()
     }
 
     private fun showWindow() {
@@ -567,11 +736,12 @@ class PayloadWeight : Service() {
             EasyFloat.with(applicationContext)
                 // 设置浮窗xml布局文件/自定义View，并可设置详细信息
                 .setLayout(R.layout.payload_weight) {
-                    mShoutView = it.findViewById(R.id.shoutComp)
+                    mShoutComp = it.findViewById(R.id.shoutComp)
+                    mShoutView = it.findViewById(R.id.shoutView)
                     lockBtn = it.findViewById(R.id.lockBtn)
                     it.isFocusable = true;
                     // 初始化关闭喊话界面
-                    mShoutView.visibility = View.GONE
+                    mShoutComp.visibility = View.GONE
                     mWindowTitle = it.findViewById(R.id.windowTitle)
                     mShoutViewContent = it.findViewById(R.id.shout_view_content)
                     mShoutViewContent.setOnClickListener {
@@ -765,10 +935,10 @@ class PayloadWeight : Service() {
         val (screenWidth, screenHeight) = getScreenSize(includeSystemBars = false)
 
         // 设置 shoutComp 的宽高（保留边距）
-        val params = mShoutView.layoutParams
+        val params = mShoutComp.layoutParams
         params.width = screenWidth
         params.height = screenHeight
-        mShoutView.layoutParams = params
+        mShoutComp.layoutParams = params
 
         val floatWindowView = EasyFloat.getFloatView("yk_payload_weight_op")
         floatWindowView?.let { view ->
@@ -789,7 +959,7 @@ class PayloadWeight : Service() {
             }
         }
 
-        val decorView = mShoutView.rootView
+        val decorView = mShoutComp.rootView
         val uiOptions = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
@@ -803,13 +973,12 @@ class PayloadWeight : Service() {
 
     // 恢复原有尺寸
     fun recoverSize() {
-        // 使用dp单位而不是固定像素值
-        val defaultWidthDp = 540f  // 保持原来的设计尺寸
-
-        val params = mShoutView.layoutParams
-        params.width = dpToPx(defaultWidthDp)
-        params.height = RelativeLayout.LayoutParams.WRAP_CONTENT
-        mShoutView.layoutParams = params
+        keepOriginalLayout()
+        // 如果已经旋转
+        if(isRotated) {
+            measureAndAdjustLayout()
+            return
+        }
 
         val floatWindowView = EasyFloat.getFloatView("yk_payload_weight_op")
         floatWindowView?.let { view ->
@@ -829,10 +998,8 @@ class PayloadWeight : Service() {
             }
         }
 
-        val decorView = mShoutView.rootView
+        val decorView = mShoutComp.rootView
         decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-
-        Log.d(TAG, "恢复尺寸完成: 宽度=${dpToPx(defaultWidthDp)}px (${defaultWidthDp}dp)")
     }
 
     fun setTitleText(textId: Int) {
