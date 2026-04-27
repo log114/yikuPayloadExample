@@ -210,7 +210,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
 
         // 上传音频文件
         addRecordBtn.setOnClickListener {
-            val intent = Intent(this.context, AllInOneAddRecordActivity::class.java)
+            val intent = Intent(this.context, FourInOne2AddRecordActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
             startActivity(this.context, intent, null)
         }
