@@ -12,6 +12,18 @@
                 android:top="8dp" />
         </shape>
     </item>
+    <!-- 选中状态 -->
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/light_red" /> <!-- 按下时的颜色 -->
+            <corners android:radius="8dp" /> <!-- 圆角半径 -->
+            <padding
+                android:bottom="8dp"
+                android:left="8dp"
+                android:right="8dp"
+                android:top="8dp" />
+        </shape>
+    </item>
     <!-- 禁用状态 -->
     <item android:state_enabled="false">
         <shape android:shape="rectangle">

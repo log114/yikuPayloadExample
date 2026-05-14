@@ -38,35 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:paddingLeft="8dp"-->
-<!--                android:paddingRight="8dp">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="140dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:text="@string/ShoutHost_name" />-->
-
-<!--                <EditText-->
-<!--                    android:id="@+id/ShoutHostIP"-->
-<!--                    android:layout_width="200dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:singleLine="false"-->
-<!--                    android:inputType="text"-->
-<!--                    android:background="@drawable/boder"-->
-<!--                    />-->
-<!--                <Button-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_marginStart="20dp"-->
-<!--                    android:id="@+id/reboot_ym_btn"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:text="@string/reboot_device"/>-->
-
-<!--            </LinearLayout>-->
             <com.google.android.flexbox.FlexboxLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -433,6 +404,26 @@
 
                 <EditText
                     android:id="@+id/FourInOne2HostIP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:background="@drawable/boder"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <TextView
+                    android:layout_width="140dp"
+                    android:layout_height="20dp"
+                    android:textAlignment="center"
+                    android:text="@string/SlowDescentDevice200Host_name" />
+
+                <EditText
+                    android:id="@+id/SlowDescentDevice200HostIP"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"

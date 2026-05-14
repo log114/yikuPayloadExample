@@ -65,6 +65,7 @@ class PayloadWeight : Service() {
     private lateinit var allInOneFpvWeight: AllInOneFpvWeight
     private lateinit var fourInOne2SpeakerWeight: FourInOne2SpeakerWeight
     private lateinit var fourInOne2LightWeight: FourInOne2LightWeight
+    private lateinit var slowDescentDevice200Weight: SlowDescentDevice200Weight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -92,6 +93,7 @@ class PayloadWeight : Service() {
     lateinit var allInOneFpvBtn: ImageView
     private lateinit var fourInOne2SpeakerBtn: ImageView
     private lateinit var fourInOne2LightBtn: ImageView
+    private lateinit var slowDescentDevice200Btn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
     var isRotated = false
@@ -129,6 +131,7 @@ class PayloadWeight : Service() {
         allInOneFpvBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         fourInOne2SpeakerBtn.setBackgroundResource(R.drawable.yk_shout_btn)
         fourInOne2LightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
+        slowDescentDevice200Btn.setBackgroundResource(R.drawable.yk_shout_btn)
     }
 
     private fun openFloatingWindow() {
@@ -162,6 +165,7 @@ class PayloadWeight : Service() {
                     allInOneFpvBtn = it.findViewById(R.id.all_in_on_fpv_Btn)
                     fourInOne2SpeakerBtn = it.findViewById(R.id.four_in_one_2_speaker_Btn)
                     fourInOne2LightBtn = it.findViewById(R.id.four_in_one_2_light_Btn)
+                    slowDescentDevice200Btn = it.findViewById(R.id.slowDescentDevice200Btn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -303,6 +307,12 @@ class PayloadWeight : Service() {
                             fourInOne2LightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
                         }
                     }
+                    slowDescentDevice200Btn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(23, slowDescentDevice200Btn)) {
+                            slowDescentDevice200Btn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                        }
+                    }
                 }
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -381,6 +391,36 @@ class PayloadWeight : Service() {
             if (mShoutComp.isVisible) {
                 mShoutViewContent.removeAllViews()
                 when(type) {
+                    23 -> { // 200kg缓降器
+                        opened = 23
+                        mShoutViewContent.addView(slowDescentDevice200Weight)
+                        val upSpeedEditText = mShoutViewContent.findViewById<EditText>(R.id.upSpeedInput)
+                        upSpeedEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                upSpeedEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                        val downSpeedEditText = mShoutViewContent.findViewById<EditText>(R.id.downSpeedInput)
+                        downSpeedEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                downSpeedEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                        val lengthEditText = mShoutViewContent.findViewById<EditText>(R.id.lengthInput)
+                        lengthEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                lengthEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                        // 测量内容并决定是否旋转
+                        measureAndAdjustLayout()
+                    }
                     22 -> { // 机器狗多合一二代，灯光
                         opened = 22
                         mWindowTitle.setText(R.string.lamplight)
@@ -731,6 +771,7 @@ class PayloadWeight : Service() {
         allInOneFpvWeight.attachFloatingWindow(this)
         fourInOne2SpeakerWeight = FourInOne2SpeakerWeight(this)
         fourInOne2LightWeight = FourInOne2LightWeight(this)
+        slowDescentDevice200Weight = SlowDescentDevice200Weight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -1076,6 +1117,7 @@ class PayloadWeight : Service() {
                 val isConnectedPLLight = plLightweight.plLightService.getIsConnected(); // 品灵探照灯
                 val isConnectedAllInOne = allInOneService.getIsConnected(); // 多合一
                 val isConnectedFourInOne2 = fourInOne2Service.getIsConnected(); // 四合一二代
+                val isConnectedSlowDescentDevice200 = slowDescentDevice200Weight.slowDescentDevice200Service.getIsConnected(); // 200kg缓降器
 
 //                val isConnectedMegaphone = true;// 喊话器
 //                val isConnectedYA3 = true; // 四合一
@@ -1093,6 +1135,7 @@ class PayloadWeight : Service() {
 //                val isConnectedPLLight = true; // 品灵探照灯
 //                val isConnectedAllInOne = true; // 多合一
 //                val isConnectedFourInOne2 = true; // 四合一二代
+//                val isConnectedSlowDescentDevice200 = true; // 200kg缓降器
                     // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示
@@ -1215,6 +1258,13 @@ class PayloadWeight : Service() {
                     handler.post {
                         fourInOne2SpeakerBtn.visibility = VISIBLE;
                         fourInOne2LightBtn.visibility = VISIBLE
+                        emptyText.visibility = GONE;
+                    }
+                }
+                // 200kg缓降器
+                if(isConnectedSlowDescentDevice200){
+                    handler.post {
+                        slowDescentDevice200Btn.visibility = VISIBLE;
                         emptyText.visibility = GONE;
                     }
                 }

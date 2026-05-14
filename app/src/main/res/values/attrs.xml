@@ -3,4 +3,8 @@
         <attr name="fullscreenBackgroundColor" format="color" />
         <attr name="fullscreenTextColor" format="color" />
     </declare-styleable>
+    <!-- 自定义属性，用于存放图片前缀 -->
+    <declare-styleable name="StatefulImageButton">
+        <attr name="imagePrefix" format="string" />
+    </declare-styleable>
 </resources>

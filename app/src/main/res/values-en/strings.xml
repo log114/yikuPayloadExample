@@ -119,7 +119,7 @@
     <string name="weight">"Weight: "</string>
     <string name="release_emergency">Release the state of emergency</string>
     <string name="need_relesase_emergency">Please lift the emergency status first!</string>
-    <string name="confirm_fuse">Please confirm using one click fuse</string>
+    <string name="confirm_fuse">Please confirm the use of emergency circuit breaker</string>
     <string name="fuse_prompt">After the circuit breaker is broken, it needs to be returned to the factory for processing before it can continue to be used!</string>
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
@@ -319,4 +319,16 @@
     <string name="flipped_180_degrees">The image has been flipped 180 degrees</string>
     <string name="screen_restored">The screen has been restored</string>
     <string name="not_support">The current device does not support this function</string>
+    <string name="SlowDescentDevice200Host_name">"200kg lifting IP: "</string>
+    <string name="not_peaked">Not peaked</string>
+    <string name="peaked">Peaked</string>
+    <string name="speed">"Speed: "</string>
+    <string name="rope_length">"Rope length: "</string>
+    <string name="horizontal_swing_angle">"Swing angle: "</string>
+    <string name="MOBO_temp">"MOBO temp: "</string>
+    <string name="hook_status">"Hook status: "</string>
+    <string name="urgent_stop">Urgent stop</string>
+    <string name="hook_battery_level">"Hook battery level: "</string>
+    <string name="warning_light">warning light</string>
+    <string name="hook_switch">hook switch</string>
 </resources>

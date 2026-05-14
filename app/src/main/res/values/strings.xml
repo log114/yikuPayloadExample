@@ -163,7 +163,7 @@
     <string name="weight">载重：</string>
     <string name="release_emergency">解除紧急状态</string>
     <string name="need_relesase_emergency">请先解除紧急状态！</string>
-    <string name="confirm_fuse">请确认使用一键熔断</string>
+    <string name="confirm_fuse">请确认使用紧急熔断</string>
     <string name="fuse_prompt">熔断后需要返厂处理后才能继续使用!</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
@@ -363,4 +363,16 @@
     <string name="flipped_180_degrees">画面已翻转180度</string>
     <string name="screen_restored">画面已恢复</string>
     <string name="not_support">当前设备不支持这个功能</string>
+    <string name="SlowDescentDevice200Host_name">"200kg 缓降器IP: "</string>
+    <string name="not_peaked">未触顶</string>
+    <string name="peaked">已触顶</string>
+    <string name="speed">"速度: "</string>
+    <string name="rope_length">"释放绳长: "</string>
+    <string name="horizontal_swing_angle">"水平摆角: "</string>
+    <string name="MOBO_temp">"主板温度: "</string>
+    <string name="hook_status">"挂钩通信: "</string>
+    <string name="urgent_stop">急停</string>
+    <string name="hook_battery_level">"挂钩电量: "</string>
+    <string name="warning_light">警示灯</string>
+    <string name="hook_switch">挂钩开关</string>
 </resources>

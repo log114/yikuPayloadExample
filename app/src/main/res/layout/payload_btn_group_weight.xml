@@ -286,6 +286,18 @@
         app:layout_constraintStart_toEndOf="@id/four_in_one_2_speaker_Btn"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone" />
+    <ImageView
+        android:id="@+id/slowDescentDevice200Btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/yk_shout_btn"
+        android:contentDescription="@string/slow_descent_device"
+        android:src="@drawable/slow_descent_device"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/four_in_one_2_light_Btn"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/emptyText"
