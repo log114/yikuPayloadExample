@@ -113,7 +113,7 @@ class AppUpdateManager private constructor(
                     } else {
                         val errorMessage = "${context.resources.getString(R.string.network_request_failed)}: ${response.code()}"
                         onUpdateListener?.onUpdateCheckFailed(errorMessage)
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
