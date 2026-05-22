@@ -33,6 +33,8 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private var isPlaying = false
     private var voice: Int = 0
     private lateinit var mVolumeSeekBar: SeekBar // 音量滑块
+    private lateinit var mSpeechRateLine: LinearLayout
+    private lateinit var mSpeechRateSeekBar: SeekBar // 语速滑块
     private var isSettingVolume = false; // 是否正在设置音量
     private var volumeReal = 0;
     private var volumeLimit = 100
@@ -51,13 +53,13 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         val timer = Timer();
         val task = object : TimerTask() {
             override fun run() {
+                val handler = Handler(Looper.getMainLooper())
                 // 每秒从内存里拿出状态消息更新
                 if (sharedPreferences != null) {
                     volumeReal = sharedPreferences!!.getInt("volume_real", 0)
                     volumeLimit = sharedPreferences!!.getInt("volume_limit", 100)
                     temperature = sharedPreferences!!.getString("temperature", "0").toString()
                     // 更新到主线程
-                    val handler = Handler(Looper.getMainLooper())
                     handler.post {
                         // 更新音量进度条
                         if (!isSettingVolume) {
@@ -74,33 +76,23 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         }
                     }
                 }
+                // 根据连接状态，判断在连接的是四合一的时候，显示语速调整组件
+                if(megaphoneService?.getIsConnectedYA3() == true) {
+                    handler.post {
+                        mSpeechRateLine.visibility = VISIBLE;
+                    }
+                }
+                else if(megaphoneService?.getIsConnected() == true) {
+                    handler.post {
+                        mSpeechRateLine.visibility = GONE;
+                    }
+                }
             }
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
         timer.schedule(task, 100, 1000);
     }
 
-    // 更新喊话器温度状态
-    fun updateTemperatureStatus(msg: ByteArray) {
-        Log.i(TAG, "喊话器温度msg:${msg.toHex()}")
-        // 温度
-        val temperature = (msg[0 + 3]).toUByte() - (50).toUByte()
-        mTemperature.text = "${context.resources.getString(R.string.temperature)} ${temperature}℃"
-        // 状态，0：正常，1：温度过高，喊话器不可用
-        val status = msg[1 + 3]
-
-        when (status) {
-            0x00.toByte() -> {
-                mStatus.text = "${context.resources.getString(R.string.state)} ${context.resources.getString(R.string.status_normal)}"
-                mStatus.setTextColor(Color.WHITE)
-            }
-
-            0x01.toByte() -> {
-                mStatus.text = "${context.resources.getString(R.string.state)} ${context.resources.getString(R.string.excessive_temperature)}"
-                mStatus.setTextColor(Color.RED)
-            }
-        }
-    }
     private fun sendText2Vehicle(
         loopPlayback: Boolean // 循环播放
     ) {
@@ -172,6 +164,8 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mBtnManVoice = this.findViewById(R.id.btn_man_voice)
         mBtnWomanVoice = this.findViewById(R.id.btn_woman_voice)
         mVolumeSeekBar = findViewById(R.id.volume_seek_bar)
+        mSpeechRateSeekBar = findViewById(R.id.speech_rate_seek_bar)
+        mSpeechRateLine = findViewById(R.id.speechRateLine)
         mBtnManVoice.setOnCheckedChangeListener{_, checked ->
             run {
                 if(checked){
@@ -222,6 +216,21 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             isSettingVolume = false
                         }
                     }
+                }
+            }
+
+        })
+        mSpeechRateSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if (seekBar != null) {
+                    megaphoneService?.setTtsSpeechRate(seekBar.progress)
+                    Log.i(TAG, "语速设置，当前语速：${seekBar.progress}")
                 }
             }
 

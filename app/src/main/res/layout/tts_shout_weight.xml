@@ -95,6 +95,30 @@
         android:max="100"
         android:progress="30" />
 
+    <LinearLayout
+        android:id="@+id/speechRateLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:text="@string/adjust_speechRate"
+            android:textColor="@color/white" />
+
+        <SeekBar
+            android:id="@+id/speech_rate_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:minHeight="2dp"
+            android:maxHeight="2dp"
+            android:progressDrawable="@drawable/bg_adjust_seek_bar"
+            android:thumb="@drawable/bg_seek_bar_thumb"
+            android:max="100"
+            android:progress="50" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/tts_play"
         android:layout_width="100dp"
