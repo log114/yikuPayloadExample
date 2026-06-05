@@ -214,8 +214,8 @@
     <string name="closed">已关闭</string>
     <string name="opened">已打开</string>
     <string name="not_detected">未检测</string>
-    <string name="waterGun">水枪</string>
-    <string name="WaterGunHost_name">"水枪IP: "</string>
+    <string name="waterGun">清洗水枪</string>
+    <string name="WaterGunHost_name">"清洗水枪IP: "</string>
     <string name="BucketHost_name">"吊桶IP: "</string>
     <string name="bucket">吊桶</string>
     <string name="drain_valve">"放水阀门: "</string>
@@ -376,4 +376,10 @@
     <string name="warning_light">警示灯</string>
     <string name="hook_switch">挂钩开关</string>
     <string name="adjust_speechRate">调整语速</string>
+    <string name="switch_targets">切换喷头</string>
+    <string name="nozzle">喷头：</string>
+    <string name="clear_water">清水</string>
+    <string name="foam">泡沫</string>
+    <string name="reached_leftmost_side">已达最左侧</string>
+    <string name="reached_rightmost_side">已达最右侧</string>
 </resources>

@@ -332,4 +332,10 @@
     <string name="warning_light">warning light</string>
     <string name="hook_switch">hook switch</string>
     <string name="adjust_speechRate">Speech rate</string>
+    <string name="switch_targets">switch nozzle</string>
+    <string name="nozzle">"Nozzle: "</string>
+    <string name="clear_water">clear water</string>
+    <string name="foam">foam</string>
+    <string name="reached_leftmost_side">Has reached the leftmost side</string>
+    <string name="reached_rightmost_side">Has reached the rightmost side</string>
 </resources>

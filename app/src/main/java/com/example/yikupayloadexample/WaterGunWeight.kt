@@ -21,15 +21,18 @@ import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
+import kotlin.time.Duration
 
 class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
         private val TAG = "WaterGunWeight"
         private lateinit var mLightView: View
         var waterGunService: WaterGunService = WaterGunService()
-        private lateinit var mSafetySwitchSwitch: Switch
+        private lateinit var mSafetySwitch: Switch
         private lateinit var mState: TextView
         private lateinit var mOperateBtn: Button
+        private lateinit var mSwitchBtn: Button
+        private lateinit var mSwitchState: TextView
         private lateinit var mToLeftBtn: Button
         private lateinit var mToRightBtn: Button
         private var isConnecting: Boolean = false
@@ -37,6 +40,8 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         private var updateTime = Date().time
         private var timerToLeft: Timer? = null
         private var timerToRight: Timer? = null
+        private var isSwitchingNozzle = false
+        private var currentNozzleType = 0
 
         // 0关，1开
         private var state: Int = 0
@@ -70,8 +75,15 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         }
 
         private fun updateState(msg: ByteArray) {
-            state = msg[0 + 3].toInt()
-            val locationStatus = msg[0 + 4].toInt()
+            state = msg[0 + 3].toInt() // 水枪状态
+            val locationStatus = msg[0 + 4].toInt() // 限位状态
+            currentNozzleType = msg[5].toInt()
+            val nozzleType = if(currentNozzleType == 0) { // 当前喷头类型
+                R.string.clear_water
+            }
+            else {
+                R.string.foam
+            }
             val handler = Handler(Looper.getMainLooper())
             handler.post {
                 when(state) {
@@ -79,22 +91,25 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mState.setText(R.string.preparing)
                         mState.setTextColor(resources.getColor(R.color.red))
                         mOperateBtn.isEnabled = false
+                        mSwitchBtn.isEnabled = false
                         mToLeftBtn.isEnabled = false
                         mToRightBtn.isEnabled = false
                     }
                     1 -> {
                         mState.setText(R.string.beReady)
                         mState.setTextColor(resources.getColor(R.color.green))
-                        mOperateBtn.isEnabled = true
                         mOperateBtn.setText(R.string.pulse_on)
+                        mOperateBtn.isEnabled = mSafetySwitch.isChecked
+                        mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
                         mToRightBtn.isEnabled = false
                     }
                     2 -> {
                         mState.setText(R.string.autoMode)
                         mState.setTextColor(resources.getColor(R.color.green))
-                        mOperateBtn.isEnabled = true
                         mOperateBtn.setText(R.string.switching_modes)
+                        mOperateBtn.isEnabled = mSafetySwitch.isChecked
+                        mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
                         mToRightBtn.isEnabled = false
                     }
@@ -102,22 +117,25 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mState.setText(R.string.switching)
                         mState.setTextColor(resources.getColor(R.color.green))
                         mOperateBtn.isEnabled = false
+                        mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
                         mToRightBtn.isEnabled = false
                     }
                     4 -> {
                         mState.setText(R.string.manualMode)
                         mState.setTextColor(resources.getColor(R.color.green))
-                        mOperateBtn.isEnabled = true
                         mOperateBtn.setText(R.string.stop)
-                        mToLeftBtn.isEnabled = true
-                        mToRightBtn.isEnabled = true
+                        mOperateBtn.isEnabled = mSafetySwitch.isChecked
+                        mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
+                        mToLeftBtn.isEnabled = mSafetySwitch.isChecked
+                        mToRightBtn.isEnabled = mSafetySwitch.isChecked
                     }
                     5 -> {
                         mState.setText(R.string.stopped)
                         mState.setTextColor(resources.getColor(R.color.green))
-                        mOperateBtn.isEnabled = true
                         mOperateBtn.setText(R.string.pulse_on)
+                        mOperateBtn.isEnabled = mSafetySwitch.isChecked
+                        mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
                         mToRightBtn.isEnabled = false
                     }
@@ -126,12 +144,19 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 Log.i(TAG, "locationStatus=${locationStatus}")
                 when(locationStatus) {
                     1 -> {
-                        stopToLeft()
-                    }
-                    2 -> {
+                        if(mToRightBtn.isPressed && timerToRight != null) {
+                            showToast(R.string.reached_rightmost_side)
+                        }
                         stopToRight()
                     }
+                    2 -> {
+                        if(mToLeftBtn.isPressed && timerToLeft != null) {
+                            showToast(R.string.reached_leftmost_side)
+                        }
+                        stopToLeft()
+                    }
                 }
+                mSwitchState.setText(nozzleType)
             }
         }
 
@@ -139,19 +164,18 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         private fun initView(context: Context?) {
             LayoutInflater.from(context).inflate(R.layout.water_gun_weight, this, true)
             mLightView = findViewById(R.id.waterGun_view)
-            mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
+            mSafetySwitch = findViewById(R.id.safetySwitch)
             mState = findViewById(R.id.state)
-            mOperateBtn = findViewById<Button>(R.id.operateBtn)
-            mToLeftBtn = findViewById<Button>(R.id.toLeftBtn)
-            mToRightBtn = findViewById<Button>(R.id.toRightBtn)
+            mOperateBtn = findViewById(R.id.operateBtn)
+            mSwitchBtn = findViewById(R.id.switchBtn)
+            mSwitchState = findViewById(R.id.switch_state)
+            mToLeftBtn = findViewById(R.id.toLeftBtn)
+            mToRightBtn = findViewById(R.id.toRightBtn)
             setConnectState()
 
+            // 切换模式
             mOperateBtn.setOnClickListener {
                 try {
-                    if(!mSafetySwitchSwitch.isChecked) {
-                        showToast(R.string.need_to_open_safety_switch)
-                        return@setOnClickListener
-                    }
                     waterGunService.modeSwitch()
                     mOperateBtn.setText( R.string.executing )
                     mOperateBtn.isEnabled = false
@@ -161,14 +185,27 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 }
 
             }
+            // 切换喷头
+            mSwitchBtn.setOnClickListener {
+                isSwitchingNozzle = true
+                mSwitchBtn.isEnabled = false
+                if(currentNozzleType == 0) {
+                    waterGunService.nozzleSwitch(1)
+                }
+                else {
+                    waterGunService.nozzleSwitch(0)
+                }
+                thread {
+                    Thread.sleep(2000)
+                    isSwitchingNozzle = false
+                }
+            }
+            // 手动向左
             mToLeftBtn.setOnTouchListener { view, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
+                        mToLeftBtn.isPressed = true
                         if(timerToLeft == null) {
-                            if(!mSafetySwitchSwitch.isChecked) {
-                                showToast(R.string.need_to_open_safety_switch)
-                                return@setOnTouchListener false
-                            }
                             if(state != 4) {
                                 showToast(R.string.notManualMode)
                                 return@setOnTouchListener false
@@ -187,19 +224,18 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     }
                     MotionEvent.ACTION_UP -> {
                         Log.i(TAG, "向左松开")
+                        mToLeftBtn.isPressed = false
                         stopToLeft()
                     }
                 }
                 true
             }
+            // 手动向右
             mToRightBtn.setOnTouchListener { view, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
+                        mToRightBtn.isPressed = true
                         if(timerToRight == null) {
-                            if(!mSafetySwitchSwitch.isChecked) {
-                                showToast(R.string.need_to_open_safety_switch)
-                                return@setOnTouchListener false
-                            }
                             if(state != 4) {
                                 showToast(R.string.notManualMode)
                                 return@setOnTouchListener false
@@ -218,6 +254,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     }
                     MotionEvent.ACTION_UP -> {
                         Log.i(TAG, "向右松开")
+                        mToRightBtn.isPressed = false
                         stopToRight()
                     }
                 }
@@ -239,7 +276,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             joinToString(separator = "") { eachByte -> "%02x ".format(eachByte) }
 
 
-        private fun showToast(msg: Int) {
+        private fun showToast(msg: Int, duration: Int = Toast.LENGTH_LONG) {
             val handler = Handler(Looper.getMainLooper())
             handler.post {
                 Toast.makeText(

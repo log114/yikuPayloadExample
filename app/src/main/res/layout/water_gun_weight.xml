@@ -24,7 +24,7 @@
             android:textColor="@color/white" />
 
         <Switch
-            android:id="@+id/safetySwitchSwitch"
+            android:id="@+id/safetySwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/safety_switch"
@@ -60,23 +60,41 @@
                 android:text="@string/preparing"
                 android:textColor="@color/red" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:visibility="visible">
+
+            <Button
+                android:id="@+id/switchBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/play_btn"
+                android:text="@string/switch_targets"
+                android:textColor="@color/white"
+                android:enabled="false"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_marginStart="10dp"
-                android:text="@string/directionControl"
+                android:text="@string/nozzle"
+                android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/switch_state"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:text="@string/clear_water"
                 android:textColor="@color/white" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="10dp"
             android:visibility="visible">
             <Button
                 android:id="@+id/toLeftBtn"
