@@ -26,7 +26,8 @@ import kotlin.time.Duration
 class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
         private val TAG = "WaterGunWeight"
-        private lateinit var mLightView: View
+        private lateinit var mContentView: View
+        private lateinit var mPromptView: View
         var waterGunService: WaterGunService = WaterGunService()
         private lateinit var mSafetySwitch: Switch
         private lateinit var mState: TextView
@@ -35,6 +36,8 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         private lateinit var mSwitchState: TextView
         private lateinit var mToLeftBtn: Button
         private lateinit var mToRightBtn: Button
+        private lateinit var mOkBtn: Button
+        private lateinit var mCancelBtn: Button
         private var isConnecting: Boolean = false
         private var isFirstConnect: Boolean = true
         private var updateTime = Date().time
@@ -163,7 +166,8 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         @SuppressLint("ClickableViewAccessibility")
         private fun initView(context: Context?) {
             LayoutInflater.from(context).inflate(R.layout.water_gun_weight, this, true)
-            mLightView = findViewById(R.id.waterGun_view)
+            mContentView = findViewById(R.id.waterGun_view)
+            mPromptView = findViewById(R.id.prompt_view)
             mSafetySwitch = findViewById(R.id.safetySwitch)
             mState = findViewById(R.id.state)
             mOperateBtn = findViewById(R.id.operateBtn)
@@ -171,6 +175,8 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             mSwitchState = findViewById(R.id.switch_state)
             mToLeftBtn = findViewById(R.id.toLeftBtn)
             mToRightBtn = findViewById(R.id.toRightBtn)
+            mOkBtn = findViewById(R.id.okBtn)
+            mCancelBtn = findViewById(R.id.cancelBtn)
             setConnectState()
 
             // 切换模式
@@ -187,6 +193,10 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
             // 切换喷头
             mSwitchBtn.setOnClickListener {
+                mContentView.visibility = GONE
+                mPromptView.visibility = VISIBLE
+            }
+            mOkBtn.setOnClickListener {
                 isSwitchingNozzle = true
                 mSwitchBtn.isEnabled = false
                 if(currentNozzleType == 0) {
@@ -196,9 +206,15 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     waterGunService.nozzleSwitch(0)
                 }
                 thread {
-                    Thread.sleep(2000)
+                    Thread.sleep(3000)
                     isSwitchingNozzle = false
                 }
+                mPromptView.visibility = GONE
+                mContentView.visibility = VISIBLE
+            }
+            mCancelBtn.setOnClickListener {
+                mPromptView.visibility = GONE
+                mContentView.visibility = VISIBLE
             }
             // 手动向左
             mToLeftBtn.setOnTouchListener { view, event ->

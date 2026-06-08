@@ -338,4 +338,5 @@
     <string name="foam">泡沫</string>
     <string name="reached_leftmost_side">已达最左侧</string>
     <string name="reached_rightmost_side">已达最右侧</string>
+    <string name="nozzleSwitchPrompt">请先确认水泵已关闭，再进行喷头切换！</string>
 </resources>
