@@ -40,7 +40,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
-                android:text="@string/launch"
+                android:text="@string/not_detected"
+                android:enabled="false"
                 android:textColor="@color/white" />
 
             <Button
@@ -50,7 +51,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
-                android:text="@string/launch"
+                android:text="@string/not_detected"
+                android:enabled="false"
                 android:textColor="@color/white" />
 
             <Button
@@ -60,7 +62,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
-                android:text="@string/launch"
+                android:text="@string/not_detected"
+                android:enabled="false"
                 android:textColor="@color/white" />
         </LinearLayout>
 
@@ -76,7 +79,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
-                android:text="@string/launch"
+                android:text="@string/not_detected"
+                android:enabled="false"
                 android:textColor="@color/white" />
 
             <Button
@@ -86,7 +90,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
-                android:text="@string/launch"
+                android:text="@string/not_detected"
+                android:enabled="false"
                 android:textColor="@color/white" />
 
             <Button
@@ -96,7 +101,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/play_btn"
-                android:text="@string/launch"
+                android:text="@string/not_detected"
+                android:enabled="false"
                 android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>

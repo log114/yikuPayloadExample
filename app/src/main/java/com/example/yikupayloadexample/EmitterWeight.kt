@@ -11,6 +11,7 @@ import android.widget.*
 import com.yiku.yikupayloadSDK.service.EmitterService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.lang.Exception
+import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
@@ -19,6 +20,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "EmitterWeight"
     var emitterService: EmitterService
+    private lateinit var connectText: TextView
     private lateinit var mSafetySwitchSwitch: Switch
     private lateinit var mEmitterLaunch1Btn: Button
     private lateinit var mEmitterLaunch2Btn: Button
@@ -30,6 +32,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
     private var isOpenSafetySwitch: Boolean = false
+    private var updateTime = Date().time
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -66,6 +69,11 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
     fun updateStatus(msg: ByteArray) {
         Log.i(TAG, "38mm发射器，更新状态msg:${msg.toHex()}")
+        updateTime = Date().time
+
+        handler.post {
+            connectText.setText(R.string.connection_status_connected)
+        }
         var i = 0
         while (i < 6) {
             val btn: Button = when (i) {
@@ -135,6 +143,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.emitter_weight, this, true)
         mEmitterView = findViewById(R.id.emitter_view)
+        connectText = findViewById(R.id.emitterConnect)
         mSafetySwitchSwitch = findViewById(R.id.emitterSafetySwitchSwitch)
         mEmitterLaunch1Btn = findViewById(R.id.emitterLaunch1Btn)
         mEmitterLaunch2Btn = findViewById(R.id.emitterLaunch2Btn)
@@ -204,15 +213,23 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     // 定时器，判断连接状态
     private fun setConnectState() {
         val timer = Timer();
-        val connectText = findViewById<TextView>(R.id.emitterConnect)
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask() {
             override fun run() {
                 if (emitterService.getIsConnected()) {
-                    handler.post {
-                        connectText.setText(R.string.connection_status_connected)
-                    }
                     emitterService.getStatus()
+
+                    if (Date().time - updateTime > 3000) {
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            connectText.setText(R.string.connection_status_notconnected)
+                        }
+                    }
+                    // 如果超过5s没收到消息，主动断开连接，等待重连
+                    if (Date().time - updateTime > 5000) {
+                        // 断连
+                        emitterService.disConnect()
+                    }
                 } else if(!isConnecting){
                     isConnecting = true
                     handler.post {
@@ -227,6 +244,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         while (!emitterService.connect()) {
                             Thread.sleep(1000)
                         }
+                        updateTime = Date().time
                         isConnecting = false
                     }
                 }
