@@ -340,4 +340,6 @@
     <string name="reached_rightmost_side">Has reached the rightmost side</string>
     <string name="nozzleSwitchPrompt">Please confirm that the water pump has been turned off before switching the spray head!</string>
     <string name="connect_payload">connect payload</string>
+    <string name="catchnet">catch net</string>
+    <string name="emitter_38mm">38mm emitter</string>
 </resources>

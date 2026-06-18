@@ -109,29 +109,29 @@ class PayloadWeight : Service() {
     }
 
     private fun resetShoutBtnsBackground() {
-        mShoutBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        mTTSBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        mRecordBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        mLightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        mCacheNetBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        mEmitterBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        mLightYl300Btn.setBackgroundResource(R.drawable.yk_shout_btn)
-        throwerBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        slowDescentDeviceBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        gripperBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        resqmeBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        extinguisherBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        waterGunBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        bucketBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        waterBranchBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        plLightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        allInOneSpeakerBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        allInOneLightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        allInOneThrowerBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        allInOneFpvBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        fourInOne2SpeakerBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        fourInOne2LightBtn.setBackgroundResource(R.drawable.yk_shout_btn)
-        slowDescentDevice200Btn.setBackgroundResource(R.drawable.yk_shout_btn)
+        mShoutBtn.isSelected = false
+        mTTSBtn.isSelected = false
+        mRecordBtn.isSelected = false
+        mLightBtn.isSelected = false
+        mCacheNetBtn.isSelected = false
+        mEmitterBtn.isSelected = false
+        mLightYl300Btn.isSelected = false
+        throwerBtn.isSelected = false
+        slowDescentDeviceBtn.isSelected = false
+        gripperBtn.isSelected = false
+        resqmeBtn.isSelected = false
+        extinguisherBtn.isSelected = false
+        waterGunBtn.isSelected = false
+        bucketBtn.isSelected = false
+        waterBranchBtn.isSelected = false
+        plLightBtn.isSelected = false
+        allInOneSpeakerBtn.isSelected = false
+        allInOneLightBtn.isSelected = false
+        allInOneThrowerBtn.isSelected = false
+        allInOneFpvBtn.isSelected = false
+        fourInOne2SpeakerBtn.isSelected = false
+        fourInOne2LightBtn.isSelected = false
+        slowDescentDevice200Btn.isSelected = false
     }
 
     private fun openFloatingWindow() {
@@ -173,21 +173,21 @@ class PayloadWeight : Service() {
                         Log.i(TAG, "mShoutBtn clicked!");
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(3, mShoutBtn)) {
-                            mShoutBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            mShoutBtn.isSelected = true
                         }
                     }
                     mTTSBtn.setOnClickListener {
                         Log.i(TAG, "mTTSBtn clicked!");
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(1, mTTSBtn)) {
-                            mTTSBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            mTTSBtn.isSelected = true
                         }
                     }
                     mRecordBtn.setOnClickListener {
                         Log.i(TAG, "mRecordBtn clicked!");
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(2, mRecordBtn)) {
-                            mRecordBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            mRecordBtn.isSelected = true
                         }
                     }
 
@@ -195,122 +195,122 @@ class PayloadWeight : Service() {
 //                        Log.i(TAG, "mShoutBtn clicked!");
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(4, mLightBtn)) {
-                            mLightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            mLightBtn.isSelected = true
                         }
                     }
 
                     mCacheNetBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(5, mCacheNetBtn)) {
-                            mCacheNetBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            mCacheNetBtn.isSelected = true
                         }
                     }
                     mEmitterBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(6, mEmitterBtn)) {
-                            mEmitterBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            mEmitterBtn.isSelected = true
                         }
                     }
                     mLightYl300Btn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(7, mLightYl300Btn)) {
-                            mLightYl300Btn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            mLightYl300Btn.isSelected = true
                         }
                     }
                     throwerBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(8, throwerBtn)) {
-                            throwerBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            throwerBtn.isSelected = true
                         }
                     }
                     slowDescentDeviceBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(9, slowDescentDeviceBtn)) {
-                            slowDescentDeviceBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            slowDescentDeviceBtn.isSelected = true
                         }
                     }
                     gripperBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(10, gripperBtn)) {
-                            gripperBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            gripperBtn.isSelected = true
                         }
                     }
                     resqmeBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(11, resqmeBtn)) {
-                            resqmeBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            resqmeBtn.isSelected = true
                         }
                     }
                     extinguisherBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(12, extinguisherBtn)) {
-                            extinguisherBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            extinguisherBtn.isSelected = true
                         }
                     }
                     waterGunBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(13, waterGunBtn)) {
-                            waterGunBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            waterGunBtn.isSelected = true
                         }
                     }
                     bucketBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(14, bucketBtn)) {
-                            bucketBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            bucketBtn.isSelected = true
                         }
                     }
                     waterBranchBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(15, waterBranchBtn)) {
-                            waterBranchBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            waterBranchBtn.isSelected = true
                         }
                     }
                     plLightBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(16, plLightBtn)) {
-                            plLightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            plLightBtn.isSelected = true
                         }
                     }
                     allInOneSpeakerBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(17, allInOneSpeakerBtn)) {
-                            allInOneSpeakerBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            allInOneSpeakerBtn.isSelected = true
                         }
                     }
                     allInOneLightBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(18, allInOneLightBtn)) {
-                            allInOneLightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            allInOneLightBtn.isSelected = true
                         }
                     }
                     allInOneThrowerBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(19, allInOneThrowerBtn)) {
-                            allInOneThrowerBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            allInOneThrowerBtn.isSelected = true
                         }
                     }
                     allInOneFpvBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(20, allInOneFpvBtn)) {
-                            allInOneFpvBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            allInOneFpvBtn.isSelected = true
                         }
                     }
                     fourInOne2SpeakerBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(21, fourInOne2SpeakerBtn)) {
-                            fourInOne2SpeakerBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            fourInOne2SpeakerBtn.isSelected = true
                         }
                     }
                     fourInOne2LightBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(22, fourInOne2LightBtn)) {
-                            fourInOne2LightBtn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            fourInOne2LightBtn.isSelected = true
                         }
                     }
                     slowDescentDevice200Btn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(23, slowDescentDevice200Btn)) {
-                            slowDescentDevice200Btn.setBackgroundResource(R.drawable.yk_shout_clicked_btn)
+                            slowDescentDevice200Btn.isSelected = true
                         }
                     }
                 }

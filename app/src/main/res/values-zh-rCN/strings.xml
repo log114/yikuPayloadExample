@@ -340,4 +340,6 @@
     <string name="reached_rightmost_side">已达最右侧</string>
     <string name="nozzleSwitchPrompt">请先确认水泵已关闭，再进行喷头切换！</string>
     <string name="connect_payload">连接负载</string>
+    <string name="catchnet">捕捉网</string>
+    <string name="emitter_38mm">38mm 发射器</string>
 </resources>

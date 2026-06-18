@@ -4,20 +4,19 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
-import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatImageView
 import com.example.yikupayloadexample.R
 
-class StatefulImageButton @JvmOverloads constructor(
+class StatefulImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AppCompatImageButton(context, attrs, defStyleAttr) {
+) : AppCompatImageView(context, attrs, defStyleAttr) {
 
-    private val TAG = "StatefulImageButton"
+    private val TAG = "StatefulImage"
     private var prefix: String? = null
-    private var closedResId: Int = 0
-    private var disabledResId: Int = 0
-    private var openedResId: Int = 0
+    private var defaultResId: Int = 0
+    private var selectedResId: Int = 0
     private var isPressedState = false
 
     init {
@@ -25,9 +24,8 @@ class StatefulImageButton @JvmOverloads constructor(
             try {
                 prefix = getString(R.styleable.StatefulImageButton_imagePrefix)
                 if (!prefix.isNullOrEmpty()) {
-                    closedResId = getResId("${prefix}_closed")
-                    disabledResId = getResId("${prefix}_disabled")
-                    openedResId = getResId("${prefix}_opened")
+                    defaultResId = getResId("${prefix}_unselected")
+                    selectedResId = getResId("${prefix}_selected")
 
                     updateImage()
 
@@ -35,7 +33,7 @@ class StatefulImageButton @JvmOverloads constructor(
                         Log.d(TAG, "event.action=${event.action}")
                         when (event.action) {
                             MotionEvent.ACTION_DOWN -> {
-                                if (isEnabled && openedResId != 0) {
+                                if (isEnabled && selectedResId != 0) {
                                     isPressedState = true
                                     updateImage()
                                 }
@@ -67,10 +65,9 @@ class StatefulImageButton @JvmOverloads constructor(
     private fun updateImage() {
         Log.d(TAG, "isPressedState=${isPressedState}")
         val resId = when {
-            !isEnabled && disabledResId != 0 -> disabledResId
-            isPressedState && openedResId != 0 -> openedResId  // 按下状态优先
-            isSelected && openedResId != 0 -> openedResId
-            else -> closedResId
+            isPressedState && selectedResId != 0 -> selectedResId  // 按下状态优先
+            isSelected && selectedResId != 0 -> selectedResId
+            else -> defaultResId
         }
 
         if (resId != 0) {

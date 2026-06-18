@@ -1,302 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/payload_btn_group_weight"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/startShoutBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/shout"
-        android:src="@drawable/shout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone" />
+        app:imagePrefix="shout"
+        android:visibility="gone"/>
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/ttsBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/shout"
-        android:src="@drawable/vector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/startShoutBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="tts"
         android:visibility="gone" />
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/recordBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/shout"
-        android:src="@drawable/laba"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/ttsBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="audio"
         android:visibility="gone" />
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/lightBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/light"
-        android:src="@drawable/light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/recordBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="light"
         android:visibility="gone" />
     <!--300W 照明-->
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/light_yl300_Btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/light"
-        android:src="@drawable/light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/lightBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="light"
         android:visibility="gone" />
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/catchNetBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
-        android:contentDescription="@string/light"
-        android:src="@drawable/cache_net"
+        android:contentDescription="@string/catchnet"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/light_yl300_Btn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="catchnet"
         android:visibility="gone" />
 
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/emitterBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
-        android:contentDescription="@string/light"
-        android:src="@drawable/emitter"
+        android:contentDescription="@string/emitter_38mm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/catchNetBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="icon_38mm"
         android:visibility="gone" />
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/throwerBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/thrower"
-        android:src="@drawable/thrower"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/emitterBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="thrower"
         android:visibility="gone" />
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/slowDescentDeviceBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/slow_descent_device"
-        android:src="@drawable/slow_descent_device"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/throwerBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="slowdescent"
         android:visibility="gone" />
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/gripperBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/gripper"
-        android:src="@drawable/gripper"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/slowDescentDeviceBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="gripper"
         android:visibility="gone" />
 
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/resqmeBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/resqme"
-        android:src="@drawable/resqme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/gripperBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="glassbreaker"
         android:visibility="gone"/>
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/extinguisherBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/extinguisher"
-        android:src="@drawable/extinguisher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/resqmeBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="extinguisher"
         android:visibility="gone"/>
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/waterGunBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/waterGun"
-        android:src="@drawable/water_gun"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/extinguisherBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="wartergun"
         android:visibility="gone"/>
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/bucketBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/bucket"
-        android:src="@drawable/bucket"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/waterGunBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="bucket"
         android:visibility="gone"/>
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/waterBranchBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/waterBranch"
-        android:src="@drawable/water_gun"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/bucketBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="wartergun"
         android:visibility="gone"/>
     <!--品灵探照灯-->
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/light_pl_Btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/light"
-        android:src="@drawable/light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/waterBranchBtn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="light"
         android:visibility="gone" />
     <!--多合一喊话-->
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/all_in_on_speaker_Btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="多合一喊话"
-        android:src="@drawable/laba"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/light_pl_Btn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="allinoneshout"
         android:visibility="gone" />
     <!--多合一照明-->
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/all_in_on_light_Btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="多合一灯光"
-        android:src="@drawable/light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/all_in_on_speaker_Btn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="light"
         android:visibility="gone" />
     <!--多合一抛投-->
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/all_in_on_thrower_Btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="多合一抛投"
-        android:src="@drawable/thrower"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/all_in_on_light_Btn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="allinone"
         android:visibility="gone" />
     <!--多合一摄像-->
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/all_in_on_fpv_Btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="多合一摄像"
-        android:src="@drawable/fpv"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/all_in_on_thrower_Btn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="fpv"
         android:visibility="gone" />
     <!--四合一.二代喊话-->
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/four_in_one_2_speaker_Btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="四合一.二代喊话"
-        android:src="@drawable/laba"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/all_in_on_fpv_Btn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="audio"
         android:visibility="gone" />
     <!--四合一.二代照明-->
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/four_in_one_2_light_Btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="四合一.二代灯光"
-        android:src="@drawable/light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/four_in_one_2_speaker_Btn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="light"
         android:visibility="gone" />
-    <ImageView
+    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/slowDescentDevice200Btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/yk_shout_btn"
         android:contentDescription="@string/slow_descent_device"
-        android:src="@drawable/slow_descent_device"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/four_in_one_2_light_Btn"
         app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="slowdescent"
         android:visibility="gone" />
 
     <LinearLayout
