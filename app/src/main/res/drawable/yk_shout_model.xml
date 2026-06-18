@@ -2,9 +2,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <!-- 填充的颜色 -->
-    <solid android:color="@color/shout_background" />
+    <solid android:color="#F014171A" />
     <!-- 圆角的半径 -->
-    <corners android:radius="20dp" />
+    <corners android:radius="14dp" />
     <padding
         android:bottom="5dp"
         android:left="5dp"
