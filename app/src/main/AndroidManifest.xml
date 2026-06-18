@@ -69,7 +69,8 @@
             android:theme="@style/Theme.YikuShoutApp.Fullscreen" />
         <activity
             android:name=".FirmwareUpdateActivity"
-            android:exported="false"/>
+            android:exported="false"
+            android:theme="@style/Theme.YikuShoutApp.Fullscreen" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation"

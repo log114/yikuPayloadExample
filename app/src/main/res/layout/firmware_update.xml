@@ -16,11 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/firmware_update"
-            android:textColor="@color/white"
             android:textSize="24sp"
             android:textAlignment="center"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:textColor="#F5F5F0"
             />
     </LinearLayout>
     <ScrollView
@@ -45,6 +45,7 @@
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
                     android:textAlignment="textEnd"
+                    android:textColor="@color/white_600"
                     android:text="@string/current_device" />
 
                 <TextView
@@ -67,6 +68,7 @@
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
                     android:textAlignment="textEnd"
+                    android:textColor="@color/white_600"
                     android:text="@string/current_firmware_version" />
 
                 <TextView
@@ -89,6 +91,7 @@
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
                     android:textAlignment="textEnd"
+                    android:textColor="@color/white_600"
                     android:text="@string/firmware_file" />
                 <TextView
                     android:id="@+id/fileName"
@@ -106,8 +109,9 @@
                 <Button
                     android:id="@+id/selectFileBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginStart="10dp"
+                    android:background="@drawable/play_btn"
                     android:text="@string/select_file"
                     android:visibility="visible"/>
             </LinearLayout>
@@ -124,6 +128,7 @@
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
                     android:textAlignment="textEnd"
+                    android:textColor="@color/white_600"
                     android:text="@string/firmware_version" />
 
                 <EditText
@@ -148,13 +153,15 @@
                 <Button
                     android:id="@+id/updateBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/play_btn"
                     android:text="@string/start_upgrade"/>
                 <Button
                     android:id="@+id/restartBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginStart="10dp"
+                    android:background="@drawable/play_btn"
                     android:text="@string/reboot_device"/>
             </LinearLayout>
 
