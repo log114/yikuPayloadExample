@@ -38,4 +38,33 @@
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
+
+    <style name="MyTextViewStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/white</item>
+        <!-- 可选：同时改变光标颜色、下划线颜色等 -->
+        <item name="android:textCursorDrawable">@null</item>  <!-- 使用系统默认光标 -->
+    </style>
+
+    <style name="ThemeOverlay.YikuShoutApp.Dialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <!-- 恢复 Dialog 内部的 textViewStyle 为默认，避免继承全局样式 -->
+        <item name="android:textViewStyle">@style/Widget.AppCompat.TextView</item>
+        <!-- 或者单独控制 Dialog 标题颜色（可选） -->
+        <item name="android:titleTextStyle">@style/DialogTitleStyle</item>
+    </style>
+
+    <style name="DialogTitleStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <!-- 普通按钮样式 -->
+    <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Dialog 按钮样式（保持原样或单独定义） -->
+    <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/teal_700</item>
+    </style>
 </resources>

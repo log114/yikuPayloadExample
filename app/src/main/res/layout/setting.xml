@@ -20,12 +20,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/setting"
-                android:textColor="@color/white"
+                android:textColor="@color/white_900"
                 android:textSize="24sp"
                 android:textAlignment="center"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 />
         </LinearLayout>
 
@@ -51,10 +51,12 @@
                 <!-- TextView -->
                 <TextView
                     android:layout_width="140dp"
-                    android:layout_height="50dp"
-                    android:gravity="center"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
                     android:text="@string/ShoutHost_name"
                     app:layout_alignSelf="center"
+                    android:textColor="@color/white_600"
                 />
 
                 <!-- EditText -->
@@ -72,9 +74,11 @@
                 <Button
                     android:id="@+id/reboot_ym_btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginStart="20dp"
                     android:text="@string/reboot_device"
+                    android:textColor="@color/white"
+                    android:background="@drawable/play_btn"
                     app:layout_alignSelf="center"
                 />
 
@@ -82,8 +86,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
@@ -91,7 +96,9 @@
                     android:layout_width="140dp"
                     android:layout_height="20dp"
                     android:text="@string/LightHost_name"
-                    android:textAlignment="center" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/white_600" />
 
                 <EditText
                     android:id="@+id/LightHostIP"
@@ -104,16 +111,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/CacheNetHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/CacheNetHost_name"
+                    android:textColor="@color/white_600" />
 
                 <EditText
                     android:id="@+id/CacheNetHostIP"
@@ -126,16 +136,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/EmitterHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/EmitterHost_name"
+                    android:textColor="@color/white_600" />
 
                 <EditText
                     android:id="@+id/EmitterHostIP"
@@ -148,16 +161,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/YA3Host_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/YA3Host_name"
+                    android:textColor="@color/white_600"/>
 
                 <EditText
                     android:id="@+id/YA3HostIP"
@@ -170,16 +186,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/ThrowerHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/ThrowerHost_name"
+                    android:textColor="@color/white_600"/>
 
                 <EditText
                     android:id="@+id/ThrowerHostIP"
@@ -192,16 +211,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/SlowDescentDeviceHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/SlowDescentDeviceHost_name"
+                    android:textColor="@color/white_600" />
 
                 <EditText
                     android:id="@+id/SlowDescentDeviceHostIP"
@@ -214,16 +236,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/GripperHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/GripperHost_name"
+                    android:textColor="@color/white_600"/>
 
                 <EditText
                     android:id="@+id/GripperHostIP"
@@ -236,16 +261,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/ResqmeHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/ResqmeHost_name"
+                    android:textColor="@color/white_600" />
 
                 <EditText
                     android:id="@+id/ResqmeHostIP"
@@ -258,16 +286,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/ExtinguisherHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/ExtinguisherHost_name"
+                    android:textColor="@color/white_600"/>
 
                 <EditText
                     android:id="@+id/ExtinguisherHostIP"
@@ -280,16 +311,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/WaterGunHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/WaterGunHost_name"
+                    android:textColor="@color/white_600"/>
 
                 <EditText
                     android:id="@+id/WaterGunHostIP"
@@ -300,16 +334,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/BucketHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/BucketHost_name"
+                    android:textColor="@color/white_600"/>
 
                 <EditText
                     android:id="@+id/BucketHostIP"
@@ -320,16 +357,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/WaterBranchHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/WaterBranchHost_name"
+                    android:textColor="@color/white_600"/>
 
                 <EditText
                     android:id="@+id/WaterBranchHostIP"
@@ -340,16 +380,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/PL_LightHost_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/PL_LightHost_name"
+                    android:textColor="@color/white_600"/>
 
                 <EditText
                     android:id="@+id/PL_LightHostIP"
@@ -363,6 +406,7 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 app:flexWrap="wrap"
                 app:alignItems="stretch"
                 android:paddingLeft="8dp"
@@ -370,9 +414,11 @@
 
                 <TextView
                     android:layout_width="140dp"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="@string/AllInOneHost_name" />
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/AllInOneHost_name"
+                    android:textColor="@color/white_600"/>
                 <EditText
                     android:id="@+id/AllInOneHostIP"
                     android:layout_width="200dp"
@@ -383,24 +429,28 @@
                     app:layout_alignSelf="center"
                     />
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="20dp"
                     android:id="@+id/allInOneUpdate"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/play_btn"
                     android:text="@string/firmware_update"/>
             </com.google.android.flexbox.FlexboxLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/four_in_one_2_ip" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/four_in_one_2_ip"
+                    android:textColor="@color/white_600" />
 
                 <EditText
                     android:id="@+id/FourInOne2HostIP"
@@ -411,16 +461,19 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp">
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="20dp"
-                    android:textAlignment="center"
-                    android:text="@string/SlowDescentDevice200Host_name" />
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/SlowDescentDevice200Host_name"
+                    android:textColor="@color/white_600"/>
 
                 <EditText
                     android:id="@+id/SlowDescentDevice200HostIP"
@@ -440,8 +493,9 @@
                 <Button
                     android:id="@+id/save"
                     android:layout_width="100dp"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:textAlignment="center"
+                    android:background="@drawable/play_btn"
                     android:text="@string/save_name" />
             </LinearLayout>
         </LinearLayout>
