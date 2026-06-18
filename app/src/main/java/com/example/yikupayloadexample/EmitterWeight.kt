@@ -87,28 +87,20 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     mEmitterLaunch1Btn
                 }
             }
-            if(!isOpenSafetySwitch) {
-                btn.setText(R.string.not_detected)
-                btn.isEnabled = false
-            }
-            else {
-                if (msg[i + 3] == 0x00.toByte()) {
-                    // 空仓
+            when(msg[i + 3].toInt()) {
+                0x00 -> {
                     btn.setText(R.string.short_position)
                     btn.isEnabled = false
                 }
-                if (msg[i + 3] == 0x01.toByte()) {
-                    // 在仓
+                0x01 -> {
                     btn.setText(R.string.launch)
-                    btn.isEnabled = true
+                    btn.isEnabled = mSafetySwitchSwitch.isChecked
                 }
-                if (msg[i + 3] == 0x02.toByte()) {
-                    // 发射中
+                0x02 -> {
                     btn.setText(R.string.launching)
                     btn.isEnabled = false
                 }
-                if (msg[i + 3] == 0x03.toByte()) {
-                    // 卡住
+                0x03 -> {
                     btn.setText(R.string.stuck)
                     btn.isEnabled = false
                 }
