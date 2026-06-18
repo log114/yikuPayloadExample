@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
 import com.yiku.yikupayloadSDK.service.MegaphoneService
 import android.text.InputType
+import android.widget.Button
 import com.example.yikupayloadexample.util.AppUpdateManager
 import com.example.yikupayloadexample.util.VersionData
 import com.yiku.yikupayloadSDK.service.AllInOneService
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appUpdateManager: AppUpdateManager
     private var mHandler: Handler? = null
     private val missingPermission: MutableList<String> = ArrayList()
-    private lateinit var mOpenH16View: ImageView
+    private lateinit var mStartConnectBtn: Button
     private var conn: ServiceConnection? = null
     private var intent: Intent? = null
     private var isOpenedPayloadWeight: Boolean = false
@@ -75,8 +76,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        mOpenH16View = findViewById(R.id.open_h16_view)
-        mOpenH16View.setOnClickListener {
+        mStartConnectBtn = findViewById(R.id.startConnectBtn)
+        mStartConnectBtn.setOnClickListener {
             val powerManager = this.getSystemService(POWER_SERVICE) as PowerManager
             if(powerManager.isPowerSaveMode){
                 showToast(R.string.turn_off_power_saving_mode)
@@ -151,7 +152,7 @@ class MainActivity : AppCompatActivity() {
 
         initView()
         //跳转页面
-        val setting_btn = findViewById<ImageView>(R.id.setting_btn)
+        val setting_btn = findViewById<Button>(R.id.setting_btn)
         setting_btn.setOnClickListener {
             // 创建密码输入对话框
             val passwordDialog = AlertDialog.Builder(this).apply {
