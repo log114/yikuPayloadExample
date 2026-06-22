@@ -570,15 +570,18 @@ class PayloadWeight : Service() {
                     3 -> {
                         opened = 3
                         mShoutViewContent.addView(realTimeShoutWeight)
+                        mWindowTitle.setText(R.string.shout)
                     }
                     2 -> {
                         opened = 2
                         mShoutViewContent.addView(recordShoutWeight)
+                        mWindowTitle.setText(R.string.audio_file)
                         recordShoutWeight.onShow()
                     }
                     1 -> {
                         opened = 1
                         mShoutViewContent.addView(ttsShoutWeight)
+                        mWindowTitle.setText(R.string.tts)
                         val editText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
                         editText.setOnTouchListener { _, event ->
                             if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(

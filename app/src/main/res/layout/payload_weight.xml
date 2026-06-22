@@ -24,6 +24,7 @@
             android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="24dp"
+            android:paddingHorizontal="4dp"
             tools:ignore="UselessParent">
 
             <TextView
@@ -31,15 +32,15 @@
                 android:layout_width="0dp"
                 android:layout_height="24dp"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="start"
+                android:textSize="16sp"
                 android:text="@string/unitree_control"
                 android:textColor="@color/shout_font_color" />
             <ImageView
                 android:id="@+id/lockBtn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginRight="10dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/unlock"/>
 
         </LinearLayout>

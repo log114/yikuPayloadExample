@@ -243,16 +243,7 @@ class SettingActivity : AppCompatActivity() {
             val intent = Intent(this@SettingActivity, FirmwareUpdateActivity::class.java)
             intent.putExtra("deviceName", "allInOne") // 传参，设备名称
             startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 }
-
-
-
-
-
-
-
-
-
-

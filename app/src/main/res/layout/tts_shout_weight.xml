@@ -5,6 +5,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".TtsShoutWeight">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <View
+            android:id="@+id/statusDot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/circle_indicator" />
+        <TextView
+            android:id="@+id/realTimeShoutConnect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/connection_status_notconnected"
+            android:textSize="10sp"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,12 +48,17 @@
             android:text="@string/normal_temperature"
             android:textColor="@color/white" />
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:background="#383D40" />
 
     <EditText
         android:id="@+id/tts_text"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:autofillHints="speak_text"
@@ -41,11 +68,19 @@
         android:inputType="text"
         android:minLines="4"
         android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColorHint="#9EABB2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:theme="@style/My_CheckBox">
         <RadioButton
@@ -65,46 +100,55 @@
             android:textSize="16sp"
             android:text="@string/female_voice"/>
     </RadioGroup>
-    <CheckBox
-        android:id="@+id/tts_loop_playback_checkbox"
+    <Switch
+        android:id="@+id/tts_loop_playback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:text="@string/loop_playback"
+        android:layout_marginEnd="10dp"
+        android:text="@string/loop"
         android:textColor="@color/white"
-        android:textSize="14dp"
-        android:theme="@style/My_CheckBox">
+        android:switchPadding="4dp"
+        android:track="@drawable/switch_track_bg"
+        android:thumb="@drawable/switch_thumb"
+        tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml"/>
+    </LinearLayout>
 
-    </CheckBox>
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="@string/adjust_volume"
-        android:textColor="@color/white" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/adjust_volume"
+            android:textColor="@color/white" />
 
-    <SeekBar
-        android:id="@+id/volume_seek_bar"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:minHeight="2dp"
-        android:maxHeight="2dp"
-        android:progressDrawable="@drawable/bg_adjust_seek_bar"
-        android:thumb="@drawable/bg_seek_bar_thumb"
-        android:max="100"
-        android:progress="30" />
+        <SeekBar
+            android:id="@+id/volume_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:minHeight="2dp"
+            android:maxHeight="2dp"
+            android:progressDrawable="@drawable/bg_adjust_seek_bar"
+            android:thumb="@drawable/bg_seek_bar_thumb"
+            android:max="100"
+            android:progress="30" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/speechRateLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal"
         android:visibility="gone">
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:text="@string/adjust_speechRate"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/white" />
 
         <SeekBar
@@ -119,13 +163,26 @@
             android:progress="50" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/tts_play"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:background="@drawable/play_btn"
-        android:text="@string/tts_play"
-        android:textColor="#ffffff" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/tts_play"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:background="@drawable/play_btn"
+            android:text="@string/tts_play"
+            android:textColor="#ffffff" />
+        <Button
+            android:id="@+id/tts_stop"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/danger_btn"
+            android:text="@string/stop"
+            android:textColor="#ffffff" />
+    </LinearLayout>
 
 </LinearLayout>

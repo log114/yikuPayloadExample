@@ -3,8 +3,8 @@
     <!-- 按下状态 -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/light_red" /> <!-- 按下时的颜色 -->
-            <corners android:radius="8dp" /> <!-- 圆角半径 -->
+            <solid android:color="@color/red" /> <!-- 按下时的颜色 -->
+            <corners android:radius="5dp" /> <!-- 圆角半径 -->
             <padding
                 android:bottom="8dp"
                 android:left="8dp"
@@ -15,8 +15,8 @@
     <!-- 选中状态 -->
     <item android:state_selected="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/light_red" /> <!-- 按下时的颜色 -->
-            <corners android:radius="8dp" /> <!-- 圆角半径 -->
+            <solid android:color="@color/red" /> <!-- 按下时的颜色 -->
+            <corners android:radius="5dp" /> <!-- 圆角半径 -->
             <padding
                 android:bottom="8dp"
                 android:left="8dp"
@@ -28,7 +28,7 @@
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/gray" /> <!-- 默认颜色 -->
-            <corners android:radius="8dp" />
+            <corners android:radius="5dp" />
             <padding
                 android:bottom="8dp"
                 android:left="8dp"
@@ -40,8 +40,8 @@
     <!-- 默认状态 -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/red" />
-            <corners android:radius="8dp" />
+            <solid android:color="@color/light_red" />
+            <corners android:radius="5dp" />
             <padding
                 android:bottom="8dp"
                 android:left="8dp"

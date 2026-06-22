@@ -51,6 +51,7 @@
         <activity
             android:name=".SettingActivity"
             android:exported="false"
+            android:hardwareAccelerated="false"
             android:theme="@style/Theme.YikuShoutApp.Fullscreen" />
         <activity
             android:name=".AddRecordActivity"
@@ -75,7 +76,7 @@
             android:name=".MainActivity"
             android:configChanges="orientation"
             android:exported="true"
-            android:theme="@style/Theme.YikuShoutApp.Fullscreen">
+            android:theme="@style/Theme.YikuShoutApp.MainPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

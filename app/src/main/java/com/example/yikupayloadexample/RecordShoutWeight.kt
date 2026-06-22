@@ -6,12 +6,15 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import org.json.JSONException
@@ -72,45 +75,28 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         thread {
             try {
                 val files = megaphoneService?.fetchFiles()
-//                val files = arrayOf("康姆-我在画中走.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3")
+//                val files = arrayOf("康姆-我在画中走.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3")
                 if (files == null) {
 //                    showToast("获取文件列表失败!")
                     return@thread
                 }
-                val mainHandler = Handler(Looper.getMainLooper())
                 Log.i(TAG, "files:${files}")
-                datas.clear()
-                var i = 0
-                while (i < files.size) {
-                    Log.i(TAG, "item:${files[i]}")
-                    if ("" != files[i]) {
-                        // 获取之前的playing状态和loop状态
-                        val playing =
-                            if (audioPlayingStatusMap[files[i]] == null) false else audioPlayingStatusMap[files[i]]
-                        val loop =
-                            if (audioLoopStatusMap[files[i]] == null) false else audioLoopStatusMap[files[i]]
-                        datas.add(
-                            RecordPo(
-                                i,
-                                files[i],
-                                checked = false,
-                                playing = playing == true,
-                                loop = loop == true
-                            )
-                        )
+                // 先构建一个新列表，避免在后台线程操作 datas
+                val newList = mutableListOf<RecordPo>()
+                files.forEachIndexed { index, name ->
+                    if (name.isNotEmpty()) {
+                        val playing = audioPlayingStatusMap[name] ?: false
+                        val loop = audioLoopStatusMap[name] ?: false
+                        newList.add(RecordPo(index, name, checked = false, playing = playing, loop = loop))
                     }
-                    i++
-
                 }
 
-                mainHandler.post {
+                // 回到 UI 线程一次性更新 datas 并通知适配器
+                Handler(Looper.getMainLooper()).post {
+                    datas.clear()
+                    datas.addAll(newList)
                     recordAdapter?.notifyDataSetChanged()
                 }
-//                megaphoneService.getAudioList(object : GetAudioFilesCallback {
-//                    override fun onResult(files: String) {
-//
-//                    }
-//                })
             } catch (e: Exception) {
                 e.printStackTrace()
                 e.message?.let { Log.e(TAG, it) }
@@ -164,7 +150,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                     }
                 }
 
-                if (delArr.size > 0) {
+                if (delArr.isNotEmpty()) {
                     for (item in delArr) {
                         datas.remove(item)
                     }
@@ -216,6 +202,9 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
 
     // 定时器，同步更新温度音量等
     private fun setCallbacksTask() {
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val background = statusDot.background as GradientDrawable
+        val connectText = findViewById<TextView>(R.id.realTimeShoutConnect)
         val timer = Timer();
         val task = object : TimerTask() {
             override fun run() {
@@ -224,6 +213,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                     volumeReal = sharedPreferences!!.getInt("volume_real", 0)
                     volumeLimit = sharedPreferences!!.getInt("volume_limit", 100)
                     temperature = sharedPreferences!!.getString("temperature", "0").toString()
+                    val connectStatus = sharedPreferences!!.getBoolean("shoutConnectStatus", false)
                     // 更新到主线程
                     val handler = Handler(Looper.getMainLooper())
                     handler.post {
@@ -239,6 +229,15 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                         else {
                             mStatus.setText(R.string.normal_temperature)
                             mStatus.setTextColor(Color.WHITE)
+                        }
+
+                        if(connectStatus) {
+                            connectText.setText(R.string.connection_status_connected)
+                            background.setColor(ContextCompat.getColor(context, R.color.green))
+                        }
+                        else {
+                            connectText.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                     }
                 }

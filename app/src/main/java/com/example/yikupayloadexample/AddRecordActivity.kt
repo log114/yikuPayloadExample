@@ -24,7 +24,6 @@ import kotlin.concurrent.thread
 class AddRecordActivity : AppCompatActivity() {
     private val TAG = "AddRecordActivity"
     private lateinit var mSelectFile: Button
-    private lateinit var mSelectFileTextView: TextView
     private lateinit var mFileNameEditText: EditText
     private lateinit var uploadFile: File
     private lateinit var mUploadBtn: Button
@@ -35,7 +34,7 @@ class AddRecordActivity : AppCompatActivity() {
     private fun httpUploadFile() {
         runOnUiThread {
             mProgressBarUpload.max = uploadFile.length().toInt()
-            mUploadBtn.text = "正在上传..."
+            mUploadBtn.setText(R.string.button_uploading)
             mUploadBtn.isEnabled = false
         }
         val callback =
@@ -48,16 +47,17 @@ class AddRecordActivity : AppCompatActivity() {
             try {
                 Log.i(TAG, "uploadFile:${uploadFile}")
                 if (megaphoneService?.uploadFile(uploadFile, callback) == true) {
-                    showToast("上传成功!")
+                    showToast(R.string.upload_successful)
                 } else {
-                    showToast("上传失败!")
+                    showToast(R.string.upload_failed)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                showToast("上传失败：${e.message}")
+                val message = getString(R.string.upload_failed_msg, e.message)
+                showToast(message)
             } finally {
                 runOnUiThread {
-                    mUploadBtn.text = "上传"
+                    mUploadBtn.setText(R.string.upload)
                     mUploadBtn.isEnabled = true
                 }
             }
@@ -123,7 +123,7 @@ class AddRecordActivity : AppCompatActivity() {
                                     "上传的进度: totalNum:${totalNum}, finishNum:${finishNum}"
                                 )
                                 if (totalNum - 1 == finishNum) {
-                                    showToast("上传成功!")
+                                    showToast(R.string.upload_successful)
                                     runOnUiThread {
                                         mUploadPlan.visibility = View.INVISIBLE
                                     }
@@ -134,7 +134,7 @@ class AddRecordActivity : AppCompatActivity() {
                     }
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
-                    showToast("上传失败，请重试.")
+                    showToast(R.string.upload_failed_please_try_again)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -150,7 +150,6 @@ class AddRecordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_record)
 
         mSelectFile = findViewById(R.id.selectFile)
-        mSelectFileTextView = findViewById(R.id.selectFileTextView)
         mFileNameEditText = findViewById(R.id.fileNameEditText)
         mUploadBtn = findViewById(R.id.uploadBtn)
 //        mRecordButton = findViewById(R.id.recordButton)
@@ -216,17 +215,25 @@ class AddRecordActivity : AppCompatActivity() {
             uploadFile = File(_path)
         }
         if (!uploadFile.exists()) {
-            showToast("获取文件失败.")
+            showToast(R.string.failed_to_get_file)
             return
         }
         Log.e(TAG, "Name: ${uploadFile.name}")
-        mSelectFileTextView.text = uploadFile.name.split(":").last()
         mFileNameEditText.setText(uploadFile.name.split(":").last())
         Log.e(TAG, "Size: ${uploadFile.length()}")
     }
 
-
     private fun showToast(msg: String) {
+        this.runOnUiThread {
+            Toast.makeText(
+                this,
+                msg,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun showToast(msg: Int) {
         this.runOnUiThread {
             Toast.makeText(
                 this,

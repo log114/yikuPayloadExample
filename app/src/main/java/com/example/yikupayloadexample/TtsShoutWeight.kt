@@ -5,12 +5,18 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.AbsoluteSizeSpan
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import org.json.JSONException
 import org.json.JSONObject
@@ -26,7 +32,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mStatus: TextView // 状态
     private lateinit var mTtsPlayBtn: Button;
     private lateinit var mTextView: EditText;
-    private lateinit var mTtsLoopPlaybackCheckbox: CheckBox
+    private lateinit var mTtsLoopPlaybackSwitch: Switch
     private lateinit var mBtnManVoice: RadioButton
     private lateinit var mBtnWomanVoice: RadioButton
     private var sharedPreferences: SharedPreferences? = null
@@ -50,6 +56,9 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
     // 定时器，同步更新音量、温度等
     private fun setCallbacksTask() {
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val background = statusDot.background as GradientDrawable
+        val connectText = findViewById<TextView>(R.id.realTimeShoutConnect)
         val timer = Timer();
         val task = object : TimerTask() {
             override fun run() {
@@ -59,6 +68,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     volumeReal = sharedPreferences!!.getInt("volume_real", 0)
                     volumeLimit = sharedPreferences!!.getInt("volume_limit", 100)
                     temperature = sharedPreferences!!.getString("temperature", "0").toString()
+                    val connectStatus = sharedPreferences!!.getBoolean("shoutConnectStatus", false)
                     // 更新到主线程
                     handler.post {
                         // 更新音量进度条
@@ -73,6 +83,15 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         else {
                             mStatus.setText(R.string.normal_temperature)
                             mStatus.setTextColor(Color.WHITE)
+                        }
+
+                        if(connectStatus) {
+                            connectText.setText(R.string.connection_status_connected)
+                            background.setColor(ContextCompat.getColor(context, R.color.green))
+                        }
+                        else {
+                            connectText.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                     }
                 }
@@ -166,6 +185,16 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mVolumeSeekBar = findViewById(R.id.volume_seek_bar)
         mSpeechRateSeekBar = findViewById(R.id.speech_rate_seek_bar)
         mSpeechRateLine = findViewById(R.id.speechRateLine)
+        val hintText = context.resources.getString(R.string.place_input_text)
+        val spannable = SpannableString(hintText)
+        spannable.setSpan(
+            AbsoluteSizeSpan(12, true), // 第二个参数 true 表示单位是 sp
+            0,
+            hintText.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        mTextView.hint = spannable
+
         mBtnManVoice.setOnCheckedChangeListener{_, checked ->
             run {
                 if(checked){
@@ -181,7 +210,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 voice = 1
             }
         }}
-        mTtsLoopPlaybackCheckbox = this.findViewById(R.id.tts_loop_playback_checkbox)
+        mTtsLoopPlaybackSwitch = this.findViewById(R.id.tts_loop_playback)
         sharedPreferences = context.getSharedPreferences("Megaphone", MODE_PRIVATE)
         val ttstext: String = sharedPreferences!!.getString("ttstext", "")!!
         Log.i(TAG, "ttstext:$ttstext")
@@ -191,7 +220,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             if (isPlaying) {
                 stopTTSPlay()
             } else {
-                sendText2Vehicle(mTtsLoopPlaybackCheckbox.isChecked)
+                sendText2Vehicle(mTtsLoopPlaybackSwitch.isChecked)
             }
         }
         mVolumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 全屏铺的背景色（与你图片边缘同色最佳） -->
+    <item>
+        <color android:color="@color/black_0E"/>
+    </item>
+
+    <!-- 你的图片：fill = 等比填满屏幕，center = 居中 -->
+    <item android:gravity="fill|center">
+        <bitmap
+            android:src="@drawable/background"
+            android:tileMode="disabled"/>
+    </item>
+
+</layer-list>

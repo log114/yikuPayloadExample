@@ -11,14 +11,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <View
+            android:id="@+id/statusDot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/circle_indicator" />
         <TextView
             android:id="@+id/realTimeShoutConnect"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
+            android:gravity="start"
             android:text="@string/connection_status_notconnected"
+            android:textSize="10sp"
             android:textColor="@color/white" />
     </LinearLayout>
     <LinearLayout
@@ -41,6 +50,13 @@
             android:text="@string/normal_temperature"
             android:textColor="@color/white" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:background="#383D40" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,44 +115,62 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:background="@color/light_blue_900"
+            android:paddingHorizontal="10dp"
             android:text="@string/radio_disable"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:track="@drawable/switch_track_bg"
+            android:thumb="@drawable/switch_thumb"
+            tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml"/>
     </LinearLayout>
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="@string/adjust_volume"
-        android:textColor="@color/white" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/adjust_volume"
+            android:textColor="@color/white" />
+        <SeekBar
+            android:id="@+id/volume_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:minHeight="2dp"
+            android:maxHeight="2dp"
+            android:progressDrawable="@drawable/bg_adjust_seek_bar"
+            android:thumb="@drawable/bg_seek_bar_thumb"
+            android:max="100"
+            android:progress="30" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/servo_control_text"
+            android:textColor="@color/white" />
 
-    <SeekBar
-        android:id="@+id/volume_seek_bar"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:minHeight="2dp"
-        android:maxHeight="2dp"
-        android:progressDrawable="@drawable/bg_adjust_seek_bar"
-        android:thumb="@drawable/bg_seek_bar_thumb"
-        android:max="100"
-        android:progress="30" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="@string/servo_control_text"
-        android:textColor="@color/white" />
-
-    <SeekBar
-        android:id="@+id/servo_control_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:minHeight="2dp"
-        android:maxHeight="2dp"
-        android:progressDrawable="@drawable/bg_adjust_seek_bar"
-        android:thumb="@drawable/bg_seek_bar_thumb"
-        android:max="120"
-        android:progress="0" />
+        <SeekBar
+            android:id="@+id/servo_control_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:minHeight="2dp"
+            android:maxHeight="2dp"
+            android:progressDrawable="@drawable/bg_adjust_seek_bar"
+            android:thumb="@drawable/bg_seek_bar_thumb"
+            android:max="120"
+            android:progress="0" />
+    </LinearLayout>
 </LinearLayout>

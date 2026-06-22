@@ -3,48 +3,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="8dp"
     android:orientation="vertical"
     tools:context=".AddRecordActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/file_upload"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/fileNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:hint="@string/please_select_file"
+        android:background="@drawable/edittext_border"
+        android:textColor="@color/white"
+        android:textColorHint="#9EABB2" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:paddingHorizontal="8dp">
 
         <TextView
-            android:id="@+id/selectFileTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/please_select_file" />
+            android:text="" />
 
         <Button
             android:id="@+id/selectFile"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:text="@string/select_file" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:orientation="horizontal"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp">
-
-        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/file_name" />
+            android:layout_height="40dp"
+            android:background="@drawable/default_btn"
+            android:text="@string/select_file" />
 
-        <EditText
-            android:id="@+id/fileNameEditText"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5" />
+        <Button
+            android:id="@+id/uploadBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/play_btn"
+            android:text="@string/upload" />
     </LinearLayout>
 
     <LinearLayout
@@ -67,17 +72,9 @@
             android:max="100"
             android:progress="0" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/uploadBtn"
-        android:layout_width="160dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:text="@string/upload" />
     <TextView
         android:layout_margin="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/file_upload_prompt"/>
 </LinearLayout>

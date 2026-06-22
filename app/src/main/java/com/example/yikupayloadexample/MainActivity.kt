@@ -174,6 +174,7 @@ class MainActivity : AppCompatActivity() {
                         // 密码正确，执行跳转
                         val intent = Intent(this@MainActivity, SettingActivity::class.java)
                         startActivity(intent)
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                     } else {
                         // 密码错误，提示并重新显示对话框
                         Toast.makeText(this@MainActivity, R.string.password_error, Toast.LENGTH_SHORT).show()

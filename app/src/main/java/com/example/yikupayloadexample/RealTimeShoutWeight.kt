@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.media.AudioFormat
 import android.media.AudioTrack
 import android.media.AudioTrack.MODE_STREAM
@@ -17,6 +18,7 @@ import android.provider.Settings
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
@@ -514,6 +516,8 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     // 定时器，判断连接状态
     private fun setConnectState() {
         val timer = Timer();
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val background = statusDot.background as GradientDrawable
         val connectText = findViewById<TextView>(R.id.realTimeShoutConnect)
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask() {
@@ -521,6 +525,10 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                 if (megaphoneService?.getIsConnected() == true || megaphoneService?.getIsConnectedYA3() == true) {
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
+                        background.setColor(ContextCompat.getColor(context, R.color.green))
+                    }
+                    sharedPreferences.edit {
+                        putBoolean("shoutConnectStatus", true);
                     }
 
                     if (!isInit && megaphoneService != null) {
@@ -530,6 +538,10 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                 } else {
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
+                    }
+                    sharedPreferences.edit {
+                        putBoolean("shoutConnectStatus", false);
                     }
                     if(!isConnecting_1) {
                         isConnecting_1 = true

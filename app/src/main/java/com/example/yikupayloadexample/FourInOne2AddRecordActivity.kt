@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -29,7 +28,6 @@ import kotlin.concurrent.thread
 class FourInOne2AddRecordActivity: AppCompatActivity() {
     private val TAG = "FourInOne2AddRecordActivity"
     private lateinit var mSelectFile: Button
-    private lateinit var mSelectFileTextView: TextView
     private lateinit var mFileNameEditText: EditText
     private lateinit var uploadFile: File
     private lateinit var mUploadBtn: Button
@@ -39,7 +37,7 @@ class FourInOne2AddRecordActivity: AppCompatActivity() {
     private fun httpUploadFile() {
         runOnUiThread {
             mProgressBarUpload.max = uploadFile.length().toInt()
-            mUploadBtn.text = "正在上传..."
+            mUploadBtn.setText(R.string.button_uploading)
             mUploadBtn.isEnabled = false
 //            mUploadPlan.visibility = View.VISIBLE
         }
@@ -54,15 +52,17 @@ class FourInOne2AddRecordActivity: AppCompatActivity() {
             try {
                 Log.i(TAG, "uploadFile:${uploadFile}")
                 if (fourInOne2Service.uploadFile(uploadFile, callback)) {
-                    showToast("上传成功!")
+                    showToast(R.string.upload_successful)
                 } else {
-                    showToast("上传失败!")
+                    showToast(R.string.upload_failed)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                val message = getString(R.string.upload_failed_msg, e.message)
+                showToast(message)
             } finally {
                 runOnUiThread {
-                    mUploadBtn.text = "上传"
+                    mUploadBtn.setText(R.string.upload)
                     mUploadBtn.isEnabled = true
 //                    mUploadPlan.visibility = View.INVISIBLE
                 }
@@ -115,7 +115,7 @@ class FourInOne2AddRecordActivity: AppCompatActivity() {
                                     "上传的进度: totalNum:${totalNum}, finishNum:${finishNum}"
                                 )
                                 if (totalNum - 1 == finishNum) {
-                                    showToast("上传成功!")
+                                    showToast(R.string.upload_successful)
                                     runOnUiThread {
                                         mUploadPlan.visibility = View.INVISIBLE
                                     }
@@ -126,7 +126,7 @@ class FourInOne2AddRecordActivity: AppCompatActivity() {
                     }
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
-                    showToast("上传失败，请重试.")
+                    showToast(R.string.upload_failed_please_try_again)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -142,7 +142,6 @@ class FourInOne2AddRecordActivity: AppCompatActivity() {
         setContentView(R.layout.activity_add_record)
 
         mSelectFile = findViewById(R.id.selectFile)
-        mSelectFileTextView = findViewById(R.id.selectFileTextView)
         mFileNameEditText = findViewById(R.id.fileNameEditText)
         mUploadBtn = findViewById(R.id.uploadBtn)
 
@@ -203,15 +202,13 @@ class FourInOne2AddRecordActivity: AppCompatActivity() {
             uploadFile = File(_path)
         }
         if (!uploadFile.exists()) {
-            showToast("获取文件失败.")
+            showToast(R.string.failed_to_get_file)
             return
         }
         Log.e(TAG, "Name: ${uploadFile.name}")
-        mSelectFileTextView.text = uploadFile.name.split(":").last()
         mFileNameEditText.setText(uploadFile.name.split(":").last())
         Log.e(TAG, "Size: ${uploadFile.length()}")
     }
-
 
     private fun showToast(msg: String) {
         this.runOnUiThread {
@@ -219,6 +216,16 @@ class FourInOne2AddRecordActivity: AppCompatActivity() {
                 this,
                 msg,
                 Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun showToast(msg: Int) {
+        this.runOnUiThread {
+            Toast.makeText(
+                this,
+                msg,
+                Toast.LENGTH_SHORT
             ).show()
         }
     }

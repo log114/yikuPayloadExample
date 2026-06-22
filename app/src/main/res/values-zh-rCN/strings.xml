@@ -342,4 +342,11 @@
     <string name="connect_payload">连接负载</string>
     <string name="catchnet">捕捉网</string>
     <string name="emitter_38mm">38mm 发射器</string>
+    <string name="file_upload">文件上传</string>
+    <string name="button_uploading">正在上传</string>
+    <string name="upload_successful">上传成功</string>
+    <string name="upload_failed">上传失败</string>
+    <string name="upload_failed_msg">上传失败：%s</string>
+    <string name="upload_failed_please_try_again">上传失败，请重试</string>
+    <string name="failed_to_get_file">获取文件失败</string>
 </resources>
