@@ -5,8 +5,7 @@
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:paddingEnd="16dp">
 
     <TextView
         android:id="@+id/mode_name"
@@ -20,8 +19,9 @@
         android:id="@+id/mode_radio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:buttonTint="@color/light_blue_600"
+        android:textColor="@color/white"
         android:clickable="false"
-        android:focusable="false" />
+        android:focusable="false"
+        android:theme="@style/My_CheckBox"/>
 
 </LinearLayout>

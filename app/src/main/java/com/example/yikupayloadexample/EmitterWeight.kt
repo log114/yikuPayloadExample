@@ -25,7 +25,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var connectText: TextView
     private lateinit var statusDot: View
     private lateinit var background: GradientDrawable
-    private lateinit var mSafetySwitchSwitch: Switch
+    private lateinit var mSafetySwitch: Switch
     private lateinit var mEmitterLaunch1Btn: Button
     private lateinit var mEmitterLaunch2Btn: Button
     private lateinit var mEmitterLaunch3Btn: Button
@@ -123,16 +123,16 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     }
 
     fun launch(index: Int) {
-        Log.i(TAG, "mSafetySwitchSwitch.isChecked:${mSafetySwitchSwitch.isChecked}")
+        Log.i(TAG, "mSafetySwitch.isChecked:${mSafetySwitch.isChecked}")
         try {
-            if (!mSafetySwitchSwitch.isChecked) {
+            if (!mSafetySwitch.isChecked) {
                 showToast(R.string.need_to_open_safety_switch)
             } else {
                 Log.i(TAG, "发射...")
                 emitterService.launch(index)
                 showToast(R.string.launch_command_executed)
 
-                mSafetySwitchSwitch.isChecked = false
+                mSafetySwitch.isChecked = false
                 thread {
                     Thread.sleep(100)
                     emitterService.safetySwitch(false)
@@ -150,7 +150,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mEmitterView = findViewById(R.id.emitter_view)
         connectText = findViewById(R.id.emitterConnect)
         statusDot = findViewById(R.id.statusDot)
-        mSafetySwitchSwitch = findViewById(R.id.emitterSafetySwitchSwitch)
+        mSafetySwitch = findViewById(R.id.emitterSafetySwitch)
         mEmitterLaunch1Btn = findViewById(R.id.emitterLaunch1Btn)
         mEmitterLaunch2Btn = findViewById(R.id.emitterLaunch2Btn)
         mEmitterLaunch3Btn = findViewById(R.id.emitterLaunch3Btn)
@@ -161,16 +161,16 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         setConnectState()
 
         // 安全开关
-        mSafetySwitchSwitch.setOnClickListener {
-            emitterService.safetySwitch(mSafetySwitchSwitch.isChecked)
-            if(mSafetySwitchSwitch.isChecked) {
+        mSafetySwitch.setOnClickListener {
+            emitterService.safetySwitch(mSafetySwitch.isChecked)
+            if(mSafetySwitch.isChecked) {
                 thread {
                     Thread.sleep(2000)
-                    isOpenSafetySwitch = mSafetySwitchSwitch.isChecked
+                    isOpenSafetySwitch = mSafetySwitch.isChecked
                 }
             }
             else {
-                isOpenSafetySwitch = mSafetySwitchSwitch.isChecked
+                isOpenSafetySwitch = mSafetySwitch.isChecked
             }
         }
 

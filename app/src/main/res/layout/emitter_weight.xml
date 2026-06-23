@@ -42,7 +42,7 @@
             android:background="#383D40" />
 
         <Switch
-            android:id="@+id/emitterSafetySwitchSwitch"
+            android:id="@+id/emitterSafetySwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/safety_switch"

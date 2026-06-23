@@ -81,7 +81,7 @@
     <string name="slow_descent_device">Slow descent device</string>
     <string name="open">ON</string>
     <string name="passageway">pass</string>
-    <string name="line_length">Current line length:</string>
+    <string name="line_length">Current line length</string>
     <string name="state">State:</string>
     <string name="not_reaching_the_limit">Not reaching the limit</string>
     <string name="reached_the_top">Reached the top</string>
@@ -115,7 +115,7 @@
     <string name="nine">" nine"</string>
     <string name="target_length">"Target length: "</string>
     <string name="pulse_on">pulse on</string>
-    <string name="current_location">Current location:</string>
+    <string name="current_location">Current location</string>
     <string name="weight">"Weight: "</string>
     <string name="release_emergency">Release the state of emergency</string>
     <string name="need_relesase_emergency">Please lift the emergency status first!</string>

@@ -1,6 +1,7 @@
 package com.example.yikupayloadexample
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -9,6 +10,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.service.GripperService
 import java.util.Timer
 import java.util.TimerTask
@@ -53,6 +55,8 @@ class GripperWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     // 定时器，判断连接状态
     private fun setConnectState(){
         val timer = Timer();
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val background = statusDot.background as GradientDrawable
         val connectText = findViewById<TextView>(R.id.gripperConnect)
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
@@ -60,12 +64,14 @@ class GripperWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 if(gripperService.getIsConnected()){
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
+                        background.setColor(ContextCompat.getColor(context, R.color.green))
                     }
                 }
                 else if(!isConnecting){
                     isConnecting = true
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                     // 尝试重连
                     thread {

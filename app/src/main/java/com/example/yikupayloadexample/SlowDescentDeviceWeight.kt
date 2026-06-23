@@ -2,6 +2,7 @@ package com.example.yikupayloadexample
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.text.InputFilter
@@ -15,8 +16,10 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.protocol.DESCENT_STATE_GET
 import com.yiku.yikupayloadSDK.service.SlowDescentDeviceService
 import com.yiku.yikupayloadSDK.util.MaxFValueInputFilter
@@ -32,10 +35,10 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private val TAG = "SlowDescentDeviceWeight"
     var slowDescentDeviceService: SlowDescentDeviceService
 
-    //    private lateinit var mDescentSafetySwitchSwitch: Switch
-    private lateinit var mBtnOpen: Button
-    private lateinit var mBtnClose: Button
+    private lateinit var mDescentSafetySwitch: Switch
     private lateinit var mConnectState: TextView
+    private lateinit var statusDot: View
+    private lateinit var background: GradientDrawable
 
     //    private lateinit var mIsEnable: TextView
     private lateinit var mSlowDescentDeviceView: View
@@ -65,6 +68,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private lateinit var mBtnOk: Button
     private lateinit var mBtnCancel: Button
     private var updateTime = Date().time
+    private var isFirstConnect = true
     private var isConnecting = false;
 
     private var isEnable = false
@@ -121,19 +125,16 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
             "缓降器，isEnable:${enableType}, mode:${mode}, speed:${speed}, length:${length}, state:${state}, 载重:${weight}"
         )
         mConnectState.setText(R.string.connection_status_connected)
+        background.setColor(ContextCompat.getColor(context, R.color.green))
         // 安全开关状态
         isEnable = (enableType != 0x00.toByte())
-        if (isEnable) {
-            mBtnOpen.visibility = View.GONE
-            mBtnClose.visibility = VISIBLE
-        } else {
-            mBtnOpen.visibility = VISIBLE
-            mBtnClose.visibility = View.GONE
+        if(mDescentSafetySwitch.isEnabled) {
+            mDescentSafetySwitch.isChecked = isEnable
         }
         // 当前放线长度
         Log.i(TAG, "length:${length}")
         if (length > (0).toUByte()) {
-            mCurrentLineLength.text = "${String.format("%.1f", length.toDouble() / 10f)}m"
+            mCurrentLineLength.text = "${String.format("%.1f", length.toDouble() / 10f)} m"
         }
         // 载重
 //        mWeight.text = "${weight}kg"
@@ -145,7 +146,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
 
             0x01.toByte() -> {
                 mCurrentLocation.setText(R.string.reached_the_top)
-                mCurrentLineLength.text = "0.0m"
+                mCurrentLineLength.text = "0.0 m"
             }
 
             else -> {
@@ -170,10 +171,10 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
         LayoutInflater.from(context).inflate(R.layout.slow_descent_device_weight, this, true)
         mSlowDescentDeviceView = findViewById(R.id.slowDescentDeviceWeight)
         mPromptBox = findViewById(R.id.prompt_box)
-//        mDescentSafetySwitchSwitch = findViewById(R.id.descentSafetySwitchSwitch)
-        mBtnOpen = findViewById(R.id.btn_open)
-        mBtnClose = findViewById(R.id.btn_close)
+        mDescentSafetySwitch = findViewById(R.id.safetySwitch)
         mConnectState = findViewById(R.id.connectState)
+        statusDot = findViewById(R.id.statusDot)
+        background = statusDot.background as GradientDrawable
 //        mIsEnable = findViewById(R.id.isEnable)
         mCurrentLineLength = findViewById(R.id.currentLineLength)
 //        mWeight = findViewById(R.id.weight)
@@ -204,21 +205,19 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
         mLengthEditText.filters = arrayOf<InputFilter>(MaxFValueInputFilter(30));
 
         // 安全开关
-//        mDescentSafetySwitchSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-//            // 打开/关闭安全开关
-//            slowDescentDeviceService.descentControl(isChecked)
-//        }
-        // 打开安全开关
-        mBtnOpen.setOnClickListener {
-            slowDescentDeviceService.descentControl(true)
+        mDescentSafetySwitch.setOnClickListener {
+            mDescentSafetySwitch.isEnabled = false
+            // 打开/关闭安全开关
+            slowDescentDeviceService.descentControl(mDescentSafetySwitch.isChecked)
             updateTime = Date().time
             needJudgeConnectState = true
-        }
-        // 关闭安全开关
-        mBtnClose.setOnClickListener {
-            slowDescentDeviceService.descentControl(false)
-            updateTime = Date().time
-            needJudgeConnectState = true
+            thread {
+                Thread.sleep(2000)
+                mDescentSafetySwitch.post {
+                    mDescentSafetySwitch.isChecked = isEnable
+                    mDescentSafetySwitch.isEnabled = true
+                }
+            }
         }
 
         // 按速度
@@ -382,7 +381,10 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
                     if(!isConnecting){
                         isConnecting = true
                         thread {
-                            Thread.sleep(5000)// 先等待5s，防止刚断连就重连，报错
+                            if(!isFirstConnect) {
+                                Thread.sleep(5000)
+                            }
+                            isFirstConnect = false
                             while (!slowDescentDeviceService.connect()) {
                                 Thread.sleep(1000)
                             }
@@ -398,6 +400,7 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
                         val handler = Handler(Looper.getMainLooper())
                         handler.post {
                             mConnectState.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                     }
                     // 如果超过10s没收到消息，主动断开连接，等待重连
