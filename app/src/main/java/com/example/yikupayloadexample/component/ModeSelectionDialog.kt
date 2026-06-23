@@ -10,10 +10,12 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ListView
 import android.widget.Button
+import android.widget.TextView
 import com.example.yikupayloadexample.R
 
 class ModeSelectionDialog(
     context: Context,
+    private val title: String = "",
     private val modes: List<ModeItem>,
     private val currentMode: ModeItem,
     private val onModeSelected: (ModeItem) -> Unit
@@ -29,6 +31,10 @@ class ModeSelectionDialog(
     }
 
     private fun setupDialogWindow() {
+        if(title != "") {
+            val titleView = findViewById<TextView>(R.id.dialog_title_text)
+            titleView.text = title
+        }
         window?.apply {
             // 设置为居中显示
             setGravity(Gravity.CENTER)

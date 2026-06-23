@@ -1,6 +1,7 @@
 package com.example.yikupayloadexample
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -13,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.yikupayloadexample.component.ModeItem
 import com.example.yikupayloadexample.component.ModeSelectionDialog
 import com.yiku.yikupayloadSDK.protocol.THROWER_STATE
@@ -44,6 +46,8 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mBombState_3: TextView
     private lateinit var mBombState_4: TextView
 //    private lateinit var mTemperature: TextView
+    private lateinit var statusDot: View
+    private lateinit var background: GradientDrawable
     private lateinit var mConnectState: TextView
     private lateinit var mHeight: TextView
     private var mBtnArr = arrayOfNulls<Button>(6)
@@ -133,6 +137,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             updateTime = Date().time
 
             mConnectState.setText(R.string.connection_status_connected)
+            background.setColor(ContextCompat.getColor(context, R.color.green))
             updateBombStateText(1, msg.slice(11 until 19).toByteArray())
             updateBombStateText(2, msg.slice(19 until 27).toByteArray())
             updateBombStateText(3, msg.slice(27 until 35).toByteArray())
@@ -142,6 +147,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
     private fun showModeSelectionDialog() {
         val dialog = ModeSelectionDialog(
+            title = context.resources.getString(R.string.select_the_type_of_thrower),
             context = context,
             modes = modeItems,
             currentMode = currentMode
@@ -355,6 +361,8 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mBombState_3 = findViewById(R.id.bombState_3)
         mBombState_4 = findViewById(R.id.bombState_4)
 //        mTemperature = findViewById(R.id.temperature)
+        statusDot = findViewById(R.id.statusDot)
+        background = statusDot.background as GradientDrawable
         mConnectState = findViewById(R.id.connectState)
         mHeight = findViewById(R.id.height)
         mDetonateHeightEditText = findViewById(R.id.detonateHeight)
@@ -383,6 +391,12 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             val handler = Handler(Looper.getMainLooper())
             handler.post {
                 mDetonateHeightEditText.setText(detonateHeight.toString()) // 默认显示当前的起爆高度
+                // 更新允许引爆开关状态
+                mThrowerAllowDetonationSwitch_1.isChecked = isCharging_1
+                mThrowerAllowDetonationSwitch_2.isChecked = isCharging_2
+                mThrowerAllowDetonationSwitch_3.isChecked = isCharging_3
+                mThrowerAllowDetonationSwitch_4.isChecked = isCharging_4
+
                 mThrowerView.visibility = GONE
                 mDetonationSettingsView.visibility = VISIBLE
             }
@@ -1060,6 +1074,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             mThrowerAllowDetonationSwitch_4.isChecked = false
 //                        mTemperature.text = "0°C"
                             mConnectState.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                             mHeight.text = "0m"
                         }
                     }
@@ -1081,6 +1096,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             updateTime = Date().time
                             handler.post {
                                 mConnectState.setText(R.string.connection_status_connected)
+                                background.setColor(ContextCompat.getColor(context, R.color.green))
                             }
                         }
                     }

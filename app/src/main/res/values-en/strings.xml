@@ -349,4 +349,5 @@
     <string name="upload_failed_msg">Upload failed: %s</string>
     <string name="upload_failed_please_try_again">Upload failed, please try again</string>
     <string name="failed_to_get_file">Failed to obtain the file</string>
+    <string name="select_the_type_of_thrower">Select the type of thrower</string>
 </resources>

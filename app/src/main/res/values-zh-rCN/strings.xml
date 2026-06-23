@@ -349,4 +349,5 @@
     <string name="upload_failed_msg">上传失败：%s</string>
     <string name="upload_failed_please_try_again">上传失败，请重试</string>
     <string name="failed_to_get_file">获取文件失败</string>
+    <string name="select_the_type_of_thrower">选择抛投类型</string>
 </resources>

@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/thWeight"
     android:layout_width="500dp"
-    android:layout_height="300dp">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/throwerWeight"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical"
         android:visibility="visible">
@@ -17,65 +17,29 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="visible">
-
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <View
+                android:id="@+id/statusDot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/circle_indicator" />
             <TextView
                 android:id="@+id/connectState"
                 android:layout_width="0dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="10dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="@string/connection_status_notconnected"
+                android:textSize="10sp"
                 android:textColor="@color/white" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:visibility="visible">
-
-            <Switch
-                android:id="@+id/throwerSafetySwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:scaleX="1.2"
-                android:scaleY="1.2"
-                android:text="@string/safety_switch"
-                android:textColor="@color/white" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:gravity="end">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:gravity="left"
-                    android:text="@string/height"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/height"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:gravity="left"
-                    android:text="0m"
-                    android:textColor="@color/white" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
             <LinearLayout
@@ -184,6 +148,55 @@
                     android:textColor="@color/red"/>
             </LinearLayout>
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="#383D40" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <Switch
+                android:id="@+id/throwerSafetySwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:text="@string/safety_switch"
+                android:textColor="@color/white"
+                android:switchPadding="4dp"
+                android:track="@drawable/switch_track_bg"
+                android:thumb="@drawable/switch_thumb"
+                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:gravity="end">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:gravity="left"
+                    android:text="@string/height"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/height"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:gravity="left"
+                    android:text="0m"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -199,7 +212,7 @@
                 <Button
                     android:id="@+id/detonationSettingsBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:padding="0dp"
@@ -209,7 +222,7 @@
                 <Button
                     android:id="@+id/throwerUpdate"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/play_btn"
                     android:padding="0dp"
@@ -219,10 +232,10 @@
                 <LinearLayout
                     android:id="@+id/mode_selector_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:layout_marginStart="8dp"
                     android:orientation="horizontal"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     android:gravity="center_vertical"
                     android:padding="8dp">
 
@@ -240,7 +253,6 @@
                         android:layout_height="12dp"
                         android:src="@drawable/ic_arrow_down"
                         app:tint="@color/white" />
-
                 </LinearLayout>
             </LinearLayout>
 
@@ -258,7 +270,7 @@
                     <Button
                         android:id="@+id/openAll"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open_all"
@@ -267,7 +279,7 @@
                     <Button
                         android:id="@+id/switchLeft"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -276,7 +288,7 @@
                     <Button
                         android:id="@+id/switchCenter"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -285,7 +297,7 @@
                     <Button
                         android:id="@+id/switchRight"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -294,7 +306,7 @@
                     <Button
                         android:id="@+id/switch1"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -309,7 +321,7 @@
                     <Button
                         android:id="@+id/switch2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -318,7 +330,7 @@
                     <Button
                         android:id="@+id/switch3"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -327,7 +339,7 @@
                     <Button
                         android:id="@+id/switch4"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -336,7 +348,7 @@
                     <Button
                         android:id="@+id/switch5"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -345,7 +357,7 @@
                     <Button
                         android:id="@+id/switch6"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -366,7 +378,7 @@
                     <Button
                         android:id="@+id/openAll_4_way"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open_all"
@@ -375,7 +387,7 @@
                     <Button
                         android:id="@+id/switchLeft_4_way"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -384,7 +396,7 @@
                     <Button
                         android:id="@+id/switchRight_4_way"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -399,7 +411,7 @@
                     <Button
                         android:id="@+id/switch1_4_way"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -407,7 +419,7 @@
                     <Button
                         android:id="@+id/switch2_4_way"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -416,7 +428,7 @@
                     <Button
                         android:id="@+id/switch3_4_way"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -425,7 +437,7 @@
                     <Button
                         android:id="@+id/switch4_4_way"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/play_btn"
                         android:text="@string/open"
@@ -437,15 +449,14 @@
     <LinearLayout
         android:id="@+id/detonationSettingsView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
         android:orientation="vertical"
         android:visibility="gone">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
             android:visibility="visible">
             <TextView
                 android:layout_width="wrap_content"
@@ -458,17 +469,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
-                android:scaleX="1.2"
-                android:scaleY="1.2"
                 android:text="@string/allow_detonation"
                 android:textColor="@color/white"
-                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+                android:switchPadding="4dp"
+                android:track="@drawable/switch_track_bg"
+                android:thumb="@drawable/switch_thumb"
+                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml"/>
         </LinearLayout>
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             android:visibility="visible">
             <TextView
                 android:layout_width="wrap_content"
@@ -481,24 +492,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
-                android:scaleX="1.2"
-                android:scaleY="1.2"
                 android:text="@string/allow_detonation"
                 android:textColor="@color/white"
-                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+                android:switchPadding="4dp"
+                android:track="@drawable/switch_track_bg"
+                android:thumb="@drawable/switch_thumb"
+                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/bombSettingRow2"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible">
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 android:visibility="visible">
                 <TextView
                     android:layout_width="wrap_content"
@@ -511,17 +522,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="20dp"
-                    android:scaleX="1.2"
-                    android:scaleY="1.2"
                     android:text="@string/allow_detonation"
                     android:textColor="@color/white"
-                    tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+                    android:switchPadding="4dp"
+                    android:track="@drawable/switch_track_bg"
+                    android:thumb="@drawable/switch_thumb"
+                    tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml"/>
             </LinearLayout>
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 android:visibility="visible">
                 <TextView
                     android:layout_width="wrap_content"
@@ -534,18 +545,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="20dp"
-                    android:scaleX="1.2"
-                    android:scaleY="1.2"
                     android:text="@string/allow_detonation"
                     android:textColor="@color/white"
-                    tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+                    android:switchPadding="4dp"
+                    android:track="@drawable/switch_track_bg"
+                    android:thumb="@drawable/switch_thumb"
+                    tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="60dp">
+            android:layout_marginTop="10dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -555,18 +566,18 @@
                 android:textSize="16sp"/>
             <EditText
                 android:id="@+id/detonateHeight"
-                android:layout_width="40dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:inputType="number"
                 android:text="0"
                 android:textColor="@color/white"
-                android:background="@drawable/boder"/>
+                android:background="@drawable/edittext_border"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="m"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
@@ -575,25 +586,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:paddingStart="60dp"
             android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="@string/current_height"
                 android:textColor="@color/white"
                 android:textSize="16sp"/>
             <EditText
                 android:id="@+id/currentHeight"
-                android:layout_width="40dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:inputType="number"
                 android:text="0"
                 android:textColor="@color/white"
-                android:background="@drawable/boder"/>
+                android:background="@drawable/edittext_border"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -606,8 +616,7 @@
         <Button
             android:id="@+id/OKBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
+            android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/play_btn"
             android:text="@string/ok"
@@ -616,9 +625,8 @@
     <LinearLayout
         android:id="@+id/promptView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:visibility="gone">
         <TextView
@@ -629,26 +637,24 @@
             android:text="@string/confirm_open"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal"
             android:visibility="visible">
             <Button
                 android:id="@+id/promptOkBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="40dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/ok"
                 android:textColor="@color/white" />
             <Button
                 android:id="@+id/promptCancelBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/play_btn"
+                android:background="@drawable/default_btn"
                 android:text="@string/cancel"
                 android:textColor="@color/white" />
         </LinearLayout>
@@ -656,9 +662,8 @@
     <LinearLayout
         android:id="@+id/updateView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:visibility="gone">
         <TextView
@@ -669,26 +674,24 @@
             android:text="@string/isUpdate"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal"
             android:visibility="visible">
             <Button
                 android:id="@+id/updateOkBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="40dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/ok"
                 android:textColor="@color/white" />
             <Button
                 android:id="@+id/updateCancelBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/play_btn"
+                android:background="@drawable/default_btn"
                 android:text="@string/cancel"
                 android:textColor="@color/white" />
         </LinearLayout>

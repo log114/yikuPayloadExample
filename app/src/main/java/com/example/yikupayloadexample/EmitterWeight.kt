@@ -1,6 +1,7 @@
 package com.example.yikupayloadexample;
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -8,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.service.EmitterService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.lang.Exception
@@ -21,6 +23,8 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private val TAG = "EmitterWeight"
     var emitterService: EmitterService
     private lateinit var connectText: TextView
+    private lateinit var statusDot: View
+    private lateinit var background: GradientDrawable
     private lateinit var mSafetySwitchSwitch: Switch
     private lateinit var mEmitterLaunch1Btn: Button
     private lateinit var mEmitterLaunch2Btn: Button
@@ -73,6 +77,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
         handler.post {
             connectText.setText(R.string.connection_status_connected)
+            background.setColor(ContextCompat.getColor(context, R.color.green))
         }
         var i = 0
         while (i < 6) {
@@ -144,6 +149,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         LayoutInflater.from(context).inflate(R.layout.emitter_weight, this, true)
         mEmitterView = findViewById(R.id.emitter_view)
         connectText = findViewById(R.id.emitterConnect)
+        statusDot = findViewById(R.id.statusDot)
         mSafetySwitchSwitch = findViewById(R.id.emitterSafetySwitchSwitch)
         mEmitterLaunch1Btn = findViewById(R.id.emitterLaunch1Btn)
         mEmitterLaunch2Btn = findViewById(R.id.emitterLaunch2Btn)
@@ -151,6 +157,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mEmitterLaunch4Btn = findViewById(R.id.emitterLaunch4Btn)
         mEmitterLaunch5Btn = findViewById(R.id.emitterLaunch5Btn)
         mEmitterLaunch6Btn = findViewById(R.id.emitterLaunch6Btn)
+        background = statusDot.background as GradientDrawable
         setConnectState()
 
         // 安全开关
@@ -223,6 +230,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         val handler = Handler(Looper.getMainLooper())
                         handler.post {
                             connectText.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                     }
                     // 如果超过5s没收到消息，主动断开连接，等待重连
@@ -234,6 +242,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     isConnecting = true
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                     // 尝试重连
                     thread {
