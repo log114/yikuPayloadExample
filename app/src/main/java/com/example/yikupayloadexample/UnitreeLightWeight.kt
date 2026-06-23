@@ -3,6 +3,7 @@ package com.example.yikupayloadexample;
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.util.MsgCallback
 
 import java.util.Timer
@@ -260,6 +262,8 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
     // 定时器，判断连接状态
     private fun setConnectState(){
         val timer = Timer();
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val background = statusDot.background as GradientDrawable
         val connectText = findViewById<TextView>(R.id.lightConnectYA3)
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
@@ -267,11 +271,13 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
                 if(megaphoneService?.getIsConnectedYA3() == true){
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
+                        background.setColor(ContextCompat.getColor(context, R.color.green))
                     }
                 }
                 else{
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                     // 此处不重连，因为是四合一，重连部分在RealTimeShoutWeight
                 }

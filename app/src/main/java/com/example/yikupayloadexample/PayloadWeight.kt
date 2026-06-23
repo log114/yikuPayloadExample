@@ -394,6 +394,7 @@ class PayloadWeight : Service() {
                     23 -> { // 200kg缓降器
                         opened = 23
                         mShoutViewContent.addView(slowDescentDevice200Weight)
+                        mWindowTitle.setText(R.string.slow_descent_device)
                         val upSpeedEditText = mShoutViewContent.findViewById<EditText>(R.id.upSpeedInput)
                         upSpeedEditText.setOnTouchListener { _, event ->
                             if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
@@ -492,34 +493,42 @@ class PayloadWeight : Service() {
                     16 -> {
                         opened = 16
                         mShoutViewContent.addView(plLightweight)
+                        mWindowTitle.setText(R.string.searchlight)
                     }
                     15 -> {
                         opened = 15
                         mShoutViewContent.addView(waterBranchWeight)
+                        mWindowTitle.setText(R.string.waterBranch)
                     }
                     14 -> {
                         opened = 14
                         mShoutViewContent.addView(bucketWeight)
+                        mWindowTitle.setText(R.string.bucket)
                     }
                     13 -> {
                         opened = 13
                         mShoutViewContent.addView(waterGunWeight)
+                        mWindowTitle.setText(R.string.waterGun)
                     }
                     12 -> {
                         opened = 12
                         mShoutViewContent.addView(extinguisherWeight)
+                        mWindowTitle.setText(R.string.extinguisher)
                     }
                     11 -> {
                         opened = 11
                         mShoutViewContent.addView(resqmeWeight)
+                        mWindowTitle.setText(R.string.glass_breaker)
                     }
                     10 -> {
                         opened = 10
                         mShoutViewContent.addView(gripperWeight)
+                        mWindowTitle.setText(R.string.gripper)
                     }
                     9 -> {
                         opened = 9
                         mShoutViewContent.addView(slowDescentDeviceWeight)
+                        mWindowTitle.setText(R.string.slow_descent_device)
                         val speedEditText = mShoutViewContent.findViewById<EditText>(R.id.speed)
                         speedEditText.setOnTouchListener { _, event ->
                             if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
@@ -540,6 +549,7 @@ class PayloadWeight : Service() {
                     8 -> { // 抛投器
                         opened = 8
                         mShoutViewContent.addView(throwerweight)
+                        mWindowTitle.setText(R.string.thrower)
                         val detonateHeightEditText = mShoutViewContent.findViewById<EditText>(R.id.detonateHeight)
                         detonateHeightEditText.setOnTouchListener { _, event ->
                             if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
@@ -554,18 +564,22 @@ class PayloadWeight : Service() {
                     7 -> {
                         opened = 7
                         mShoutViewContent.addView(lightYl300Weight)
+                        mWindowTitle.setText(R.string.searchlight)
                     }
                     6 -> {
                         opened = 6
                         mShoutViewContent.addView(emitterWeight)
+                        mWindowTitle.setText(R.string.emitter_38mm)
                     }
                     5 -> {
                         opened = 5
                         mShoutViewContent.addView(cacheNetWeight)
+                        mWindowTitle.setText(R.string.capture_net)
                     }
                     4 -> {
                         opened = 4
                         mShoutViewContent.addView(unitreeLightWeight)
+                        mWindowTitle.setText(R.string.lamplight)
                     }
                     3 -> {
                         opened = 3

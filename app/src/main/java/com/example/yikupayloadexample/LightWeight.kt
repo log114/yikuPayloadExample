@@ -3,6 +3,7 @@ package com.example.yikupayloadexample
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -16,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.yikupayloadexample.component.RoundMenuView
 import com.yiku.yikupayloadSDK.service.LightService
 import com.yiku.yikupayloadSDK.util.MsgCallback
@@ -35,7 +37,8 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private val timer: Timer = Timer()
     private lateinit var timerTask: TimerTask
     private lateinit var openInvertedModeCheckBox: CheckBox
-    private lateinit var mLuminanceText: TextView
+    private lateinit var mDriveTemperatureText: TextView
+    private lateinit var mLampHeadTemperatureText: TextView
     private var pitchVal = 0
     private var yawVal = 0
     private val pitchMedianVal = 3000
@@ -94,21 +97,20 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             Log.i(TAG, "recv: ${msg.asList()}")
             if (msg[2] == 0x04.toByte()) {
                 lastRecvTime = Date().time
-                if (mLuminanceText != null) {
-//                    Log.i(TAG, "修改温度...")
-                    mLuminanceText.post(Runnable {
-                        changeLuminance(
-                            (msg[4].toInt() and 0xFF) - 50, (msg[3].toInt() and 0xff) - 50
-                        )
-                    })
-                }
+
+                Handler(Looper.getMainLooper()).post(Runnable {
+                    changeLuminance(
+                        (msg[4].toInt() and 0xFF) - 50, (msg[3].toInt() and 0xff) - 50
+                    )
+                })
             }
         }
 
     }
 
     fun changeLuminance(driverLuminance: Int, ledLuminance: Int) {
-        mLuminanceText.text = "${context.resources.getString(R.string.drive_temperature)}: ${driverLuminance}℃ \n" + "${context.resources.getString(R.string.lamp_head_temperature)}: ${ledLuminance}℃"
+        mDriveTemperatureText.text = "${context.resources.getString(R.string.drive_temperature)}: ${driverLuminance}℃"
+        mLampHeadTemperatureText.text = "${context.resources.getString(R.string.lamp_head_temperature)}: ${ledLuminance}℃"
     }
 
     fun sendTripodHead() {
@@ -134,7 +136,7 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 //        )
     }
 
-    private fun initView(context: Context?){
+    private fun initView(context: Context){
         LayoutInflater.from(context).inflate(R.layout.light_weight, this, true)
 
         val drawable = resources.getDrawable(R.drawable.right) // 替换成你的 Drawable 资源
@@ -164,7 +166,11 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mPitchValueText = findViewById(R.id.pitch_value_text)
         mYawValueText = findViewById(R.id.yaw_value_text)
         openInvertedModeCheckBox = findViewById(R.id.open_inverted_mode)
-        mLuminanceText = findViewById(R.id.luminance_text)
+        mDriveTemperatureText = findViewById(R.id.drive_temperature)
+        mLampHeadTemperatureText = findViewById(R.id.lamp_head_temperature)
+
+        mDriveTemperatureText.text = "${context.resources.getString(R.string.drive_temperature)}: 0℃"
+        mLampHeadTemperatureText.text = "${context.resources.getString(R.string.lamp_head_temperature)}: 0℃"
         // 初始化通讯回调函数
         lightService.registMsgCallback(LightMsgCallback())
 
@@ -338,6 +344,8 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     // 定时器，判断连接状态
     private fun setConnectState(){
         val timer = Timer();
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val background = statusDot.background as GradientDrawable
         val connectText = findViewById<TextView>(R.id.lightConnect)
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
@@ -345,11 +353,13 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 if(lightService.getIsConnected()){
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
+                        background.setColor(ContextCompat.getColor(context, R.color.green))
                     }
                 }
                 else{
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                     // 尝试重连
                     if(!isConnecting) {

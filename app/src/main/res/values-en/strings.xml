@@ -41,7 +41,7 @@
     <string name="floating_window_opened">The floating window has been opened</string>
     <string name="safety_switch">"safety switch: "</string>
     <string name="launch">launch</string>
-    <string name="brightness_adjustment">brightness adjustment</string>
+    <string name="brightness_adjustment">brightness</string>
     <string name="turn_on_the_light">light on</string>
     <string name="explosive_flashing">flash on</string>
     <string name="open_the_pod_to_follow">open the pod to follow</string>
@@ -155,7 +155,7 @@
     <string name="cannot_detonate_notAllow">Cannot detonate, not allow</string>
     <string name="cannot_detonate_tooLow">Cannot detonate, too low</string>
     <string name="gripper">gripper</string>
-    <string name="resqme">resqme</string>
+    <string name="glass_breaker">Glass breaker</string>
     <string name="current_height">"Current height: "</string>
     <string name="ResqmeHost_name">"ResqmeHost IP: "</string>
     <string name="launch_all">Launch All</string>
@@ -170,14 +170,14 @@
     <string name="closed">Closed</string>
     <string name="opened">Opened</string>
     <string name="not_detected">Undetected</string>
-    <string name="waterGun">water gun</string>
+    <string name="waterGun">Wash gun​</string>
     <string name="WaterGunHost_name">"WaterGunHost IP: "</string>
     <string name="BucketHost_name">"BucketHost IP: "</string>
-    <string name="bucket">bucket</string>
+    <string name="bucket">Bucket</string>
     <string name="drain_valve">"drain valve: "</string>
     <string name="detach">"detach: "</string>
     <string name="WaterBranchHost_name">"WaterBranchHost IP: "</string>
-    <string name="waterBranch">water branch</string>
+    <string name="waterBranch">Water branch</string>
     <string name="hoseRelease">release hose</string>
     <string name="hoseDetachment">detach hose</string>
     <string name="executing">executing</string>
@@ -340,7 +340,7 @@
     <string name="reached_rightmost_side">Has reached the rightmost side</string>
     <string name="nozzleSwitchPrompt">Please confirm that the water pump has been turned off before switching the spray head!</string>
     <string name="connect_payload">connect payload</string>
-    <string name="catchnet">catch net</string>
+    <string name="capture_net">Capture net</string>
     <string name="emitter_38mm">38mm emitter</string>
     <string name="file_upload">File upload</string>
     <string name="button_uploading">uploading</string>
