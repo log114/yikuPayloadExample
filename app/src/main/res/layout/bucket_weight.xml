@@ -14,32 +14,61 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <TextView
-            android:id="@+id/bucketConnect"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/connection_status_notconnected"
-            android:textColor="@color/white" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <View
+                android:id="@+id/statusDot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/circle_indicator" />
+            <TextView
+                android:id="@+id/bucketConnect"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:text="@string/connection_status_notconnected"
+                android:textSize="10sp"
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="#383D40" />
 
         <Switch
             android:id="@+id/safetySwitchSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
             android:text="@string/safety_switch"
             android:textColor="@color/white"
+            android:switchPadding="4dp"
+            android:track="@drawable/switch_track_bg"
+            android:thumb="@drawable/switch_thumb"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <Switch
             android:id="@+id/hookSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="10dp"
             android:text="@string/detach"
             android:textColor="@color/white"
+            android:switchPadding="4dp"
             android:enabled="false"
+            android:track="@drawable/switch_track_bg"
+            android:thumb="@drawable/switch_thumb"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

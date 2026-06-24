@@ -177,7 +177,7 @@
     <string name="drain_valve">"drain valve: "</string>
     <string name="detach">"detach: "</string>
     <string name="WaterBranchHost_name">"WaterBranchHost IP: "</string>
-    <string name="waterBranch">Water branch</string>
+    <string name="waterBranch">Fire hose nozzle</string>
     <string name="hoseRelease">release hose</string>
     <string name="hoseDetachment">detach hose</string>
     <string name="executing">executing</string>

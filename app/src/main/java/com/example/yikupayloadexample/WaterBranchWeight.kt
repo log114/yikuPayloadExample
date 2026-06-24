@@ -2,6 +2,7 @@ package com.example.yikupayloadexample
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -14,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.protocol.WATERBRANCH_STATE_RECEIVE
 import com.yiku.yikupayloadSDK.service.WaterBranchService
 import com.yiku.yikupayloadSDK.util.MsgCallback
@@ -172,6 +174,8 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     // 定时器，判断连接状态
     private fun setConnectState(){
         val timer = Timer();
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val background = statusDot.background as GradientDrawable
         val connectText = findViewById<TextView>(R.id.waterBranchConnect)
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
@@ -180,6 +184,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                     if (Date().time - updateTime < 3000) {
                         handler.post {
                             connectText.setText(R.string.connection_status_connected)
+                            background.setColor(ContextCompat.getColor(context, R.color.green))
                         }
                     }
                     waterBranchService.heartbeat()
@@ -187,6 +192,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                     if (Date().time - updateTime > 3000) {
                         handler.post {
                             connectText.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                     }
                     // 如果超过10s没收到消息，主动断开连接，等待重连
@@ -199,6 +205,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                     isConnecting = true
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                     // 尝试重连
                     thread {
@@ -213,6 +220,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                         updateTime = Date().time
                         handler.post {
                             connectText.setText(R.string.connection_status_connected)
+                            background.setColor(ContextCompat.getColor(context, R.color.green))
                         }
                     }
                 }

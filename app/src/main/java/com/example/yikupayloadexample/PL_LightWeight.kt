@@ -3,6 +3,7 @@ package com.example.yikupayloadexample
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -18,6 +19,7 @@ import android.widget.Spinner
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.yikupayloadexample.component.RoundMenuView
 import com.yiku.yikupayloadSDK.externalService.PL_LightService
 import com.yiku.yikupayloadSDK.util.MsgCallback
@@ -288,6 +290,8 @@ class PL_LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     // 定时器，判断连接状态
     private fun setConnectState(){
         val timer = Timer();
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val background = statusDot.background as GradientDrawable
         val connectText = findViewById<TextView>(R.id.lightConnect)
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
@@ -295,11 +299,13 @@ class PL_LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 if(plLightService.getIsConnected()){
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
+                        background.setColor(ContextCompat.getColor(context, R.color.green))
                     }
                 }
                 else{
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                     // 尝试重连
                     plLightService.connect()
