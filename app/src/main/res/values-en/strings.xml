@@ -157,7 +157,7 @@
     <string name="gripper">gripper</string>
     <string name="glass_breaker">Glass breaker</string>
     <string name="current_height">"Current height: "</string>
-    <string name="ResqmeHost_name">"ResqmeHost IP: "</string>
+    <string name="ResqmeHost_name">"Glass Breaker Host IP: "</string>
     <string name="launch_all">Launch All</string>
     <string name="number_1">"No.1: "</string>
     <string name="number_2">"No.2: "</string>
@@ -186,9 +186,9 @@
     <string name="to_right">to right</string>
     <string name="preparing">Preparing</string>
     <string name="beReady">Be ready</string>
-    <string name="autoMode">Auto mode</string>
+    <string name="autoMode">Auto Mode</string>
     <string name="switching">Switching</string>
-    <string name="manualMode">Manual mode</string>
+    <string name="manualMode">Manual Mode</string>
     <string name="stopped">Stopped</string>
     <string name="notManualMode">Currently not in manual mode, unavailable!</string>
     <string name="thrower_ordinary">Ordinary</string>
@@ -333,9 +333,9 @@
     <string name="hook_switch">hook switch</string>
     <string name="adjust_speechRate">Speech rate</string>
     <string name="switch_targets">switch nozzle</string>
-    <string name="nozzle">"Nozzle: "</string>
-    <string name="clear_water">clear water</string>
-    <string name="foam">foam</string>
+    <string name="nozzle">Current nozzle</string>
+    <string name="clear_water">Clear Water Nozzle</string>
+    <string name="foam">Foam Nozzle</string>
     <string name="reached_leftmost_side">Has reached the leftmost side</string>
     <string name="reached_rightmost_side">Has reached the rightmost side</string>
     <string name="nozzleSwitchPrompt">Please confirm that the water pump has been turned off before switching the spray head!</string>
@@ -350,4 +350,8 @@
     <string name="upload_failed_please_try_again">Upload failed, please try again</string>
     <string name="failed_to_get_file">Failed to obtain the file</string>
     <string name="select_the_type_of_thrower">Select the type of thrower</string>
+    <string name="bullet_1">No.1 bullet</string>
+    <string name="bullet_2">No.2 bullet</string>
+    <string name="static_mode">Static Mode​</string>
+    <string name="nozzle_mode">Nozzle model</string>
 </resources>

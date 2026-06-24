@@ -2,6 +2,7 @@ package com.example.yikupayloadexample
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -14,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.protocol.WATERGUN_STATE_RECEIVE
 import com.yiku.yikupayloadSDK.service.WaterGunService
 import com.yiku.yikupayloadSDK.util.MsgCallback
@@ -99,9 +101,8 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mToRightBtn.isEnabled = false
                     }
                     1 -> {
-                        mState.setText(R.string.beReady)
+                        mState.setText(R.string.static_mode)
                         mState.setTextColor(resources.getColor(R.color.green))
-                        mOperateBtn.setText(R.string.pulse_on)
                         mOperateBtn.isEnabled = mSafetySwitch.isChecked
                         mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
@@ -110,7 +111,6 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     2 -> {
                         mState.setText(R.string.autoMode)
                         mState.setTextColor(resources.getColor(R.color.green))
-                        mOperateBtn.setText(R.string.switching_modes)
                         mOperateBtn.isEnabled = mSafetySwitch.isChecked
                         mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
@@ -127,16 +127,14 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     4 -> {
                         mState.setText(R.string.manualMode)
                         mState.setTextColor(resources.getColor(R.color.green))
-                        mOperateBtn.setText(R.string.stop)
                         mOperateBtn.isEnabled = mSafetySwitch.isChecked
                         mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = mSafetySwitch.isChecked
                         mToRightBtn.isEnabled = mSafetySwitch.isChecked
                     }
                     5 -> {
-                        mState.setText(R.string.stopped)
+                        mState.setText(R.string.static_mode)
                         mState.setTextColor(resources.getColor(R.color.green))
-                        mOperateBtn.setText(R.string.pulse_on)
                         mOperateBtn.isEnabled = mSafetySwitch.isChecked
                         mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
@@ -183,7 +181,6 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             mOperateBtn.setOnClickListener {
                 try {
                     waterGunService.modeSwitch()
-                    mOperateBtn.setText( R.string.executing )
                     mOperateBtn.isEnabled = false
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -304,6 +301,8 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         // 定时器，判断连接状态
         private fun setConnectState(){
             val timer = Timer();
+            val statusDot = findViewById<View>(R.id.statusDot)
+            val background = statusDot.background as GradientDrawable
             val connectText = findViewById<TextView>(R.id.waterGunConnect)
             val handler = Handler(Looper.getMainLooper())
             val task = object : TimerTask(){
@@ -312,6 +311,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         if (Date().time - updateTime < 3000) {
                             handler.post {
                                 connectText.setText(R.string.connection_status_connected)
+                                background.setColor(ContextCompat.getColor(context, R.color.green))
                             }
                         }
                         waterGunService.heartbeat()
@@ -319,6 +319,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         if (Date().time - updateTime > 3000) {
                             handler.post {
                                 connectText.setText(R.string.connection_status_notconnected)
+                                background.setColor(ContextCompat.getColor(context, R.color.red))
                             }
                         }
                         // 如果超过10s没收到消息，主动断开连接，等待重连
@@ -331,6 +332,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         isConnecting = true
                         handler.post {
                             connectText.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                         // 尝试重连
                         thread {
@@ -345,6 +347,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                             updateTime = Date().time
                             handler.post {
                                 connectText.setText(R.string.connection_status_connected)
+                                background.setColor(ContextCompat.getColor(context, R.color.green))
                             }
                         }
                     }

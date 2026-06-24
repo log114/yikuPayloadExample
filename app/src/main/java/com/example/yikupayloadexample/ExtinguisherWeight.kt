@@ -1,6 +1,7 @@
 package com.example.yikupayloadexample
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -12,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.protocol.EXTINGUISHER_STATE_RECEIVE
 import com.yiku.yikupayloadSDK.service.ExtinguisherService
 import com.yiku.yikupayloadSDK.util.MsgCallback
@@ -121,19 +123,19 @@ class ExtinguisherWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
     // 定时器，判断连接状态
     private fun setConnectState(){
         val timer = Timer();
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val background = statusDot.background as GradientDrawable
         val connectText = findViewById<TextView>(R.id.extinguisherConnect)
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
             override fun run() {
                 if(extinguisherService.getIsConnected()){
-                    handler.post {
-                        connectText.setText(R.string.connection_status_connected)
-                    }
                     extinguisherService.heartbeat()
                     // 3秒没收到信息，显示未连接
                     if (Date().time - updateTime > 3000) {
                         handler.post {
                             connectText.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                     }
                     // 如果超过10s没收到消息，主动断开连接，等待重连
@@ -146,6 +148,7 @@ class ExtinguisherWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
                     isConnecting = true
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                     // 尝试重连
                     thread {
@@ -160,6 +163,7 @@ class ExtinguisherWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
                         updateTime = Date().time
                         handler.post {
                             connectText.setText(R.string.connection_status_connected)
+                            background.setColor(ContextCompat.getColor(context, R.color.green))
                         }
                     }
                 }

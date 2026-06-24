@@ -377,9 +377,9 @@
     <string name="hook_switch">挂钩开关</string>
     <string name="adjust_speechRate">调整语速</string>
     <string name="switch_targets">切换喷头</string>
-    <string name="nozzle">喷头：</string>
-    <string name="clear_water">清水</string>
-    <string name="foam">泡沫</string>
+    <string name="nozzle">当前喷头</string>
+    <string name="clear_water">清水喷头</string>
+    <string name="foam">泡沫喷头</string>
     <string name="reached_leftmost_side">已达最左侧</string>
     <string name="reached_rightmost_side">已达最右侧</string>
     <string name="nozzleSwitchPrompt">请先确认水泵已关闭，再进行喷头切换！</string>
@@ -394,4 +394,8 @@
     <string name="upload_failed_please_try_again">上传失败，请重试</string>
     <string name="failed_to_get_file">获取文件失败</string>
     <string name="select_the_type_of_thrower">选择抛投类型</string>
+    <string name="bullet_1">1号弹</string>
+    <string name="bullet_2">2号弹</string>
+    <string name="static_mode">静止模式</string>
+    <string name="nozzle_mode">枪头模式</string>
 </resources>

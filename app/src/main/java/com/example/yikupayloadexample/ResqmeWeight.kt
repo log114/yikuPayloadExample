@@ -2,6 +2,7 @@ package com.example.yikupayloadexample
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -13,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.protocol.RESQME_STATUS
 import com.yiku.yikupayloadSDK.service.ResqmeService
 import com.yiku.yikupayloadSDK.util.MsgCallback
@@ -28,6 +30,8 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     var resqmeService: ResqmeService = ResqmeService()
     private lateinit var mResqmeView: View
     private lateinit var connectText: TextView
+    private lateinit var statusDot: View
+    private lateinit var background: GradientDrawable
     private lateinit var mSafetySwitchSwitch: Switch
     private lateinit var mResqmeLaunchBtn1: Button
     private lateinit var mResqmeLaunchBtn2: Button
@@ -75,6 +79,9 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         if(!mSafetySwitchSwitch.isChecked) {
             mResqmeState1.setText(R.string.not_detected)
             mResqmeState2.setText(R.string.not_detected)
+            mResqmeLaunchBtn1.isEnabled = false
+            mResqmeLaunchBtn2.isEnabled = false
+            mResqmeLaunchAllBtn.isEnabled = false
         }
         else {
             var i = 0
@@ -111,10 +118,10 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 }
                 i++
             }
+            mResqmeLaunchAllBtn.isEnabled = mResqmeLaunchBtn1.isEnabled || mResqmeLaunchBtn2.isEnabled
         }
-        handler.post {
-            connectText.setText(R.string.connection_status_connected)
-        }
+        connectText.setText(R.string.connection_status_connected)
+        background.setColor(ContextCompat.getColor(context, R.color.green))
     }
 
     fun ByteArray.toHex(): String =
@@ -124,6 +131,8 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         LayoutInflater.from(context).inflate(R.layout.resqme_weight, this, true)
         mResqmeView = findViewById(R.id.resqme_view)
         connectText = findViewById(R.id.resqmeConnect)
+        statusDot = findViewById(R.id.statusDot)
+        background = statusDot.background as GradientDrawable
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
         mResqmeLaunchBtn1 = findViewById(R.id.resqmeLaunchBtn1)
         mResqmeLaunchBtn2 = findViewById(R.id.resqmeLaunchBtn2)
@@ -203,6 +212,7 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     if(Date().time - updateTime > 3000) {
                         handler.post {
                             connectText.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                         resqmeService.disConnect()
                     }
@@ -211,6 +221,7 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     isConnecting = true
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                     // 尝试重连
                     thread {
@@ -225,6 +236,7 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         updateTime = Date().time
                         handler.post {
                             connectText.setText(R.string.connection_status_connected)
+                            background.setColor(ContextCompat.getColor(context, R.color.green))
                         }
                     }
                 }

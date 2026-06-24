@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/thWeight"
     android:layout_width="300dp"
     android:layout_height="match_parent">
@@ -11,95 +12,137 @@
         android:layout_centerInParent="true"
         android:orientation="vertical"
         android:visibility="visible">
-
-        <TextView
-            android:id="@+id/resqmeConnect"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/connection_status_notconnected"
-            android:textColor="@color/white" />
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <View
+                android:id="@+id/statusDot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/circle_indicator" />
+            <TextView
+                android:id="@+id/resqmeConnect"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:text="@string/connection_status_notconnected"
+                android:textSize="10sp"
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:layout_marginTop="0dp"
+            android:visibility="visible">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/resqmeState1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/not_detected'
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text='@string/bullet_1'
+                    android:textSize="11sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/resqmeState2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/not_detected'
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text='@string/bullet_2'
+                    android:textSize="11sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="#383D40" />
         <Switch
             android:id="@+id/safetySwitchSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/safety_switch"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:switchPadding="4dp"
+            android:track="@drawable/switch_track_bg"
+            android:thumb="@drawable/switch_thumb"
+            tools:ignore="UseSwitchCompatOrMaterialXml"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
             android:visibility="visible">
             <Button
                 android:id="@+id/resqmeLaunchBtn1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/launch"
+                android:enabled="false"
                 android:textColor="@color/white" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:text="@string/number_1"
-                android:textColor="@color/white" />
-            <TextView
-                android:id="@+id/resqmeState1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:text="@string/short_position"
-                android:textColor="@color/white" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-            android:visibility="visible">
+
             <Button
                 android:id="@+id/resqmeLaunchBtn2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/launch"
-                android:textColor="@color/white" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:text="@string/number_2"
-                android:textColor="@color/white" />
-            <TextView
-                android:id="@+id/resqmeState2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:text="@string/short_position"
+                android:enabled="false"
                 android:textColor="@color/white" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
             android:visibility="visible">
             <Button
                 android:id="@+id/resqmeLaunchAllBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_width="182dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/launch_all"
+                android:enabled="false"
                 android:textColor="@color/white" />
 
         </LinearLayout>
