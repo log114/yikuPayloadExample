@@ -1,15 +1,18 @@
 package com.example.yikupayloadexample
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.example.yikupayloadexample.component.ModeItem
 import com.example.yikupayloadexample.component.ModeSelectionDialog
 import com.yiku.yikupayloadSDK.protocol.FOURINONE2_STATE
@@ -26,6 +29,8 @@ class FourInOne2LightWeight(context: Context, attr: AttributeSet?, defStyleAttr:
 
     private val TAG = "FourInOne2LightWeight"
     private lateinit var connectState: TextView
+    private lateinit var statusDot: View
+    private lateinit var background: GradientDrawable
     private lateinit var lightSwitchBtn: Button
     private lateinit var flashSwitchBtn: Button
     private lateinit var luminanceSeekBar: SeekBar
@@ -206,6 +211,8 @@ class FourInOne2LightWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.four_in_one_2_light_weight, this, true)
         connectState = findViewById(R.id.connectState)
+        statusDot = findViewById(R.id.statusDot)
+        background = statusDot.background as GradientDrawable
         lightSwitchBtn = findViewById(R.id.light_switch_btn)
         flashSwitchBtn = findViewById(R.id.flash_switch_btn)
         luminanceSeekBar = findViewById(R.id.luminance_seek_bar)
@@ -247,6 +254,7 @@ class FourInOne2LightWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                     isConnectingMain = true
                     handler.post {
                         connectState.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                     thread {
                         Thread.sleep(5000)
@@ -255,6 +263,7 @@ class FourInOne2LightWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                         }
                         handler.post {
                             connectState.setText(R.string.connection_status_connected)
+                            background.setColor(ContextCompat.getColor(context, R.color.green))
                         }
                         isConnectingMain = false
                         updateTime = Date().time
@@ -266,6 +275,7 @@ class FourInOne2LightWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                     if (Date().time - updateTime > 5000) {
                         handler.post {
                             connectState.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                     }
                     // 如果超过10s没收到消息，主动断开连接，等待重连
