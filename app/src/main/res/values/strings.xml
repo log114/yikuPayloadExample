@@ -398,4 +398,6 @@
     <string name="bullet_2">2号弹</string>
     <string name="static_mode">静止模式</string>
     <string name="nozzle_mode">枪头模式</string>
+    <string name="shouting_and_alarms">喊话和警报</string>
+    <string name="back">返回</string>
 </resources>

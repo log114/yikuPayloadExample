@@ -354,4 +354,6 @@
     <string name="bullet_2">No.2 bullet</string>
     <string name="static_mode">Static Mode​</string>
     <string name="nozzle_mode">Nozzle model</string>
+    <string name="shouting_and_alarms">Shouting and Alarms</string>
+    <string name="back">Back</string>
 </resources>

@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/boder"
+            android:background="@drawable/edittext_border"
             android:padding="0dp"
             tools:ignore="UselessParent">
             <LinearLayout
@@ -59,18 +59,14 @@
                     android:src="@drawable/picture_in_picture" />
             </LinearLayout>
         </FrameLayout>
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_bottom_dash_line"
-            android:visibility="visible"
-            tools:ignore="UselessParent">
-        </LinearLayout>
+            android:background="#383D40" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="24dp"

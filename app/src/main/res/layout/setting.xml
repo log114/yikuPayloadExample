@@ -417,6 +417,7 @@
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
                     android:textAlignment="textEnd"
+                    app:layout_alignSelf="center"
                     android:text="@string/AllInOneHost_name"
                     android:textColor="@color/white_600"/>
                 <EditText

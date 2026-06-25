@@ -3,6 +3,7 @@ package com.example.yikupayloadexample
 import android.content.Context
 import android.content.Intent
 import android.graphics.SurfaceTexture
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -22,6 +24,7 @@ import android.widget.RelativeLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.example.yikupayloadexample.component.FullScreenVideoActivity
 import com.example.yikupayloadexample.util.RtspPlayer
@@ -42,6 +45,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var fpvContent: LinearLayout
     private lateinit var throwerSafetySwitch: Switch
     private lateinit var connectState: TextView
+    private lateinit var statusDot: View
+    private lateinit var background: GradientDrawable
     private lateinit var thrower1Btn: Button
     private lateinit var thrower2Btn: Button
     private lateinit var throwerAllBtn: Button
@@ -447,6 +452,8 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         fpvContent = findViewById(R.id.fpv_content)
         throwerSafetySwitch = findViewById(R.id.throwerSafetySwitch)
         connectState = findViewById(R.id.connectState)
+        statusDot = findViewById(R.id.statusDot)
+        background = statusDot.background as GradientDrawable
         thrower1Btn = findViewById(R.id.thrower1_btn)
         thrower2Btn = findViewById(R.id.thrower2_btn)
         throwerAllBtn = findViewById(R.id.throwerAll_btn)
@@ -757,11 +764,13 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 if (allInOneService.getMainIsConnected()) {
                     handler.post {
                         connectState.setText(R.string.connection_status_connected)
+                        background.setColor(ContextCompat.getColor(context, R.color.green))
                     }
                 }
                 else{// 未连接
                     handler.post {
                         connectState.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                 }
             }

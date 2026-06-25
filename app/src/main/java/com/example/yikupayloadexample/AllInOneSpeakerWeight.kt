@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -13,11 +14,11 @@ import android.provider.Settings
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.RadioGroup
@@ -54,6 +55,8 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var realTimeSpeakBtn: Button
     private lateinit var playAlarmBtn: Button
     private lateinit var mConnectState: TextView
+    private lateinit var statusDot: View
+    private lateinit var background: GradientDrawable
     private lateinit var ttsText: EditText
     private lateinit var ttsPlayBtn: Button
     private lateinit var ttsRadioGroup: RadioGroup
@@ -69,7 +72,8 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var volumeText: TextView
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
-    private lateinit var backBtn: ImageView
+    private lateinit var ttsBackBtn: Button
+    private lateinit var audioBackBtn: Button
     private var isConnecting: Boolean = false
     private var isForegroundServiceRunning = false
     private var isStartSpeak = false
@@ -291,7 +295,11 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
 
         // 返回主界面
-        backBtn.setOnClickListener {
+        ttsBackBtn.setOnClickListener {
+            speakerMainPage.visibility = VISIBLE
+            speakerSecondPage.visibility = GONE
+        }
+        audioBackBtn.setOnClickListener {
             speakerMainPage.visibility = VISIBLE
             speakerSecondPage.visibility = GONE
         }
@@ -311,6 +319,8 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         realTimeSpeakBtn = findViewById(R.id.real_time_speak_btn)
         playAlarmBtn = findViewById(R.id.play_alarm)
         mConnectState = findViewById(R.id.connectState)
+        statusDot = findViewById(R.id.statusDot)
+        background = statusDot.background as GradientDrawable
         ttsSettingBtn = findViewById(R.id.tts_setting_btn)
         ttsText = findViewById(R.id.tts_text)
         ttsPlayBtn = findViewById(R.id.tts_play)
@@ -327,7 +337,8 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         volumeText = findViewById(R.id.volumeText)
         pitchSeekBar = findViewById(R.id.pitch_seek_bar)
         pitchText = findViewById(R.id.pitchText)
-        backBtn = findViewById(R.id.back_btn)
+        ttsBackBtn = findViewById(R.id.tts_back_btn)
+        audioBackBtn = findViewById(R.id.audio_back_btn)
 
         sharedPreferences = context.getSharedPreferences("RealTimeShoutWeight", Context.MODE_PRIVATE)
         // 实时喊话
@@ -540,11 +551,13 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 if(allInOneService.getMainIsConnected()) {
                     handler.post {
                         mConnectState.setText(R.string.connection_status_connected)
+                        background.setColor(ContextCompat.getColor(context, R.color.green))
                     }
                 }
                 else {
                     handler.post {
                         mConnectState.setText(R.string.connection_status_notconnected)
+                        background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
                 }
             }

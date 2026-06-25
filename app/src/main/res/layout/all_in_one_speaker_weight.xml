@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/speakerWeight"
     android:layout_width="450dp"
-    android:layout_height="245dp">
+    android:layout_height="245dp"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <View
+            android:id="@+id/statusDot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/circle_indicator" />
+        <TextView
+            android:id="@+id/connectState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/connection_status_notconnected"
+            android:textSize="10sp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:background="#383D40" />
+
     <LinearLayout
         android:id="@+id/speakerMainPage"
         android:layout_width="match_parent"
@@ -19,11 +49,19 @@
             android:gravity="center_vertical"
             android:visibility="visible"
             tools:ignore="UselessParent">
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textStart"
+                android:text="@string/shouting_and_alarms"
+                android:textSize="13sp"
+                android:textColor="@color/white" />
             <Button
                 android:id="@+id/real_time_speak_btn"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="4dp"
                 android:padding="0dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/play_btn"
@@ -45,16 +83,6 @@
                 android:textSize="13sp"
                 tools:ignore="ButtonStyle"
                 />
-            <TextView
-                android:id="@+id/connectState"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="10dp"
-                android:textAlignment="textEnd"
-                android:layout_weight="1"
-                android:text="@string/not_connected"
-                android:textSize="13sp"
-                android:textColor="@color/white" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,33 +137,21 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_bottom_dash_line"
-            android:visibility="visible"
-            tools:ignore="UselessParent">
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
             android:visibility="visible"
+            android:gravity="start"
             tools:ignore="UselessParent">
 
             <TextView
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="10dp"
-                android:textAlignment="textStart"
                 android:text="@string/audio_file"
                 android:textSize="13sp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:gravity="center_vertical"/>
 
 
             <LinearLayout
@@ -211,19 +227,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_bottom_dash_line"
-            android:visibility="visible"
-            tools:ignore="UselessParent">
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
             <TextView
@@ -238,15 +243,15 @@
             <SeekBar
                 android:id="@+id/volume_seek_bar"
                 android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_height="34dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:minHeight="2dp"
-                android:maxHeight="2dp"
-                android:progressDrawable="@drawable/bg_adjust_seek_bar"
-                android:thumb="@drawable/bg_seek_bar_thumb"
                 android:max="100"
-                android:progress="30" />
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
+                android:progress="30"
+                android:progressDrawable="@drawable/bg_adjust_seek_bar"
+                android:thumb="@drawable/bg_seek_bar_thumb" />
 
             <TextView
                 android:id="@+id/volumeText"
@@ -287,7 +292,6 @@
                 android:id="@+id/pitchText"
                 android:layout_width="60dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="20dp"
                 android:text="0°"
                 android:textSize="13sp"
                 android:textColor="@color/white" />
@@ -299,22 +303,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:gravity="center_vertical"
         android:visibility="gone"
         tools:ignore="UselessParent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="10dp"
-            android:visibility="visible">
-            <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="4dp"
-                android:contentDescription="返回"
-                android:src="@drawable/back" />
-        </LinearLayout>
         <LinearLayout
             android:id="@+id/tts_setting_page"
             android:layout_width="match_parent"
@@ -324,7 +315,7 @@
             tools:ignore="UselessParent">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="visible"
                 tools:ignore="UselessParent">
@@ -397,6 +388,24 @@
                     android:theme="@style/My_CheckBox">
                 </CheckBox>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:visibility="visible"
+                tools:ignore="UselessParent">
+                <Button
+                    android:id="@+id/tts_back_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:paddingVertical="0dp"
+                    android:background="@drawable/default_btn"
+                    android:text="@string/back"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"/>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/audio_file_list_page"
@@ -428,10 +437,9 @@
                 tools:ignore="UselessParent">
                 <Button
                     android:id="@+id/addRecordBtn"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:padding="0dp"
-                    android:layout_marginEnd="100dp"
+                    android:paddingVertical="0dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/add_video"
                     android:textColor="#fff"
@@ -440,15 +448,28 @@
 
                 <Button
                     android:id="@+id/del_audio"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:padding="0dp"
+                    android:layout_marginStart="10dp"
+                    android:paddingVertical="0dp"
                     android:background="@drawable/danger_btn"
                     android:text="@string/del_video"
+                    android:textColor="#fff"
+                    android:textSize="13sp"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/audio_back_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="10dp"
+                    android:paddingVertical="0dp"
+                    android:background="@drawable/default_btn"
+                    android:text="@string/back"
                     android:textColor="#fff"
                     android:textSize="13sp"
                     tools:ignore="ButtonStyle" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
