@@ -366,13 +366,13 @@
     <string name="SlowDescentDevice200Host_name">"200kg 缓降器IP: "</string>
     <string name="not_peaked">未触顶</string>
     <string name="peaked">已触顶</string>
-    <string name="speed">"速度: "</string>
-    <string name="rope_length">"释放绳长: "</string>
-    <string name="horizontal_swing_angle">"水平摆角: "</string>
-    <string name="MOBO_temp">"主板温度: "</string>
-    <string name="hook_status">"挂钩通信: "</string>
+    <string name="speed">速度</string>
+    <string name="rope_length">释放绳长</string>
+    <string name="horizontal_swing_angle">水平摆角</string>
+    <string name="MOBO_temp">主板温度</string>
+    <string name="hook_status">挂钩通信</string>
     <string name="urgent_stop">急停</string>
-    <string name="hook_battery_level">"挂钩电量: "</string>
+    <string name="hook_battery_level">挂钩电量</string>
     <string name="warning_light">警示灯</string>
     <string name="hook_switch">挂钩开关</string>
     <string name="adjust_speechRate">调整语速</string>
@@ -400,4 +400,5 @@
     <string name="nozzle_mode">枪头模式</string>
     <string name="shouting_and_alarms">喊话和警报</string>
     <string name="back">返回</string>
+    <string name="peak_state">触顶状态</string>
 </resources>

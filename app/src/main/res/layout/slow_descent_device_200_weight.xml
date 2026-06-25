@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/deWeight"
     android:layout_width="380dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/slowDescentDevice200Weight"
@@ -16,43 +17,214 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="8dp"
-            android:visibility="visible">
-            <Switch
-                android:id="@+id/safetySwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX="1"
-                android:scaleY="1"
-                android:text="@string/safety_switch"
-                android:textColor="@color/white"
-                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <View
+                android:id="@+id/statusDot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/circle_indicator" />
             <TextView
                 android:id="@+id/connectState"
                 android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="end"
+                android:gravity="start"
                 android:text="@string/connection_status_notconnected"
+                android:textSize="10sp"
                 android:textColor="@color/white" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="8dp"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/peakedText"
+            android:layout_marginTop="0dp"
+            android:visibility="visible">
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="1dp"
                 android:layout_weight="1"
-                android:text='@string/not_peaked'
-                android:textColor="@color/white" />
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/peakedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/not_peaked'
+                    android:textColor="@color/white"
+                    android:textSize="12sp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/peak_state'
+                    android:textSize="10sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="1dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/ropeLengthText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='0 m'
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/rope_length'
+                    android:textSize="10sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="1dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/speedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='0 m/min'
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/speed'
+                    android:textSize="10sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:layout_marginTop="1dp"
+            android:visibility="visible">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="1dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/hookStatusText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/not_connected'
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/hook_status'
+                    android:textSize="10sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="1dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/hookBatteryLevelText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='0%'
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/hook_battery_level'
+                    android:textSize="10sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="1dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/swingAngleText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='0°'
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/horizontal_swing_angle'
+                    android:textSize="10sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="#383D40" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:gravity="center_vertical"
+            android:visibility="visible">
+            <Switch
+                android:id="@+id/safetySwitch"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/safety_switch"
+                android:textColor="@color/white"
+                android:switchPadding="4dp"
+                android:track="@drawable/switch_track_bg"
+                android:thumb="@drawable/switch_thumb"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
             <TextView
                 android:id="@+id/weightTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
+                android:layout_marginStart="48dp"
                 android:gravity="center"
                 android:text='@string/weight'
                 android:textColor="@color/white" />
@@ -64,129 +236,19 @@
                 android:gravity="center"
                 android:text='0 kg'
                 android:textColor="@color/white" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
             <ImageButton
                 android:id="@+id/resetToZeroBtn"
-                android:layout_width="30dp"
+                android:layout_width="40dp"
                 android:layout_height="30dp"
+                android:padding="0dp"
                 android:contentDescription="重量清零"
-                android:src="@drawable/image_btn_reset_to_zero"
+                android:src="@drawable/icon_reset_to_zero"
                 android:scaleType="centerInside"
-                android:background="@drawable/image_btn"
-                android:layout_marginStart="8dp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:layout_marginTop="0dp"
-            android:paddingHorizontal="8dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="visible">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:gravity="center"
-                    android:text='@string/speed'
-                    android:textColor="@color/white" />
-                <TextView
-                    android:id="@+id/speedText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center"
-                    android:text='0 m/s'
-                    android:textColor="@color/white" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:gravity="center"
-                    android:text='@string/rope_length'
-                    android:textColor="@color/white" />
-                <TextView
-                    android:id="@+id/ropeLengthText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center"
-                    android:text='0 m'
-                    android:textColor="@color/white" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:gravity="center"
-                    android:text='@string/horizontal_swing_angle'
-                    android:textColor="@color/white" />
-                <TextView
-                    android:id="@+id/swingAngleText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center"
-                    android:text='0°'
-                    android:textColor="@color/white" />
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:layout_marginTop="0dp"
-            android:paddingHorizontal="8dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="visible">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:gravity="center"
-                    android:text='@string/hook_status'
-                    android:textColor="@color/white" />
-                <TextView
-                    android:id="@+id/hookStatusText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center"
-                    android:text='@string/not_connected'
-                    android:textColor="@color/white" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:gravity="center"
-                    android:text='@string/hook_battery_level'
-                    android:textColor="@color/white" />
-                <TextView
-                    android:id="@+id/hookBatteryLevelText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center"
-                    android:text='0%'
-                    android:textColor="@color/white" />
-            </LinearLayout>
+                android:background="@drawable/danger_btn"/>
         </LinearLayout>
 
         <LinearLayout
@@ -197,36 +259,37 @@
             android:paddingHorizontal="8dp"
             android:visibility="visible">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text='@string/by_speed'
                 android:textColor="@color/white" />
             <EditText
                 android:id="@+id/upSpeedInput"
-                android:layout_width="50dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:inputType="number"
                 android:text="10"
                 android:textColor="@color/white"
-                android:background="@drawable/boder"/>
+                android:background="@drawable/edittext_border"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
-                android:gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text='m/min (0~60)'
                 android:textColor="@color/white" />
             <ImageButton
                 android:id="@+id/upBtn"
-                android:layout_width="30dp"
+                android:layout_width="40dp"
                 android:layout_height="30dp"
+                android:padding="0dp"
                 android:contentDescription="上升"
-                android:src="@drawable/image_btn_up"
+                android:src="@drawable/icon_up"
                 android:scaleType="centerInside"
-                android:background="@drawable/image_btn"
-                android:layout_marginStart="10dp"/>
+                android:background="@drawable/play_btn"/>
         </LinearLayout>
 
         <LinearLayout
@@ -237,179 +300,115 @@
             android:paddingHorizontal="8dp"
             android:visibility="visible">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text='@string/by_speed'
                 android:textColor="@color/white" />
             <EditText
                 android:id="@+id/downSpeedInput"
-                android:layout_width="50dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:inputType="number"
                 android:text="20"
                 android:textColor="@color/white"
-                android:background="@drawable/boder"/>
+                android:background="@drawable/edittext_border"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
-                android:gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text='m/min (0~60)'
                 android:textColor="@color/white" />
             <ImageButton
                 android:id="@+id/downBtn"
-                android:layout_width="30dp"
+                android:layout_width="40dp"
                 android:layout_height="30dp"
+                android:padding="0dp"
                 android:contentDescription="下降"
-                android:src="@drawable/image_btn_down"
+                android:src="@drawable/icon_down"
                 android:scaleType="centerInside"
-                android:background="@drawable/image_btn"
-                android:layout_marginStart="10dp"/>
+                android:background="@drawable/play_btn"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal"
             android:paddingHorizontal="8dp"
             android:visibility="visible">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text='@string/by_length'
                 android:textColor="@color/white" />
             <EditText
                 android:id="@+id/lengthInput"
-                android:layout_width="50dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:inputType="number"
                 android:text="0"
                 android:textColor="@color/white"
-                android:background="@drawable/boder"/>
+                android:background="@drawable/edittext_border"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
-                android:gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text='m (0~100)'
                 android:textColor="@color/white" />
             <ImageButton
                 android:id="@+id/startBtn"
-                android:layout_width="30dp"
+                android:layout_width="40dp"
                 android:layout_height="30dp"
+                android:padding="0dp"
                 android:contentDescription="启动"
-                android:src="@drawable/image_btn_start"
+                android:src="@drawable/icon_up_rotated"
                 android:scaleType="centerInside"
-                android:background="@drawable/image_btn"
-                android:layout_marginStart="8dp"/>
+                android:background="@drawable/play_btn"/>
         </LinearLayout>
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:paddingHorizontal="8dp"-->
-<!--            android:visibility="visible">-->
-<!--            <ImageButton-->
-<!--                android:id="@+id/warningLightBtn"-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:contentDescription="警示灯"-->
-<!--                android:src="@drawable/image_btn_warning_light"-->
-<!--                android:scaleType="centerInside"-->
-<!--                android:background="@drawable/image_btn"/>-->
-<!--            <ImageButton-->
-<!--                android:id="@+id/hookBtn"-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:contentDescription="挂钩开关"-->
-<!--                android:src="@drawable/image_btn_hook"-->
-<!--                android:scaleType="centerInside"-->
-<!--                android:background="@drawable/image_btn"-->
-<!--                android:layout_marginStart="10dp"/>-->
-<!--            <ImageButton-->
-<!--                android:id="@+id/stopBtn"-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:contentDescription="停止"-->
-<!--                android:src="@drawable/image_btn_stop"-->
-<!--                android:scaleType="centerInside"-->
-<!--                android:background="@drawable/image_btn"-->
-<!--                android:layout_marginStart="10dp"/>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:gravity="end">-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/urgentResetBtn"-->
-<!--                    android:layout_width="30dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:contentDescription="复位"-->
-<!--                    android:src="@drawable/image_danger_btn_reset"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    android:background="@drawable/image_danger_btn"/>-->
-<!--                <ImageButton-->
-<!--                    android:id="@+id/urgentStopBtn"-->
-<!--                    android:layout_width="30dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:contentDescription="急停"-->
-<!--                    android:src="@drawable/image_danger_btn_stop"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    android:background="@drawable/image_danger_btn"-->
-<!--                    android:layout_marginStart="10dp"/>-->
-<!--                <ImageButton-->
-<!--                    android:id="@+id/urgentFuseBtn"-->
-<!--                    android:layout_width="30dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:contentDescription="熔断"-->
-<!--                    android:src="@drawable/image_danger_btn_fusing"-->
-<!--                    android:scaleType="centerInside"-->
-<!--                    android:background="@drawable/image_danger_btn"-->
-<!--                    android:layout_marginStart="10dp"/>-->
-<!--            </LinearLayout>-->
-<!--        </LinearLayout>-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal"
             android:paddingHorizontal="8dp"
             android:visibility="visible">
             <Button
                 android:id="@+id/warningLightBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="0dp"
+                android:layout_weight="1"
                 android:text="@string/warning_light"
                 android:background="@drawable/play_btn"
                 android:textColor="@color/white" />
             <Button
                 android:id="@+id/hookBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="0dp"
+                android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="@string/hook_switch"
                 android:background="@drawable/play_btn"
                 android:textColor="@color/white" />
             <Button
                 android:id="@+id/stopBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="0dp"
+                android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="@string/stop"
                 android:background="@drawable/play_btn"
@@ -418,35 +417,38 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal"
             android:paddingHorizontal="8dp"
             android:visibility="visible">
             <Button
                 android:id="@+id/urgentResetBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="0dp"
+                android:layout_weight="1"
                 android:text="@string/reset"
                 android:background="@drawable/danger_btn"
                 android:textColor="@color/white" />
             <Button
                 android:id="@+id/urgentStopBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="0dp"
+                android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="@string/urgent_stop"
                 android:background="@drawable/danger_btn"
                 android:textColor="@color/white"/>
             <Button
                 android:id="@+id/urgentFuseBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="0dp"
+                android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="@string/fuse"
                 android:background="@drawable/danger_btn"
@@ -457,7 +459,7 @@
         android:id="@+id/prompt_box"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:visibility="gone">
         <TextView
@@ -481,6 +483,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            android:gravity="center_horizontal"
             android:visibility="visible">
             <Button
                 android:id="@+id/btn_ok"
@@ -488,7 +491,6 @@
                 android:layout_height="30dp"
                 android:paddingHorizontal="2dp"
                 android:paddingVertical="0dp"
-                android:layout_marginStart="16dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/ok"
                 android:textColor="@color/white" />
@@ -498,10 +500,10 @@
                 android:layout_height="30dp"
                 android:paddingHorizontal="2dp"
                 android:paddingVertical="0dp"
-                android:layout_marginStart="16dp"
-                android:background="@drawable/play_btn"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/default_btn"
                 android:text="@string/cancel"
                 android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.example.yikupayloadexample
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.text.InputFilter
@@ -40,6 +41,8 @@ class SlowDescentDevice200Weight(context: Context, attr: AttributeSet?, defStyle
     private lateinit var mSlowDescentDevice200View: LinearLayout
     private lateinit var mPromptBox: LinearLayout
     private lateinit var mConnectState: TextView
+    private lateinit var statusDot: View
+    private lateinit var background: GradientDrawable
     private lateinit var mSafetySwitch: Switch
     private lateinit var mPeakedText: TextView
     private lateinit var mWeightText: TextView
@@ -65,6 +68,7 @@ class SlowDescentDevice200Weight(context: Context, attr: AttributeSet?, defStyle
     private lateinit var mCancelBtn:Button
 
     private var updateTime = Date().time
+    private var isFirstConnect = true
     private var isConnecting = false;
     private var isControling_safetySwitch = false
     private var isControling_warningLight = false
@@ -107,6 +111,7 @@ class SlowDescentDevice200Weight(context: Context, attr: AttributeSet?, defStyle
         Log.i(TAG, "缓降器msg:${msg.toHex()}")
         updateTime = Date().time
         mConnectState.setText(R.string.connection_status_connected)
+        background.setColor(ContextCompat.getColor(context, R.color.green))
         // 安全开关状态
         val isSafetySwitchOpen = (msg[3].toInt() == 1)
         if(!isControling_safetySwitch) {
@@ -193,6 +198,8 @@ class SlowDescentDevice200Weight(context: Context, attr: AttributeSet?, defStyle
         mSlowDescentDevice200View = findViewById(R.id.slowDescentDevice200Weight)
         mPromptBox = findViewById(R.id.prompt_box)
         mConnectState = findViewById(R.id.connectState)
+        statusDot = findViewById(R.id.statusDot)
+        background = statusDot.background as GradientDrawable
         mSafetySwitch = findViewById(R.id.safetySwitch)
         mPeakedText = findViewById(R.id.peakedText)
         mWeightText = findViewById(R.id.weightText)
@@ -410,7 +417,10 @@ class SlowDescentDevice200Weight(context: Context, attr: AttributeSet?, defStyle
                     if(!isConnecting){
                         isConnecting = true
                         thread {
-                            Thread.sleep(5000)// 先等待5s，防止刚断连就重连，报错
+                            if(!isFirstConnect) {
+                                Thread.sleep(5000)
+                            }
+                            isFirstConnect = false
                             while (!slowDescentDevice200Service.connect()) {
                                 Thread.sleep(1000)
                             }
@@ -425,6 +435,7 @@ class SlowDescentDevice200Weight(context: Context, attr: AttributeSet?, defStyle
                         val handler = Handler(Looper.getMainLooper())
                         handler.post {
                             mConnectState.setText(R.string.connection_status_notconnected)
+                            background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
                     }
                     // 如果超过5s没收到消息，主动断开连接，等待重连

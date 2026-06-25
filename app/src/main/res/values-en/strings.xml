@@ -157,7 +157,7 @@
     <string name="gripper">gripper</string>
     <string name="glass_breaker">Glass breaker</string>
     <string name="current_height">"Current height: "</string>
-    <string name="ResqmeHost_name">"Glass Breaker Host IP: "</string>
+    <string name="ResqmeHost_name">"GlassBreakerHost IP: "</string>
     <string name="launch_all">Launch All</string>
     <string name="number_1">"No.1: "</string>
     <string name="number_2">"No.2: "</string>
@@ -322,13 +322,13 @@
     <string name="SlowDescentDevice200Host_name">"200kg lifting IP: "</string>
     <string name="not_peaked">Not peaked</string>
     <string name="peaked">Peaked</string>
-    <string name="speed">"Speed: "</string>
-    <string name="rope_length">"Rope length: "</string>
-    <string name="horizontal_swing_angle">"Swing angle: "</string>
-    <string name="MOBO_temp">"MOBO temp: "</string>
-    <string name="hook_status">"Hook status: "</string>
+    <string name="speed">Speed</string>
+    <string name="rope_length">Rope length</string>
+    <string name="horizontal_swing_angle">Swing angle</string>
+    <string name="MOBO_temp">MOBO temp</string>
+    <string name="hook_status">Hook status</string>
     <string name="urgent_stop">Urgent stop</string>
-    <string name="hook_battery_level">"Hook battery level: "</string>
+    <string name="hook_battery_level">Hook battery level</string>
     <string name="warning_light">warning light</string>
     <string name="hook_switch">hook switch</string>
     <string name="adjust_speechRate">Speech rate</string>
@@ -356,4 +356,5 @@
     <string name="nozzle_mode">Nozzle model</string>
     <string name="shouting_and_alarms">Shouting and Alarms</string>
     <string name="back">Back</string>
+    <string name="peak_state">Peak state</string>
 </resources>

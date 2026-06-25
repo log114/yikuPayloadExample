@@ -267,7 +267,7 @@
                     android:layout_height="30dp"
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
-                    android:background="@drawable/play_btn"
+                    android:background="@drawable/danger_btn"
                     android:text="@string/emergency_stop"
                     android:textColor="@color/white" />
                 <Button
@@ -277,7 +277,7 @@
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
                     android:layout_marginStart="8dp"
-                    android:background="@drawable/play_btn"
+                    android:background="@drawable/danger_btn"
                     android:text="@string/fuse"
                     android:textColor="@color/white" />
             </LinearLayout>
