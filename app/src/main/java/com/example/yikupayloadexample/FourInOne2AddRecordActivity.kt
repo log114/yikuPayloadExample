@@ -148,6 +148,20 @@ class FourInOne2AddRecordActivity: AppCompatActivity() {
         mUploadPlan = findViewById(R.id.upload_plan)
         mUploadPlan.visibility = View.INVISIBLE
         mProgressBarUpload = findViewById(R.id.progress_bar_upload)
+
+        mFileNameEditText.setOnClickListener {
+            // 如果uploadFile未被初始化，说明没有选择文件，先跳转到选择文件页面
+            if(!::uploadFile.isInitialized) {
+                EasyFloat.hide("yk_shout_weight_op")
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                //任意类型文件
+                intent.type = "audio/*"
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
+                ActivityCompat.startActivityForResult(this, intent, 100, null)
+                return@setOnClickListener
+            }
+
+        }
         mUploadBtn.setOnClickListener {
             // 如果uploadFile未被初始化，说明没有选择文件，先跳转到选择文件页面
             if(!::uploadFile.isInitialized) {

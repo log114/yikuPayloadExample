@@ -103,6 +103,7 @@ class PayloadWeight : Service() {
     // 空状态
     private lateinit var emptyText: View
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         showWindow()
         return super.onStartCommand(intent, flags, startId)
@@ -370,6 +371,13 @@ class PayloadWeight : Service() {
 
     }
 
+    fun hideFloatWindow() {
+        mShoutComp.visibility = GONE
+        EasyFloat.hide("yk_payload_weight_op")
+        EasyFloat.hide("video_window")
+        opened = 0
+    }
+
     /**
      * 设置显示隐藏，返回true表示本次调用使组件显示，否则表示使隐藏
      */
@@ -379,11 +387,7 @@ class PayloadWeight : Service() {
         if (mShoutComp.isGone || opened != type) {
             mShoutComp.visibility = VISIBLE
         } else {
-            mShoutComp.visibility = GONE
-            EasyFloat.hide("yk_payload_weight_op")
-            EasyFloat.hide("video_window")
-//            popupWindow.dismiss()
-            opened = 0
+            hideFloatWindow()
         }
         try {
             // 重置旋转状态
@@ -763,6 +767,7 @@ class PayloadWeight : Service() {
         mShoutViewContent.requestLayout()
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun showWindow() {
         realTimeShoutWeight = RealTimeShoutWeight(this)
         ttsShoutWeight = TtsShoutWeight(this)
@@ -781,6 +786,7 @@ class PayloadWeight : Service() {
         waterBranchWeight = WaterBranchWeight(this)
         plLightweight = PL_LightWeight(this)
         allInOneSpeakerWeight = AllInOneSpeakerWeight(this)
+        allInOneSpeakerWeight.attachFloatingWindow(this)
         allInOneLightWeight = AllInOneLightWeight(this)
         allInOneThrowerWeight = AllInOneThrowerWeight(this)
         allInOneThrowerWeight.attachFloatingWindow(this)

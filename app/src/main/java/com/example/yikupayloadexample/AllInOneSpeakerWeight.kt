@@ -74,6 +74,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var pitchText: TextView
     private lateinit var ttsBackBtn: Button
     private lateinit var audioBackBtn: Button
+    private var thisPayloadWeight: PayloadWeight? = null
     private var isConnecting: Boolean = false
     private var isForegroundServiceRunning = false
     private var isStartSpeak = false
@@ -271,6 +272,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             val intent = Intent(this.context, AllInOneAddRecordActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
             startActivity(this.context, intent, null)
+            this.thisPayloadWeight?.hideFloatWindow()
         }
         // 删除音频文件
         delAudioBtn.setOnClickListener {
@@ -374,6 +376,10 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             edit.apply()
             isStartSpeak = !isStartSpeak
         }
+    }
+
+    fun attachFloatingWindow(service: PayloadWeight) {
+        this.thisPayloadWeight = service
     }
 
     private fun getFileList() {
