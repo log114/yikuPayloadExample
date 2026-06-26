@@ -22,6 +22,7 @@ import com.yiku.yikupayloadSDK.util.SlowDescentDevice200Host
 import com.yiku.yikupayloadSDK.util.SlowDescentDeviceHost
 import com.yiku.yikupayloadSDK.util.ThrowerHost
 import com.yiku.yikupayloadSDK.util.WaterBranchHost
+import com.yiku.yikupayloadSDK.util.WaterGunEscapeHost
 import com.yiku.yikupayloadSDK.util.WaterGunHost
 import com.yiku.yikupayloadSDK.util.YA3Host
 
@@ -52,6 +53,7 @@ class SettingActivity : AppCompatActivity() {
         val allInOneUpdateBtn = findViewById<Button>(R.id.allInOneUpdate)
         val fourInOne2 = findViewById<EditText>(R.id.FourInOne2HostIP)
         val slowDescentDevice200 = findViewById<EditText>(R.id.SlowDescentDevice200HostIP)
+        val waterGunEscape = findViewById<EditText>(R.id.WaterGunEscapeHostIP)
 
         //        获取了 SharedPreferences 对象
 //        preferences = getSharedPreferences("myPreferences", MODE_PRIVATE)
@@ -73,6 +75,7 @@ class SettingActivity : AppCompatActivity() {
         val valueAllInOneHost = preferences?.getString("AllInOneHost", "")// 多合一
         val valueFourInOne2Host = preferences?.getString("FourInOne2Host", "")// 机器狗多合一-二代
         val valueSlowDescentDevice200Host = preferences?.getString("SlowDescentDevice200Host", "")// 200kg缓降器
+        val valueWaterGunEscapeHost = preferences?.getString("WaterGunEscapeHost", "")// 40水枪脱困
         // 当未设置过ip时，ip显示为Host.kt里面的值，否则显示设置后的值
         if (valueShoutHost == "") {
             shout.setText(ShoutHost)
@@ -177,6 +180,13 @@ class SettingActivity : AppCompatActivity() {
             slowDescentDevice200.setText(valueSlowDescentDevice200Host)
         }
 
+        if (valueWaterGunEscapeHost == "") {
+            waterGunEscape.setText(WaterGunEscapeHost)
+        }
+        else {
+            waterGunEscape.setText(valueWaterGunEscapeHost)
+        }
+
         // 保存设置
         save.setOnClickListener {
             val textShoutHost = shout.text.toString()
@@ -196,6 +206,7 @@ class SettingActivity : AppCompatActivity() {
             val textAllInOneHost = allInOne.text.toString()
             val textFourInOne2Host = fourInOne2.text.toString()
             val textSlowDescentDevice200Host = slowDescentDevice200.text.toString()
+            val textWaterGunEscapeHost = waterGunEscape.text.toString()
             // 将修改后的值存储到 SharedPreferences 中
             val editer = preferences!!.edit()
             editer.putString("ShoutHost", textShoutHost)
@@ -215,6 +226,7 @@ class SettingActivity : AppCompatActivity() {
             editer.putString("AllInOneHost", textAllInOneHost)
             editer.putString("FourInOne2Host", textFourInOne2Host)
             editer.putString("SlowDescentDevice200Host", textSlowDescentDevice200Host)
+            editer.putString("WaterGunEscapeHost", textWaterGunEscapeHost)
             editer.apply()
             finish();  //直接关闭当前页面
         }

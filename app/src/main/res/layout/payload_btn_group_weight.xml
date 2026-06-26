@@ -277,6 +277,18 @@
         app:imagePrefix="slowdescent"
         android:visibility="gone" />
 
+    <com.example.yikupayloadexample.component.StatefulImageView
+        android:id="@+id/waterGunEscapeBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/water_gun_escape"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/bucketBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="wartergun"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/emptyText"
         android:layout_width="wrap_content"

@@ -401,4 +401,6 @@
     <string name="shouting_and_alarms">喊话和警报</string>
     <string name="back">返回</string>
     <string name="peak_state">触顶状态</string>
+    <string name="water_gun_escape">40水枪脱困</string>
+    <string name="water_gun_escape_ip">"40水枪脱困IP: "</string>
 </resources>

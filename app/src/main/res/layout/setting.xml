@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="false"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     app:layout_alignSelf="center"
                 />
 
@@ -105,7 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
 
             </LinearLayout>
@@ -130,7 +130,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
 
             </LinearLayout>
@@ -155,7 +155,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
 
             </LinearLayout>
@@ -180,7 +180,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
 
             </LinearLayout>
@@ -205,7 +205,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
 
             </LinearLayout>
@@ -230,7 +230,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
 
             </LinearLayout>
@@ -255,7 +255,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
 
             </LinearLayout>
@@ -280,7 +280,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
 
             </LinearLayout>
@@ -305,7 +305,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
 
             </LinearLayout>
@@ -330,7 +330,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"/>
+                    android:background="@drawable/edittext_border"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -353,7 +353,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"/>
+                    android:background="@drawable/edittext_border"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -376,7 +376,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"/>
+                    android:background="@drawable/edittext_border"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -399,7 +399,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"/>
+                    android:background="@drawable/edittext_border"/>
             </LinearLayout>
             <com.google.android.flexbox.FlexboxLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -426,7 +426,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="false"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     app:layout_alignSelf="center"
                     />
                 <Button
@@ -458,7 +458,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"/>
+                    android:background="@drawable/edittext_border"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -481,7 +481,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"/>
+                    android:background="@drawable/edittext_border"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <TextView
+                    android:layout_width="140dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="textEnd"
+                    android:text="@string/water_gun_escape_ip"
+                    android:textColor="@color/white_600"/>
+
+                <EditText
+                    android:id="@+id/WaterGunEscapeHostIP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:background="@drawable/edittext_border"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

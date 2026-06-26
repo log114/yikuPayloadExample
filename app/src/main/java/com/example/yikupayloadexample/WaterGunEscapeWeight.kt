@@ -8,16 +8,15 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Switch
-import android.widget.TextView
 import android.widget.Toast
+import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.yiku.yikupayloadSDK.protocol.WATERBRANCH_STATE_RECEIVE
-import com.yiku.yikupayloadSDK.service.WaterBranchService
+import com.yiku.yikupayloadSDK.protocol.WATERGUNESCAPE_STATE_RECEIVE
+import com.yiku.yikupayloadSDK.service.WaterGunEscapeService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.util.Date
 import java.util.Timer
@@ -26,13 +25,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.thread
 
-class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
+class WaterGunEscapeWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
-    private val TAG = "WaterBranchWeight"
+    private val TAG = "WaterGunEscapeWeight"
     private lateinit var mLightView: View
-    var waterBranchService: WaterBranchService = WaterBranchService()
+    var waterGunEscapeService: WaterGunEscapeService = WaterGunEscapeService()
     private lateinit var mSafetySwitchSwitch: Switch
-    private lateinit var mHoseReleaseBtn: Button
     private lateinit var mHoseDetachmentBtn: Button
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
@@ -46,14 +44,14 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     constructor(context: Context) : this(context, null, 0)
 
     init {
-        val host = preferences?.getString("WaterBranchHost", "")
-        if(host != null && "" != host) {
-            waterBranchService.setIp(host)
+        val host = preferences?.getString("WaterGunEscapeHost", "")
+        if (host != null && "" != host) {
+            waterGunEscapeService.setIp(host)
         }
         initView(context)
-        waterBranchService.registMsgCallback(object : MsgCallback {
+        waterGunEscapeService.registMsgCallback(object : MsgCallback {
             override fun getId(): String {
-                return "WaterBranchServiceCallback"
+                return "WaterGunEscapeServiceCallback"
             }
 
             override fun onMsg(msg: ByteArray) {
@@ -61,7 +59,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                 if (msg[0] != 0x8d.toByte()) {
                     return
                 }
-                if (msg[2] == WATERBRANCH_STATE_RECEIVE.toByte()) {
+                if (msg[2] == WATERGUNESCAPE_STATE_RECEIVE.toByte()) {
                     updateTime = Date().time
                     updateState(msg)
                 }
@@ -80,68 +78,39 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initView(context: Context?) {
-        LayoutInflater.from(context).inflate(R.layout.water_branch_weight, this, true)
-        mLightView = findViewById(R.id.waterBranch_view)
+        LayoutInflater.from(context).inflate(R.layout.water_gun_escape_weight, this, true)
+        mLightView = findViewById(R.id.waterGunEscape_view)
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
-        mHoseReleaseBtn = findViewById(R.id.hoseReleaseBtn)
         mHoseDetachmentBtn = findViewById(R.id.hoseDetachmentBtn)
         setConnectState()
 
         mSafetySwitchSwitch.setOnClickListener {
-            mHoseReleaseBtn.isEnabled = mSafetySwitchSwitch.isChecked
             mHoseDetachmentBtn.isEnabled = mSafetySwitchSwitch.isChecked
-        }
-        // 释放水带
-        mHoseReleaseBtn.setOnClickListener {
-            if(!mSafetySwitchSwitch.isChecked) {
-                showToast(R.string.need_to_open_safety_switch)
-                return@setOnClickListener
-            }
-            // 如果当前是打开状态，关闭
-//            if(isHoseRelease) {
-//                waterBranchService.hoseRelease(0)
-//            }
-//            else {
-//                waterBranchService.hoseRelease(1)
-//            }
-            waterBranchService.hoseRelease(1)
-            mHoseReleaseBtn.setText( R.string.executing )
-            mHoseReleaseBtn.isEnabled = false
-            thread {
-                Thread.sleep(3000)
-                val handler = Handler(Looper.getMainLooper())
-                handler.post {
-                    mHoseReleaseBtn.isEnabled = mSafetySwitchSwitch.isChecked
-                    mHoseReleaseBtn.setText(R.string.hoseRelease )
-                }
-            }
         }
         // 水带脱困
         mHoseDetachmentBtn.setOnClickListener {
-            if(!mSafetySwitchSwitch.isChecked) {
+            if (!mSafetySwitchSwitch.isChecked) {
                 showToast(R.string.need_to_open_safety_switch)
                 return@setOnClickListener
             }
-            if(isHoseDetachment) {
-                waterBranchService.hoseDetachment(0) // 复位
-            }
-            else {
-                waterBranchService.hoseDetachment(1) // 水带脱困
+            if (isHoseDetachment) {
+                waterGunEscapeService.hoseDetachment(0) // 复位
+            } else {
+                waterGunEscapeService.hoseDetachment(1) // 水带脱困
             }
             isHoseDetachment = !isHoseDetachment
 
-            mHoseDetachmentBtn.setText( R.string.executing )
+            mHoseDetachmentBtn.setText(R.string.executing)
             mHoseDetachmentBtn.isEnabled = false
             thread {
                 Thread.sleep(5000)
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
                     mHoseDetachmentBtn.isEnabled = mSafetySwitchSwitch.isChecked
-                    if(isHoseDetachment) {
-                        mHoseDetachmentBtn.setText(R.string.reset )
-                    }
-                    else {
-                        mHoseDetachmentBtn.setText(R.string.hoseDetachment )
+                    if (isHoseDetachment) {
+                        mHoseDetachmentBtn.setText(R.string.reset)
+                    } else {
+                        mHoseDetachmentBtn.setText(R.string.hoseDetachment)
                     }
                 }
             }
@@ -172,22 +141,22 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     }
 
     // 定时器，判断连接状态
-    private fun setConnectState(){
+    private fun setConnectState() {
         val timer = Timer();
         val statusDot = findViewById<View>(R.id.statusDot)
         val background = statusDot.background as GradientDrawable
         val connectText = findViewById<TextView>(R.id.waterBranchConnect)
         val handler = Handler(Looper.getMainLooper())
-        val task = object : TimerTask(){
+        val task = object : TimerTask() {
             override fun run() {
-                if(waterBranchService.getIsConnected()){
+                if (waterGunEscapeService.getIsConnected()) {
                     if (Date().time - updateTime < 3000) {
                         handler.post {
                             connectText.setText(R.string.connection_status_connected)
                             background.setColor(ContextCompat.getColor(context, R.color.green))
                         }
                     }
-                    waterBranchService.heartbeat()
+                    waterGunEscapeService.heartbeat()
                     // 3秒没收到信息，显示未连接
                     if (Date().time - updateTime > 3000) {
                         handler.post {
@@ -198,10 +167,9 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                     // 如果超过10s没收到消息，主动断开连接，等待重连
                     if (Date().time - updateTime > 10000) {
                         // 断连
-                        waterBranchService.disConnect()
+                        waterGunEscapeService.disConnect()
                     }
-                }
-                else if(!isConnecting){
+                } else if (!isConnecting) {
                     isConnecting = true
                     handler.post {
                         connectText.setText(R.string.connection_status_notconnected)
@@ -209,11 +177,11 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                     }
                     // 尝试重连
                     thread {
-                        if(!isFirstConnect) {
+                        if (!isFirstConnect) {
                             Thread.sleep(5000)
                         }
                         isFirstConnect = false
-                        while (!waterBranchService.connect()) {
+                        while (!waterGunEscapeService.connect()) {
                             Thread.sleep(1000)
                         }
                         isConnecting = false

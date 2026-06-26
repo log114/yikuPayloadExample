@@ -66,6 +66,7 @@ class PayloadWeight : Service() {
     private lateinit var fourInOne2SpeakerWeight: FourInOne2SpeakerWeight
     private lateinit var fourInOne2LightWeight: FourInOne2LightWeight
     private lateinit var slowDescentDevice200Weight: SlowDescentDevice200Weight
+    private lateinit var waterGunEscapeWeight: WaterGunEscapeWeight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -94,6 +95,7 @@ class PayloadWeight : Service() {
     private lateinit var fourInOne2SpeakerBtn: ImageView
     private lateinit var fourInOne2LightBtn: ImageView
     private lateinit var slowDescentDevice200Btn: ImageView
+    private lateinit var waterGunEscapeBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
     var isRotated = false
@@ -133,6 +135,7 @@ class PayloadWeight : Service() {
         fourInOne2SpeakerBtn.isSelected = false
         fourInOne2LightBtn.isSelected = false
         slowDescentDevice200Btn.isSelected = false
+        waterGunEscapeBtn.isSelected = false
     }
 
     private fun openFloatingWindow() {
@@ -167,6 +170,7 @@ class PayloadWeight : Service() {
                     fourInOne2SpeakerBtn = it.findViewById(R.id.four_in_one_2_speaker_Btn)
                     fourInOne2LightBtn = it.findViewById(R.id.four_in_one_2_light_Btn)
                     slowDescentDevice200Btn = it.findViewById(R.id.slowDescentDevice200Btn)
+                    waterGunEscapeBtn = it.findViewById(R.id.waterGunEscapeBtn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -314,6 +318,12 @@ class PayloadWeight : Service() {
                             slowDescentDevice200Btn.isSelected = true
                         }
                     }
+                    waterGunEscapeBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(24, waterGunEscapeBtn)) {
+                            waterGunEscapeBtn.isSelected = true
+                        }
+                    }
                 }
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -395,6 +405,11 @@ class PayloadWeight : Service() {
             if (mShoutComp.isVisible) {
                 mShoutViewContent.removeAllViews()
                 when(type) {
+                    24 -> {
+                        opened = 24
+                        mShoutViewContent.addView(waterGunEscapeWeight)
+                        mWindowTitle.setText(R.string.water_gun_escape)
+                    }
                     23 -> { // 200kg缓降器
                         opened = 23
                         mShoutViewContent.addView(slowDescentDevice200Weight)
@@ -795,6 +810,7 @@ class PayloadWeight : Service() {
         fourInOne2SpeakerWeight = FourInOne2SpeakerWeight(this)
         fourInOne2LightWeight = FourInOne2LightWeight(this)
         slowDescentDevice200Weight = SlowDescentDevice200Weight(this)
+        waterGunEscapeWeight = WaterGunEscapeWeight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -1141,25 +1157,9 @@ class PayloadWeight : Service() {
                 val isConnectedAllInOne = allInOneService.getIsConnected(); // 多合一
                 val isConnectedFourInOne2 = fourInOne2Service.getIsConnected(); // 四合一二代
                 val isConnectedSlowDescentDevice200 = slowDescentDevice200Weight.slowDescentDevice200Service.getIsConnected(); // 200kg缓降器
+                val isConnectedWaterGunEscape = waterGunEscapeWeight.waterGunEscapeService.getIsConnected(); // 40水带脱困
 
-//                val isConnectedMegaphone = true;// 喊话器
-//                val isConnectedYA3 = true; // 四合一
-//                val isConnectedCacheNet = true; // 网枪
-//                val isConnectedEmitter = true; // 38mm发射器
-//                val isConnectedLightYl300 = true; // 探照灯
-//                val isConnectedThrower = true; // 抛投器
-//                val isConnectedSlowDescentDevice = true; // 缓降器
-//                val isConnectedGripper = true; // 机械爪
-//                val isConnectedResqme = true; // 破窗器
-//                val isConnectedExtinguisher = true; // 灭火罐
-//                val isConnectedWaterGun = true; // 清洗水枪
-//                val isConnectedBucket = true; // 吊桶
-//                val isConnectedWaterBranch = true; // 消防水枪
-//                val isConnectedPLLight = true; // 品灵探照灯
-//                val isConnectedAllInOne = true; // 多合一
-//                val isConnectedFourInOne2 = true; // 四合一二代
-//                val isConnectedSlowDescentDevice200 = true; // 200kg缓降器
-                    // 喊话器
+                // 喊话器
                 if(isConnectedMegaphone){
                     // 已连接，显示
                     handler.post {
@@ -1288,6 +1288,13 @@ class PayloadWeight : Service() {
                 if(isConnectedSlowDescentDevice200){
                     handler.post {
                         slowDescentDevice200Btn.visibility = VISIBLE;
+                        emptyText.visibility = GONE;
+                    }
+                }
+                // 40水枪脱困
+                if(isConnectedWaterGunEscape) {
+                    handler.post {
+                        waterGunEscapeBtn.visibility = VISIBLE;
                         emptyText.visibility = GONE;
                     }
                 }

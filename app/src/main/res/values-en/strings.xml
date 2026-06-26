@@ -357,4 +357,6 @@
     <string name="shouting_and_alarms">Shouting and Alarms</string>
     <string name="back">Back</string>
     <string name="peak_state">Peak state</string>
+    <string name="water_gun_escape">" 40 water gun escape"</string>
+    <string name="water_gun_escape_ip">" 40 waterGunEscape IP: "</string>
 </resources>
