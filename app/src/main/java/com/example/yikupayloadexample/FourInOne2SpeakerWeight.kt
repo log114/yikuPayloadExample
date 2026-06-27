@@ -72,6 +72,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private lateinit var ttsBackBtn: Button
     private lateinit var audioBackBtn: Button
     private lateinit var mRadioBtn: Button
+    private var thisPayloadWeight: PayloadWeight? = null
     private var isConnecting: Boolean = false
     private var isForegroundServiceRunning = false
     private var isStartSpeak = false
@@ -216,6 +217,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
             val intent = Intent(this.context, FourInOne2AddRecordActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
             startActivity(this.context, intent, null)
+            this.thisPayloadWeight?.hideFloatWindow()
         }
         // 删除音频文件
         delAudioBtn.setOnClickListener {
@@ -327,6 +329,10 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
             }
 
         }
+    }
+
+    fun attachFloatingWindow(service: PayloadWeight) {
+        this.thisPayloadWeight = service
     }
 
     private fun initAudioTrack() {

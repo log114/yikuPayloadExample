@@ -149,15 +149,13 @@ class AllInOneAddRecordActivity: AppCompatActivity() {
         mUploadPlan.visibility = View.INVISIBLE
         mProgressBarUpload = findViewById(R.id.progress_bar_upload)
 
+        mFileNameEditText.isFocusable = false
+        mFileNameEditText.isFocusableInTouchMode = false
+        mFileNameEditText.isCursorVisible = false
         mFileNameEditText.setOnClickListener {
             // 如果uploadFile未被初始化，说明没有选择文件，先跳转到选择文件页面
             if(!::uploadFile.isInitialized) {
-                EasyFloat.hide("yk_shout_weight_op")
-                val intent = Intent(Intent.ACTION_GET_CONTENT)
-                //任意类型文件
-                intent.type = "audio/*"
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                ActivityCompat.startActivityForResult(this, intent, 100, null)
+                selectFile()
                 return@setOnClickListener
             }
 
@@ -165,12 +163,7 @@ class AllInOneAddRecordActivity: AppCompatActivity() {
         mUploadBtn.setOnClickListener {
             // 如果uploadFile未被初始化，说明没有选择文件，先跳转到选择文件页面
             if(!::uploadFile.isInitialized) {
-                EasyFloat.Companion.hide("yk_shout_weight_op")
-                val intent = Intent(Intent.ACTION_GET_CONTENT)
-                //任意类型文件
-                intent.type = "audio/*"
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                ActivityCompat.startActivityForResult(this, intent, 100, null)
+                selectFile()
                 return@setOnClickListener
             }
             // 针对大疆因速率限制无法使用http上传，上传会导致超时，在此限制使用socket 方式上传。
@@ -181,16 +174,19 @@ class AllInOneAddRecordActivity: AppCompatActivity() {
             }
         }
         mSelectFile.setOnClickListener {
-            EasyFloat.Companion.hide("yk_shout_weight_op")
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            //任意类型文件
-            intent.type = "audio/*"
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-            ActivityCompat.startActivityForResult(this, intent, 100, null)
+            selectFile()
         }
 
     }
 
+    // 打开文件选择窗口
+    private fun selectFile() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        //任意类型文件
+        intent.type = "audio/*"
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        ActivityCompat.startActivityForResult(this, intent, 100, null)
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -220,7 +216,11 @@ class AllInOneAddRecordActivity: AppCompatActivity() {
             return
         }
         Log.e(TAG, "Name: ${uploadFile.name}")
+        mFileNameEditText.isFocusable = true
+        mFileNameEditText.isFocusableInTouchMode = true
+        mFileNameEditText.isCursorVisible = true
         mFileNameEditText.setText(uploadFile.name.split(":").last())
+        mFileNameEditText.setOnClickListener(null)
         Log.e(TAG, "Size: ${uploadFile.length()}")
     }
 

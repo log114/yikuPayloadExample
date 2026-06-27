@@ -5,11 +5,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- 背景图片 -->
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/background"
-        android:scaleType="centerCrop" />
+<!--    <ImageView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:src="@drawable/background"-->
+<!--        android:scaleType="centerCrop" />-->
 
 
     <LinearLayout
@@ -17,7 +17,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         app:layout_constraintWidth_percent="0.9"
         app:layout_constraintHeight_percent="0.7"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,21 +32,16 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:text="@string/app_name"
-                android:layout_marginTop="40dp"
                 />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
             <Button
                 android:id="@+id/startConnectBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
+                android:layout_marginTop="40dp"
                 android:paddingHorizontal="20dp"
                 android:text="@string/connect_payload"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/main_connect_btn"/>
     </LinearLayout>
 
@@ -84,7 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="#CBD2D6"
+            android:textColor="#666666"
             android:textSize="12sp"
             android:textAlignment="center" />
     </LinearLayout>

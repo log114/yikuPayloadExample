@@ -40,7 +40,7 @@ class PayloadWeight : Service() {
     private val binder = PayloadWeightBinder()
     private lateinit var mWindowTitle: TextView
     private lateinit var mShoutViewContent: LinearLayout
-    private var opened: Int = 0
+    private var opened: PayloadPageIndex = PayloadPageIndex.NONE
 
     // 组件
     private lateinit var realTimeShoutWeight: RealTimeShoutWeight
@@ -177,21 +177,21 @@ class PayloadWeight : Service() {
                     mShoutBtn.setOnClickListener {
                         Log.i(TAG, "mShoutBtn clicked!");
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(3, mShoutBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.SHOUT, mShoutBtn)) {
                             mShoutBtn.isSelected = true
                         }
                     }
                     mTTSBtn.setOnClickListener {
                         Log.i(TAG, "mTTSBtn clicked!");
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(1, mTTSBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.TTS, mTTSBtn)) {
                             mTTSBtn.isSelected = true
                         }
                     }
                     mRecordBtn.setOnClickListener {
                         Log.i(TAG, "mRecordBtn clicked!");
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(2, mRecordBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.RECORD, mRecordBtn)) {
                             mRecordBtn.isSelected = true
                         }
                     }
@@ -199,128 +199,128 @@ class PayloadWeight : Service() {
                     mLightBtn.setOnClickListener {
 //                        Log.i(TAG, "mShoutBtn clicked!");
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(4, mLightBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.UNITREE_LIGHT, mLightBtn)) {
                             mLightBtn.isSelected = true
                         }
                     }
 
                     mCacheNetBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(5, mCacheNetBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.CAPTURE_NET, mCacheNetBtn)) {
                             mCacheNetBtn.isSelected = true
                         }
                     }
                     mEmitterBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(6, mEmitterBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.EMITTER_38MM, mEmitterBtn)) {
                             mEmitterBtn.isSelected = true
                         }
                     }
                     mLightYl300Btn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(7, mLightYl300Btn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.SEARCHLIGHT, mLightYl300Btn)) {
                             mLightYl300Btn.isSelected = true
                         }
                     }
                     throwerBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(8, throwerBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.THROWER, throwerBtn)) {
                             throwerBtn.isSelected = true
                         }
                     }
                     slowDescentDeviceBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(9, slowDescentDeviceBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.SLOW_DESCENT, slowDescentDeviceBtn)) {
                             slowDescentDeviceBtn.isSelected = true
                         }
                     }
                     gripperBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(10, gripperBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.GRIPPER, gripperBtn)) {
                             gripperBtn.isSelected = true
                         }
                     }
                     resqmeBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(11, resqmeBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.GLASS_BREAKER, resqmeBtn)) {
                             resqmeBtn.isSelected = true
                         }
                     }
                     extinguisherBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(12, extinguisherBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.EXTINGUISHER, extinguisherBtn)) {
                             extinguisherBtn.isSelected = true
                         }
                     }
                     waterGunBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(13, waterGunBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.WATER_GUN, waterGunBtn)) {
                             waterGunBtn.isSelected = true
                         }
                     }
                     bucketBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(14, bucketBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.BUCKET, bucketBtn)) {
                             bucketBtn.isSelected = true
                         }
                     }
                     waterBranchBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(15, waterBranchBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.WATER_BRANCH, waterBranchBtn)) {
                             waterBranchBtn.isSelected = true
                         }
                     }
                     plLightBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(16, plLightBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.PL_LIGHT, plLightBtn)) {
                             plLightBtn.isSelected = true
                         }
                     }
                     allInOneSpeakerBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(17, allInOneSpeakerBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.ALL_IN_ONE_SPEAKER, allInOneSpeakerBtn)) {
                             allInOneSpeakerBtn.isSelected = true
                         }
                     }
                     allInOneLightBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(18, allInOneLightBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.ALL_IN_ONE_LIGHT, allInOneLightBtn)) {
                             allInOneLightBtn.isSelected = true
                         }
                     }
                     allInOneThrowerBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(19, allInOneThrowerBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.ALL_IN_ONE_THROWER, allInOneThrowerBtn)) {
                             allInOneThrowerBtn.isSelected = true
                         }
                     }
                     allInOneFpvBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(20, allInOneFpvBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.ALL_IN_ONE_FPV, allInOneFpvBtn)) {
                             allInOneFpvBtn.isSelected = true
                         }
                     }
                     fourInOne2SpeakerBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(21, fourInOne2SpeakerBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.FOUR_IN_ONE_2_SPEAKER, fourInOne2SpeakerBtn)) {
                             fourInOne2SpeakerBtn.isSelected = true
                         }
                     }
                     fourInOne2LightBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(22, fourInOne2LightBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.FOUR_IN_ONE_2_LIGHT, fourInOne2LightBtn)) {
                             fourInOne2LightBtn.isSelected = true
                         }
                     }
                     slowDescentDevice200Btn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(23, slowDescentDevice200Btn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.SLOW_DESCENT_DEVICE_200, slowDescentDevice200Btn)) {
                             slowDescentDevice200Btn.isSelected = true
                         }
                     }
                     waterGunEscapeBtn.setOnClickListener {
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(24, waterGunEscapeBtn)) {
+                        if (this.setSVVisibility(PayloadPageIndex.WATER_GUN_ESCAPE, waterGunEscapeBtn)) {
                             waterGunEscapeBtn.isSelected = true
                         }
                     }
@@ -385,14 +385,15 @@ class PayloadWeight : Service() {
         mShoutComp.visibility = GONE
         EasyFloat.hide("yk_payload_weight_op")
         EasyFloat.hide("video_window")
-        opened = 0
+        opened = PayloadPageIndex.NONE
+        resetShoutBtnsBackground()
     }
 
     /**
      * 设置显示隐藏，返回true表示本次调用使组件显示，否则表示使隐藏
      */
     @SuppressLint("ClickableViewAccessibility")
-    fun setSVVisibility(type: Int, view: View): Boolean {
+    fun setSVVisibility(type: PayloadPageIndex, view: View): Boolean {
         Log.i(TAG, "mShoutComp. setSVVisibility:${mShoutComp.visibility}, opened:${opened}")
         if (mShoutComp.isGone || opened != type) {
             mShoutComp.visibility = VISIBLE
@@ -404,14 +405,13 @@ class PayloadWeight : Service() {
             resetRotation()
             if (mShoutComp.isVisible) {
                 mShoutViewContent.removeAllViews()
+                opened = type
                 when(type) {
-                    24 -> {
-                        opened = 24
+                    PayloadPageIndex.WATER_GUN_ESCAPE -> { // 40水枪脱困
                         mShoutViewContent.addView(waterGunEscapeWeight)
                         mWindowTitle.setText(R.string.water_gun_escape)
                     }
-                    23 -> { // 200kg缓降器
-                        opened = 23
+                    PayloadPageIndex.SLOW_DESCENT_DEVICE_200 -> { // 200kg缓降器
                         mShoutViewContent.addView(slowDescentDevice200Weight)
                         mWindowTitle.setText(R.string.slow_descent_device)
                         val upSpeedEditText = mShoutViewContent.findViewById<EditText>(R.id.upSpeedInput)
@@ -441,15 +441,13 @@ class PayloadWeight : Service() {
                         // 测量内容并决定是否旋转
                         measureAndAdjustLayout()
                     }
-                    22 -> { // 机器狗多合一二代，灯光
-                        opened = 22
+                    PayloadPageIndex.FOUR_IN_ONE_2_LIGHT -> { // 机器狗多合一二代，灯光
                         mWindowTitle.setText(R.string.lamplight)
                         mShoutViewContent.addView(fourInOne2LightWeight)
                         // 测量内容并决定是否旋转
                         measureAndAdjustLayout()
                     }
-                    21 -> { // 机器狗多合一二代，声音
-                        opened = 21
+                    PayloadPageIndex.FOUR_IN_ONE_2_SPEAKER -> { // 机器狗多合一二代，声音
                         mWindowTitle.setText(R.string.sound)
                         mShoutViewContent.addView(fourInOne2SpeakerWeight)
                         val speedEditText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
@@ -464,15 +462,13 @@ class PayloadWeight : Service() {
                         measureAndAdjustLayout()
                         fourInOne2SpeakerWeight.onShow()
                     }
-                    20 -> { // 五技吊舱，FPV
-                        opened = 20
+                    PayloadPageIndex.ALL_IN_ONE_FPV -> { // 五技吊舱，FPV
                         mWindowTitle.text = "FPV"
                         mShoutViewContent.addView(allInOneFpvWeight)
                         // 测量内容并决定是否旋转
                         measureAndAdjustLayout()
                     }
-                    19 -> { // 五技吊舱，抛投器
-                        opened = 19
+                    PayloadPageIndex.ALL_IN_ONE_THROWER -> { // 五技吊舱，抛投器
                         mWindowTitle.setText(R.string.thrower)
                         mShoutViewContent.addView(allInOneThrowerWeight)
                         val editText = mShoutViewContent.findViewById<EditText>(R.id.detonateHeightEditText)
@@ -486,15 +482,13 @@ class PayloadWeight : Service() {
                         // 测量内容并决定是否旋转
                         measureAndAdjustLayout()
                     }
-                    18 -> { // 五技吊舱，灯光
-                        opened = 18
+                    PayloadPageIndex.ALL_IN_ONE_LIGHT -> { // 五技吊舱，灯光
                         mWindowTitle.setText(R.string.lamplight)
                         mShoutViewContent.addView(allInOneLightWeight)
                         // 测量内容并决定是否旋转
                         measureAndAdjustLayout()
                     }
-                    17 -> { // 五技吊舱，声音
-                        opened = 17
+                    PayloadPageIndex.ALL_IN_ONE_SPEAKER -> { // 五技吊舱，声音
                         mWindowTitle.setText(R.string.sound)
                         mShoutViewContent.addView(allInOneSpeakerWeight)
                         val speedEditText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
@@ -509,43 +503,35 @@ class PayloadWeight : Service() {
                         measureAndAdjustLayout()
                         allInOneSpeakerWeight.onShow()
                     }
-                    16 -> {
-                        opened = 16
+                    PayloadPageIndex.PL_LIGHT -> { // 品灵探照灯
                         mShoutViewContent.addView(plLightweight)
                         mWindowTitle.setText(R.string.searchlight)
                     }
-                    15 -> {
-                        opened = 15
+                    PayloadPageIndex.WATER_BRANCH -> { // 消防水枪
                         mShoutViewContent.addView(waterBranchWeight)
                         mWindowTitle.setText(R.string.waterBranch)
                     }
-                    14 -> {
-                        opened = 14
+                    PayloadPageIndex.BUCKET -> { // 吊桶
                         mShoutViewContent.addView(bucketWeight)
                         mWindowTitle.setText(R.string.bucket)
                     }
-                    13 -> {
-                        opened = 13
+                    PayloadPageIndex.WATER_GUN -> { // 清洗水枪
                         mShoutViewContent.addView(waterGunWeight)
                         mWindowTitle.setText(R.string.waterGun)
                     }
-                    12 -> {
-                        opened = 12
+                    PayloadPageIndex.EXTINGUISHER -> { // 灭火罐
                         mShoutViewContent.addView(extinguisherWeight)
                         mWindowTitle.setText(R.string.extinguisher)
                     }
-                    11 -> {
-                        opened = 11
+                    PayloadPageIndex.GLASS_BREAKER -> { // 破窗发射器
                         mShoutViewContent.addView(resqmeWeight)
                         mWindowTitle.setText(R.string.glass_breaker)
                     }
-                    10 -> {
-                        opened = 10
+                    PayloadPageIndex.GRIPPER -> { // 机械爪
                         mShoutViewContent.addView(gripperWeight)
                         mWindowTitle.setText(R.string.gripper)
                     }
-                    9 -> {
-                        opened = 9
+                    PayloadPageIndex.SLOW_DESCENT -> { // 缓降器
                         mShoutViewContent.addView(slowDescentDeviceWeight)
                         mWindowTitle.setText(R.string.slow_descent_device)
                         val speedEditText = mShoutViewContent.findViewById<EditText>(R.id.speed)
@@ -565,8 +551,7 @@ class PayloadWeight : Service() {
                             false
                         }
                     }
-                    8 -> { // 抛投器
-                        opened = 8
+                    PayloadPageIndex.THROWER -> { // 抛投器
                         mShoutViewContent.addView(throwerweight)
                         mWindowTitle.setText(R.string.thrower)
                         val detonateHeightEditText = mShoutViewContent.findViewById<EditText>(R.id.detonateHeight)
@@ -580,39 +565,32 @@ class PayloadWeight : Service() {
                         // 测量内容并决定是否旋转
                         measureAndAdjustLayout()
                     }
-                    7 -> {
-                        opened = 7
+                    PayloadPageIndex.SEARCHLIGHT -> { // 300W探照灯
                         mShoutViewContent.addView(lightYl300Weight)
                         mWindowTitle.setText(R.string.searchlight)
                     }
-                    6 -> {
-                        opened = 6
+                    PayloadPageIndex.EMITTER_38MM -> { // 38mm发射器
                         mShoutViewContent.addView(emitterWeight)
                         mWindowTitle.setText(R.string.emitter_38mm)
                     }
-                    5 -> {
-                        opened = 5
+                    PayloadPageIndex.CAPTURE_NET -> { // 捕捉网
                         mShoutViewContent.addView(cacheNetWeight)
                         mWindowTitle.setText(R.string.capture_net)
                     }
-                    4 -> {
-                        opened = 4
+                    PayloadPageIndex.UNITREE_LIGHT -> { // 四合一照明
                         mShoutViewContent.addView(unitreeLightWeight)
                         mWindowTitle.setText(R.string.lamplight)
                     }
-                    3 -> {
-                        opened = 3
+                    PayloadPageIndex.SHOUT -> { // 实时喊话
                         mShoutViewContent.addView(realTimeShoutWeight)
                         mWindowTitle.setText(R.string.shout)
                     }
-                    2 -> {
-                        opened = 2
+                    PayloadPageIndex.RECORD -> { // 音频文件
                         mShoutViewContent.addView(recordShoutWeight)
                         mWindowTitle.setText(R.string.audio_file)
                         recordShoutWeight.onShow()
                     }
-                    1 -> {
-                        opened = 1
+                    PayloadPageIndex.TTS -> { // 文字转语音
                         mShoutViewContent.addView(ttsShoutWeight)
                         mWindowTitle.setText(R.string.tts)
                         val editText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
@@ -624,6 +602,7 @@ class PayloadWeight : Service() {
                             false
                         }
                     }
+                    else -> { }
                 }
                 EasyFloat.show("yk_payload_weight_op")
             }
@@ -787,6 +766,7 @@ class PayloadWeight : Service() {
         realTimeShoutWeight = RealTimeShoutWeight(this)
         ttsShoutWeight = TtsShoutWeight(this)
         recordShoutWeight = RecordShoutWeight(this)
+        recordShoutWeight.attachFloatingWindow(this)
         unitreeLightWeight = UnitreeLightWeight(this)
         cacheNetWeight = CacheNetWeight(this)
         emitterWeight = EmitterWeight(this)
@@ -808,6 +788,7 @@ class PayloadWeight : Service() {
         allInOneFpvWeight = AllInOneFpvWeight(this)
         allInOneFpvWeight.attachFloatingWindow(this)
         fourInOne2SpeakerWeight = FourInOne2SpeakerWeight(this)
+        fourInOne2SpeakerWeight.attachFloatingWindow(this)
         fourInOne2LightWeight = FourInOne2LightWeight(this)
         slowDescentDevice200Weight = SlowDescentDevice200Weight(this)
         waterGunEscapeWeight = WaterGunEscapeWeight(this)
@@ -1117,7 +1098,7 @@ class PayloadWeight : Service() {
     inner class PayloadWeightBinder : Binder() {
         // Return this instance of LocalService so clients can call public methods
         fun getService(): PayloadWeight = this@PayloadWeight
-        fun setSVVisibility(v: Int, view: View): Boolean {
+        fun setSVVisibility(v: PayloadPageIndex, view: View): Boolean {
             return this@PayloadWeight.setSVVisibility(v, view)
         }
 
@@ -1303,4 +1284,10 @@ class PayloadWeight : Service() {
         // 定时器，1秒后开始执行，每1秒执行一次
         timer.schedule(task, 100, 1000);
     }
+}
+
+enum class PayloadPageIndex {
+    NONE, TTS, RECORD, SHOUT, UNITREE_LIGHT, CAPTURE_NET, EMITTER_38MM, SEARCHLIGHT, THROWER, SLOW_DESCENT, GRIPPER,
+    GLASS_BREAKER, EXTINGUISHER, WATER_GUN, BUCKET, WATER_BRANCH, PL_LIGHT, ALL_IN_ONE_SPEAKER, ALL_IN_ONE_LIGHT, ALL_IN_ONE_THROWER, ALL_IN_ONE_FPV,
+    FOUR_IN_ONE_2_SPEAKER, FOUR_IN_ONE_2_LIGHT, SLOW_DESCENT_DEVICE_200, WATER_GUN_ESCAPE
 }

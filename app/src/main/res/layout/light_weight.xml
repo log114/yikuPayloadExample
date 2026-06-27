@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="6dp"
             android:orientation="horizontal"
             android:gravity="center_vertical">
             <View
@@ -38,54 +38,86 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-            <TextView
-                android:id="@+id/drive_temperature"
+            android:paddingHorizontal="8dp"
+            android:layout_marginTop="0dp"
+            android:visibility="visible">
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
                 android:layout_weight="1"
-                android:textColor="@color/white"
-                android:text="" />
-            <TextView
-                android:id="@+id/lamp_head_temperature"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/drive_temperature"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='0°C'
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/drive_temperature'
+                    android:textSize="11sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:textColor="@color/white"
-                android:text="" />
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/lamp_head_temperature"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='0°C'
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/lamp_head_temperature'
+                    android:textSize="11sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="6dp"
             android:background="#383D40" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/open_light_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:layout_marginLeft="8dp"
+                android:paddingVertical="2dp"
+                android:layout_weight="1"
                 android:background="@drawable/play_btn"
                 android:text="@string/turn_on_the_light"
                 android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/sharp_flash_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:layout_marginLeft="8dp"
+                android:paddingVertical="2dp"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/explosive_flashing"
                 android:textColor="@color/white" />

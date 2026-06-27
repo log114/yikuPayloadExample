@@ -39,6 +39,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private lateinit var mTemperature: TextView // 温度
     private lateinit var mStatus: TextView // 状态
     private lateinit var mVolumeSeekBar: SeekBar // 音量滑块
+    private var thisPayloadWeight: PayloadWeight? = null
     private var isSettingVolume = false; // 是否正在设置音量
     private var volumeReal = 0;
     private var volumeLimit = 100
@@ -119,6 +120,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             val intent = Intent(this.context, AddRecordActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
             startActivity(this.context, intent, null)
+            this.thisPayloadWeight?.hideFloatWindow()
         }
 
         mDelAudioBtn.setOnClickListener {
@@ -198,6 +200,10 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
 
         })
         mTemperature.text = "${context.resources.getString(R.string.temperature)} 0℃"
+    }
+
+    fun attachFloatingWindow(service: PayloadWeight) {
+        this.thisPayloadWeight = service
     }
 
     // 定时器，同步更新温度音量等

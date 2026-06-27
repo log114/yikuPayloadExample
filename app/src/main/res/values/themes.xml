@@ -33,8 +33,8 @@
     <style name="Theme.YikuShoutApp.MainPage" parent="Theme.YikuShoutApp.Fullscreen">
         <item name="android:windowBackground">@drawable/splash_layer</item>
         <!-- 让系统那层默认启动图标不可见 -->
-<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
-<!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
 
 <!--        &lt;!&ndash; 禁止窗口半透明导致的黑闪 &ndash;&gt;-->
         <item name="android:windowIsTranslucent">false</item>

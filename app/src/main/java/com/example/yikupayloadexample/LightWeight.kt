@@ -109,8 +109,8 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     }
 
     fun changeLuminance(driverLuminance: Int, ledLuminance: Int) {
-        mDriveTemperatureText.text = "${context.resources.getString(R.string.drive_temperature)}: ${driverLuminance}℃"
-        mLampHeadTemperatureText.text = "${context.resources.getString(R.string.lamp_head_temperature)}: ${ledLuminance}℃"
+        mDriveTemperatureText.text = "${driverLuminance}℃"
+        mLampHeadTemperatureText.text = "${ledLuminance}℃"
     }
 
     fun sendTripodHead() {
@@ -169,8 +169,8 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mDriveTemperatureText = findViewById(R.id.drive_temperature)
         mLampHeadTemperatureText = findViewById(R.id.lamp_head_temperature)
 
-        mDriveTemperatureText.text = "${context.resources.getString(R.string.drive_temperature)}: 0℃"
-        mLampHeadTemperatureText.text = "${context.resources.getString(R.string.lamp_head_temperature)}: 0℃"
+        mDriveTemperatureText.text = "0℃"
+        mLampHeadTemperatureText.text = "0℃"
         // 初始化通讯回调函数
         lightService.registMsgCallback(LightMsgCallback())
 
