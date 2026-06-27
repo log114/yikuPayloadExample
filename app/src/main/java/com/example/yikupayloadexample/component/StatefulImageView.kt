@@ -18,6 +18,8 @@ class StatefulImageView @JvmOverloads constructor(
     private var defaultResId: Int = 0
     private var selectedResId: Int = 0
     private var isPressedState = false
+    private var defaultOpacity = 0.5f
+    private var selectedOpacity = 0.8f
 
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.StatefulImageButton, 0, 0).apply {
@@ -72,6 +74,11 @@ class StatefulImageView @JvmOverloads constructor(
 
         if (resId != 0) {
             setImageResource(resId)
+        }
+        alpha = if(isPressedState || isSelected) {
+            selectedOpacity
+        } else {
+            defaultOpacity
         }
     }
 

@@ -41,6 +41,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private lateinit var mVolumeSeekBar: SeekBar // 音量滑块
     private var thisPayloadWeight: PayloadWeight? = null
     private var isSettingVolume = false; // 是否正在设置音量
+    private var hasNewVolumeSetting = false // 休眠期间是否又变更了音量
     private var volumeReal = 0;
     private var volumeLimit = 100
     private var temperature = "0"
@@ -183,10 +184,15 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (seekBar != null) {
+                    hasNewVolumeSetting = true
                     megaphoneService?.setVolume(seekBar.progress)
                     Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                     thread {
-                        Thread.sleep(500)
+                        hasNewVolumeSetting = false
+                        Thread.sleep(1000)
+                        if(hasNewVolumeSetting) { // 如果这1秒内，又做了更改，退出本线程，留后面的线程处理
+                            return@thread
+                        }
                         mVolumeSeekBar.post {
                             if (seekBar.progress > volumeLimit) {
                                 seekBar.progress = volumeReal
@@ -250,7 +256,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             }
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
-        timer.schedule(task, 100, 1000);
+        timer.schedule(task, 100, 500);
     }
 
     override fun onDraw(canvas: Canvas?) {
