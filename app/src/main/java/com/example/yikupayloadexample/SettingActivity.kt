@@ -42,6 +42,7 @@ class SettingActivity : AppCompatActivity() {
         val thrower = findViewById<EditText>(R.id.ThrowerHostIP)
         val mRebootYmBtn = findViewById<Button>(R.id.reboot_ym_btn)
         val slowDescentDevice = findViewById<EditText>(R.id.SlowDescentDeviceHostIP)
+        val slowDescentDevicePort = findViewById<EditText>(R.id.SlowDescentDevicePort)
         val gripper = findViewById<EditText>(R.id.GripperHostIP)
         val resqme = findViewById<EditText>(R.id.ResqmeHostIP)
         val extinguisher = findViewById<EditText>(R.id.ExtinguisherHostIP)
@@ -64,7 +65,8 @@ class SettingActivity : AppCompatActivity() {
         val valueEmitterHost = preferences?.getString("EmitterHost", "")//38mm发射器
         val valueYA3Host = preferences?.getString("YA3Host", "")//四合一
         val valueThrowerHost = preferences?.getString("ThrowerHost", "")//抛投器
-        val valueSlowDescentDeviceHost = preferences?.getString("SlowDescentDeviceHost", "")//缓降器
+        val valueSlowDescentDeviceHost = preferences?.getString("SlowDescentDeviceHost", "")//50kg缓降器ip
+        val valueSlowDescentDevicePort = preferences?.getString("SlowDescentDevicePort", "")//50kg缓降器端口
         val valueGripperHost = preferences?.getString("GripperHost", "")//机械爪
         val valueResqmeHost = preferences?.getString("ResqmeHost", "")//破窗器
         val valueExtinguisherHost = preferences?.getString("ExtinguisherHost", "")//灭火罐
@@ -76,6 +78,9 @@ class SettingActivity : AppCompatActivity() {
         val valueFourInOne2Host = preferences?.getString("FourInOne2Host", "")// 机器狗多合一-二代
         val valueSlowDescentDevice200Host = preferences?.getString("SlowDescentDevice200Host", "")// 200kg缓降器
         val valueWaterGunEscapeHost = preferences?.getString("WaterGunEscapeHost", "")// 40水枪脱困
+
+        val defaultPort = "8519" // 如果直接用整型，setText方法会误以为这是string资源id
+
         // 当未设置过ip时，ip显示为Host.kt里面的值，否则显示设置后的值
         if (valueShoutHost == "") {
             shout.setText(ShoutHost)
@@ -118,6 +123,11 @@ class SettingActivity : AppCompatActivity() {
             slowDescentDevice.setText(SlowDescentDeviceHost)
         } else {
             slowDescentDevice.setText(valueSlowDescentDeviceHost)
+        }
+        if (valueSlowDescentDevicePort == "") {
+            slowDescentDevicePort.setText(defaultPort)
+        } else {
+            slowDescentDevicePort.setText(valueSlowDescentDevicePort)
         }
 
         if (valueGripperHost == "") {
@@ -196,6 +206,7 @@ class SettingActivity : AppCompatActivity() {
             val textYA3Host = YA3.text.toString()
             val textThrowerHost = thrower.text.toString()
             val textSlowDescentDeviceHost = slowDescentDevice.text.toString()
+            val textSlowDescentDevicePort = slowDescentDevicePort.text.toString()
             val textGripperHost = gripper.text.toString()
             val textResqmeHost = resqme.text.toString()
             val textExtinguisherHost = extinguisher.text.toString()
@@ -216,6 +227,7 @@ class SettingActivity : AppCompatActivity() {
             editer.putString("YA3Host", textYA3Host)
             editer.putString("ThrowerHost", textThrowerHost)
             editer.putString("SlowDescentDeviceHost", textSlowDescentDeviceHost)
+            editer.putString("SlowDescentDevicePort", textSlowDescentDevicePort)
             editer.putString("GripperHost", textGripperHost)
             editer.putString("ResqmeHost", textResqmeHost)
             editer.putString("ExtinguisherHost", textExtinguisherHost)

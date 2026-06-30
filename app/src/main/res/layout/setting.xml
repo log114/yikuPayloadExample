@@ -62,7 +62,7 @@
                 <!-- EditText -->
                 <EditText
                     android:id="@+id/ShoutHostIP"
-                    android:layout_width="200dp"
+                    android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:singleLine="false"
                     android:inputType="text"
@@ -226,20 +226,23 @@
                     android:layout_marginEnd="10dp"
                     android:textAlignment="textEnd"
                     android:text="@string/SlowDescentDeviceHost_name"
+                    app:layout_alignSelf="center"
                     android:textColor="@color/white_600" />
 
                 <EditText
                     android:id="@+id/SlowDescentDeviceHostIP"
-                    android:layout_width="200dp"
+                    android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:background="@drawable/boder"
+                    android:background="@drawable/edittext_border"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:text="@string/port" />
+                    android:layout_marginHorizontal="10dp"
+                    android:text="@string/port"
+                    app:layout_alignSelf="center"
+                    android:textColor="@color/white_600" />
                 <EditText
                     android:id="@+id/SlowDescentDevicePort"
                     android:layout_width="80dp"
@@ -437,7 +440,7 @@
                     android:textColor="@color/white_600"/>
                 <EditText
                     android:id="@+id/AllInOneHostIP"
-                    android:layout_width="200dp"
+                    android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:singleLine="false"
                     android:inputType="text"

@@ -6,7 +6,6 @@
         <color android:color="@color/black_0E"/>
     </item>
 
-    <!-- 你的图片：fill = 等比填满屏幕，center = 居中 -->
     <item android:gravity="fill|center">
         <bitmap
             android:src="@drawable/background"

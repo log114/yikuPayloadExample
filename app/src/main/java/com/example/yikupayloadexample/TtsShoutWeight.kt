@@ -31,6 +31,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mTemperature: TextView // 温度
     private lateinit var mStatus: TextView // 状态
     private lateinit var mTtsPlayBtn: Button;
+    private lateinit var mTtsStopBtn: Button
     private lateinit var mTextView: EditText;
     private lateinit var mTtsLoopPlaybackSwitch: Switch
     private lateinit var mBtnManVoice: RadioButton
@@ -117,8 +118,8 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         loopPlayback: Boolean // 循环播放
     ) {
         // 获取文字
-        var text = mTextView.text.toString()
-        var translateText = text.replace(Regex("\\d")){
+        val text = mTextView.text.toString()
+        val translateText = text.replace(Regex("\\d")){
             when(it.value) {
                 "0" -> context.resources.getString(R.string.zero)
                 "1" -> context.resources.getString(R.string.one)
@@ -147,7 +148,6 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
         if (isPlaying) {
             megaphoneService?.stopLoopTts()
-            mTtsPlayBtn.setText(R.string.play)
             isPlaying = false
             return
         }
@@ -156,7 +156,6 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
          */
         Log.i(TAG, "voice:${voice}")
         megaphoneService?.startLoopTtsV2(translateText, voice)
-        mTtsPlayBtn.setText(R.string.stop_playing)
         isPlaying = true
 
     }
@@ -180,6 +179,7 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mTemperature = findViewById(R.id.temperature)
         mStatus = findViewById(R.id.status)
         mTtsPlayBtn = this.findViewById(R.id.tts_play)
+        mTtsStopBtn = this.findViewById(R.id.tts_stop)
         mTextView = this.findViewById(R.id.tts_text)
         mBtnManVoice = this.findViewById(R.id.btn_man_voice)
         mBtnWomanVoice = this.findViewById(R.id.btn_woman_voice)
@@ -220,9 +220,12 @@ class TtsShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mTtsPlayBtn.setOnClickListener {
             if (isPlaying) {
                 stopTTSPlay()
-            } else {
-                sendText2Vehicle(mTtsLoopPlaybackSwitch.isChecked)
+                Thread.sleep(100)
             }
+            sendText2Vehicle(mTtsLoopPlaybackSwitch.isChecked)
+        }
+        mTtsStopBtn.setOnClickListener {
+            stopTTSPlay()
         }
         mVolumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {

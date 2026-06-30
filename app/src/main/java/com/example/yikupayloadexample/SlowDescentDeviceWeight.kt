@@ -83,8 +83,15 @@ class SlowDescentDeviceWeight(context: Context, attr: AttributeSet?, defStyleAtt
         initView(context)
         slowDescentDeviceService = SlowDescentDeviceService()
         val host = preferences?.getString("SlowDescentDeviceHost", "")
+        val portStr = preferences?.getString("SlowDescentDevicePort", "")
         if(host != null && "" != host) {
             slowDescentDeviceService.setIp(host)
+        }
+        if(portStr != null && "" != portStr) {
+            val port = portStr.toIntOrNull()
+            if(port != null) {
+                slowDescentDeviceService.setPort(port)
+            }
         }
         slowDescentDeviceService.msgCallbacks += object : MsgCallback {
             override fun getId(): String {
