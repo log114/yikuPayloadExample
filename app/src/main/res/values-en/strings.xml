@@ -360,4 +360,6 @@
     <string name="water_gun_escape">" 40 water gun escape"</string>
     <string name="water_gun_escape_ip">" 40 waterGunEscape IP: "</string>
     <string name="port">"Port: "</string>
+    <string name="weight_1">"Weight 1: "</string>
+    <string name="weight_2">"Weight 2: "</string>
 </resources>

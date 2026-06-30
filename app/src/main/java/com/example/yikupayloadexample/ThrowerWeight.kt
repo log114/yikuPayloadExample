@@ -21,6 +21,7 @@ import com.yiku.yikupayloadSDK.protocol.THROWER_STATE
 import com.yiku.yikupayloadSDK.service.ThrowerService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.lang.Exception
+import java.text.DecimalFormat
 import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
@@ -35,6 +36,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mThrower_4_way: LinearLayout
     private lateinit var mBombSettingRow2: LinearLayout
     private lateinit var mStatusRow2: LinearLayout
+    private lateinit var mStatusRow3: LinearLayout
     private lateinit var mThrowerSafetySwitch: Switch
     private lateinit var mDetonationSettingsBtn: Button
     private lateinit var mThrowerAllowDetonationSwitch_1: Switch
@@ -45,6 +47,8 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mBombState_2: TextView
     private lateinit var mBombState_3: TextView
     private lateinit var mBombState_4: TextView
+    private lateinit var mWeight1: TextView
+    private lateinit var mWeight2: TextView
 //    private lateinit var mTemperature: TextView
     private lateinit var statusDot: View
     private lateinit var background: GradientDrawable
@@ -115,6 +119,9 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     // 更新状态
                     updateStatus(msg)
                 }
+                else if(msg[2] == 0x2B.toByte()) { // 称重模块反馈消息
+                    updateWeight(msg)
+                }
             }
 
         })
@@ -142,6 +149,18 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             updateBombStateText(2, msg.slice(19 until 27).toByteArray())
             updateBombStateText(3, msg.slice(27 until 35).toByteArray())
             updateBombStateText(4, msg.slice(35 until 43).toByteArray())
+        }
+    }
+
+    fun updateWeight(msg: ByteArray) {
+        val df = DecimalFormat("#.#")
+        val weight1 = df.format(msg[3].toFloat() / 10)
+        val weight2 = df.format(msg[5].toFloat() / 10)
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            mWeight1.text = "$weight1 kg"
+            mWeight2.text = "$weight2 kg"
+            mStatusRow3.visibility = VISIBLE
         }
     }
 
@@ -347,6 +366,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mThrower_4_way = findViewById(R.id.thrower_4_way)
         mBombSettingRow2 = findViewById(R.id.bombSettingRow2)
         mStatusRow2 = findViewById(R.id.statusRow2)
+        mStatusRow3 = findViewById(R.id.statusRow3)
         mThrowerView = findViewById(R.id.throwerWeight)
         mDetonationSettingsView = findViewById(R.id.detonationSettingsView)
         mPromptView = findViewById(R.id.promptView)
@@ -360,6 +380,8 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mBombState_2 = findViewById(R.id.bombState_2)
         mBombState_3 = findViewById(R.id.bombState_3)
         mBombState_4 = findViewById(R.id.bombState_4)
+        mWeight1 = findViewById(R.id.weight_1)
+        mWeight2 = findViewById(R.id.weight_2)
 //        mTemperature = findViewById(R.id.temperature)
         statusDot = findViewById(R.id.statusDot)
         background = statusDot.background as GradientDrawable

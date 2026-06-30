@@ -404,4 +404,6 @@
     <string name="water_gun_escape">40水枪脱困</string>
     <string name="water_gun_escape_ip">"40水枪脱困IP: "</string>
     <string name="port">端口：</string>
+    <string name="weight_1">重量1：</string>
+    <string name="weight_2">重量2：</string>
 </resources>
