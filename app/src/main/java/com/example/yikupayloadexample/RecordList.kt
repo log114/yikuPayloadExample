@@ -79,12 +79,12 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?) : Ba
                 // 不用是否在播放状态，先清播放状态，在进行播放
                 audioPlayingStatusMap[mData[position].recordName] = false
                 audioLoopStatusMap[mData[position].recordName] = false
-                resetAllImageStatus()
                 if (mData[position].playing) {
                     megaphoneService?.stopPlayAudio()
-                    notifyDataSetChanged()
+                    resetAllImageStatus()
                     return@setOnClickListener
                 }
+                resetAllImageStatus()
                 audioPlayingStatusMap[mData[position].recordName] = true
                 audioLoopStatusMap[mData[position].recordName] = false
                 mData[position].loop = false
@@ -99,14 +99,12 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?) : Ba
             mLoopPlayerAudio.setOnClickListener {
                 audioPlayingStatusMap[mData[position].recordName] = false
                 audioLoopStatusMap[mData[position].recordName] = false
-                resetAllImageStatus()
                 if (mData[position].playing) {
                     megaphoneService?.stopPlayAudio()
-                    mData[position].loop = false
-                    mData[position].playing = false
-                    notifyDataSetChanged()
+                    resetAllImageStatus()
                     return@setOnClickListener
                 }
+                resetAllImageStatus()
                 mData[position].loop = true
                 mData[position].playing = true
                 audioPlayingStatusMap[mData[position].recordName] = true
