@@ -153,9 +153,9 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     }
 
     fun updateWeight(msg: ByteArray) {
-        val df = DecimalFormat("#.#")
-        val weight1 = df.format(msg[3].toFloat() / 10)
-        val weight2 = df.format(msg[5].toFloat() / 10)
+        val df = DecimalFormat("#0.#")   // 修改为 "#0.#" 避免 ".5" 这种显示
+        val weight1 = df.format((msg[4].toUByte().toFloat() * 256 + msg[3].toUByte().toFloat()) / 10f)
+        val weight2 = df.format((msg[6].toUByte().toFloat() * 256 + msg[5].toUByte().toFloat()) / 10f)
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             mWeight1.text = "$weight1 kg"
