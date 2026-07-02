@@ -25,6 +25,7 @@ import com.yiku.yikupayloadSDK.util.WaterBranchHost
 import com.yiku.yikupayloadSDK.util.WaterGunEscapeHost
 import com.yiku.yikupayloadSDK.util.WaterGunHost
 import com.yiku.yikupayloadSDK.util.YA3Host
+import androidx.core.content.edit
 
 class SettingActivity : AppCompatActivity() {
 
@@ -219,27 +220,27 @@ class SettingActivity : AppCompatActivity() {
             val textSlowDescentDevice200Host = slowDescentDevice200.text.toString()
             val textWaterGunEscapeHost = waterGunEscape.text.toString()
             // 将修改后的值存储到 SharedPreferences 中
-            val editer = preferences!!.edit()
-            editer.putString("ShoutHost", textShoutHost)
-            editer.putString("LightHost", textLightHost)
-            editer.putString("CacheNetHost", textCacheNetHost)
-            editer.putString("EmitterHost", textEmitterHost)
-            editer.putString("YA3Host", textYA3Host)
-            editer.putString("ThrowerHost", textThrowerHost)
-            editer.putString("SlowDescentDeviceHost", textSlowDescentDeviceHost)
-            editer.putString("SlowDescentDevicePort", textSlowDescentDevicePort)
-            editer.putString("GripperHost", textGripperHost)
-            editer.putString("ResqmeHost", textResqmeHost)
-            editer.putString("ExtinguisherHost", textExtinguisherHost)
-            editer.putString("WaterGunHost", textWaterGunHost)
-            editer.putString("BucketHost", textBucketHost)
-            editer.putString("WaterBranchHost", textWaterBranchHost)
-            editer.putString("PL_LightHost", textPL_LightHost)
-            editer.putString("AllInOneHost", textAllInOneHost)
-            editer.putString("FourInOne2Host", textFourInOne2Host)
-            editer.putString("SlowDescentDevice200Host", textSlowDescentDevice200Host)
-            editer.putString("WaterGunEscapeHost", textWaterGunEscapeHost)
-            editer.apply()
+            preferences!!.edit {
+                putString("ShoutHost", textShoutHost)
+                putString("LightHost", textLightHost)
+                putString("CacheNetHost", textCacheNetHost)
+                putString("EmitterHost", textEmitterHost)
+                putString("YA3Host", textYA3Host)
+                putString("ThrowerHost", textThrowerHost)
+                putString("SlowDescentDeviceHost", textSlowDescentDeviceHost)
+                putString("SlowDescentDevicePort", textSlowDescentDevicePort)
+                putString("GripperHost", textGripperHost)
+                putString("ResqmeHost", textResqmeHost)
+                putString("ExtinguisherHost", textExtinguisherHost)
+                putString("WaterGunHost", textWaterGunHost)
+                putString("BucketHost", textBucketHost)
+                putString("WaterBranchHost", textWaterBranchHost)
+                putString("PL_LightHost", textPL_LightHost)
+                putString("AllInOneHost", textAllInOneHost)
+                putString("FourInOne2Host", textFourInOne2Host)
+                putString("SlowDescentDevice200Host", textSlowDescentDevice200Host)
+                putString("WaterGunEscapeHost", textWaterGunEscapeHost)
+            }
             finish();  //直接关闭当前页面
         }
         // 喊话器重启
