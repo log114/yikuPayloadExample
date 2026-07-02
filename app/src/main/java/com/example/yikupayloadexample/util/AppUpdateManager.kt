@@ -95,7 +95,7 @@ class AppUpdateManager private constructor(
                     if (response.isSuccessful) {
                         val versionResponse = response.body()
                         if (versionResponse?.result == "success") {
-                            versionResponse.data?.let { versionData ->
+                            versionResponse.data.let { versionData ->
                                 val currentVersion = getCurrentVersionName()
 
                                 if (isNewVersionAvailable(versionData.version, currentVersion)) {
