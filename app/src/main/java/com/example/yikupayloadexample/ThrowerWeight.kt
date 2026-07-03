@@ -26,6 +26,7 @@ import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
+import kotlin.math.roundToInt
 import kotlin.system.exitProcess
 
 class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
@@ -70,6 +71,14 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mCenterBtn: Button
     private lateinit var mLeftBtn: Button
     private lateinit var mRightBtn: Button
+    private lateinit var mWeightSettingBtn: Button
+    private lateinit var mWeightSettingsView: LinearLayout
+    private lateinit var mCalibrationWeight: EditText
+    private lateinit var mCalibration1Btn: Button
+    private lateinit var mCalibration2Btn: Button
+    private lateinit var mPeelBtn: Button
+    private lateinit var mWeightSettingBackBtn: Button
+
     private var updateTime = Date().time
     private var canDetonate_1 = false // 1号弹是否可以引爆
     private var canDetonate_2 = false // 2号弹是否可以引爆
@@ -115,11 +124,22 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     return
                 }
                 if (msg[2] == THROWER_STATE.toByte()) {
-//                    Log.i(TAG, "recv 0x25!")
+                    updateTime = Date().time
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        mConnectState.setText(R.string.connection_status_connected)
+                        background.setColor(ContextCompat.getColor(context, R.color.green))
+                    }
                     // 更新状态
                     updateStatus(msg)
                 }
                 else if(msg[2] == 0x2B.toByte()) { // 称重模块反馈消息
+                    updateTime = Date().time
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        mConnectState.setText(R.string.connection_status_connected)
+                        background.setColor(ContextCompat.getColor(context, R.color.green))
+                    }
                     updateWeight(msg)
                 }
             }
@@ -133,7 +153,6 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
 
     fun updateStatus(msg: ByteArray) {
-        Log.i(TAG, "抛投0x25msg:${msg.toHex()}")
         // 总状态
         val handler = Handler(Looper.getMainLooper())
         handler.post {
@@ -141,9 +160,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             mHeight.text = msg[0 + 3].toUByte().toString() + "m"
             // 起爆高度
             detonateHeight = msg[1 + 3].toInt()
-            updateTime = Date().time
 
-            mConnectState.setText(R.string.connection_status_connected)
             background.setColor(ContextCompat.getColor(context, R.color.green))
             updateBombStateText(1, msg.slice(11 until 19).toByteArray())
             updateBombStateText(2, msg.slice(19 until 27).toByteArray())
@@ -398,6 +415,13 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mUpdateCancelBtn = findViewById(R.id.updateCancelBtn)
         modeSelectorLayout = findViewById(R.id.mode_selector_layout)
         currentModeText = findViewById(R.id.current_mode_text)
+        mWeightSettingBtn = findViewById(R.id.weightSettingBtn)
+        mWeightSettingsView = findViewById(R.id.weightSettingsView)
+        mCalibrationWeight = findViewById(R.id.calibrationWeight)
+        mCalibration1Btn = findViewById(R.id.calibration1Btn)
+        mCalibration2Btn = findViewById(R.id.calibration2Btn)
+        mPeelBtn = findViewById(R.id.peelBtn)
+        mWeightSettingBackBtn = findViewById(R.id.weightSettingBackBtn)
 
         initModeView()
 
@@ -434,6 +458,50 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             mThrowerView.visibility = VISIBLE
             mDetonationSettingsView.visibility = GONE
         }
+
+        // 打开称重设置界面
+        mWeightSettingBtn.setOnClickListener {
+            mThrowerView.visibility = GONE
+            mWeightSettingsView.visibility = VISIBLE
+        }
+        // 重量标定1
+        mCalibration1Btn.setOnClickListener {
+            var calibrationWeight = 0
+            // 安全获取文本，避免空指针
+            val calibrationWeightStr = mCalibrationWeight?.text?.toString().orEmpty()
+            // 使用 toFloatOrNull 避免异常
+            val weightValue = calibrationWeightStr.toFloatOrNull()
+
+            if (weightValue != null && weightValue >= 0) { // 假设只接受非负数，根据业务调整
+                // 使用 Math.round 实现四舍五入到十分位（乘以10后四舍五入）
+                calibrationWeight = (weightValue * 10).roundToInt()
+            }
+            throwerService.weightCalibration(1, calibrationWeight)
+        }
+        // 重量标定2
+        mCalibration2Btn.setOnClickListener {
+            var calibrationWeight = 0
+            // 安全获取文本，避免空指针
+            val calibrationWeightStr = mCalibrationWeight?.text?.toString().orEmpty()
+            // 使用 toFloatOrNull 避免异常
+            val weightValue = calibrationWeightStr.toFloatOrNull()
+
+            if (weightValue != null && weightValue >= 0) { // 假设只接受非负数，根据业务调整
+                // 使用 Math.round 实现四舍五入到十分位（乘以10后四舍五入）
+                calibrationWeight = (weightValue * 10).roundToInt()
+            }
+            throwerService.weightCalibration(2, calibrationWeight)
+        }
+        // 去皮
+        mPeelBtn.setOnClickListener {
+            throwerService.weightPeel()
+        }
+        // 返回
+        mWeightSettingBackBtn.setOnClickListener {
+            mThrowerView.visibility = VISIBLE
+            mWeightSettingsView.visibility = GONE
+        }
+
         // 确认框，取消
         mPromptCancelBtn.setOnClickListener {
             mThrowerView.visibility = VISIBLE

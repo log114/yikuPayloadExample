@@ -562,6 +562,14 @@ class PayloadWeight : Service() {
                             )
                             false
                         }
+                        val calibrationWeightEditText = mShoutViewContent.findViewById<EditText>(R.id.calibrationWeight)
+                        calibrationWeightEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                calibrationWeightEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
                         // 测量内容并决定是否旋转
                         measureAndAdjustLayout()
                     }

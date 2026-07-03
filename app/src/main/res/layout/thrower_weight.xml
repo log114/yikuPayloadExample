@@ -267,6 +267,16 @@
                     android:textColor="@color/white" />
 
                 <Button
+                    android:id="@+id/weightSettingBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/play_btn"
+                    android:padding="0dp"
+                    android:text="称重设置"
+                    android:textColor="@color/white" />
+
+                <Button
                     android:id="@+id/throwerUpdate"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -668,6 +678,84 @@
             android:background="@drawable/play_btn"
             android:text="@string/ok"
             android:textColor="@color/white" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/weightSettingsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:text="标定重量："
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+            <EditText
+                android:id="@+id/calibrationWeight"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:inputType="numberDecimal"
+                android:text="0"
+                android:textColor="@color/white"
+                android:background="@drawable/edittext_border"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_marginStart="4dp"
+                android:text="kg"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="visible">
+            <Button
+                android:id="@+id/calibration1Btn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="@drawable/play_btn"
+                android:text="标定1号"
+                android:textColor="@color/white" />
+            <Button
+                android:id="@+id/calibration2Btn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/play_btn"
+                android:text="标定2号"
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="visible">
+            <Button
+                android:id="@+id/peelBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="@drawable/play_btn"
+                android:text="去皮"
+                android:textColor="@color/white" />
+            <Button
+                android:id="@+id/weightSettingBackBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/default_btn"
+                android:text="返回"
+                android:textColor="@color/white" />
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/promptView"
