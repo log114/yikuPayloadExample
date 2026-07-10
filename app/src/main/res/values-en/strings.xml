@@ -352,7 +352,7 @@
     <string name="select_the_type_of_thrower">Select the type of thrower</string>
     <string name="bullet_1">No.1 bullet</string>
     <string name="bullet_2">No.2 bullet</string>
-    <string name="static_mode">Static Mode​</string>
+    <string name="static_mode">Static Mode</string>
     <string name="nozzle_mode">Nozzle model</string>
     <string name="shouting_and_alarms">Shouting and Alarms</string>
     <string name="back">Back</string>
@@ -360,4 +360,5 @@
     <string name="water_gun_escape">" 40 water gun escape"</string>
     <string name="water_gun_escape_ip">" 40 waterGunEscape IP: "</string>
     <string name="port">"Port: "</string>
+    <string name="shake_head">Shake Head</string>
 </resources>

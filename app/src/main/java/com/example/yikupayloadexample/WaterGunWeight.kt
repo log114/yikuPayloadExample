@@ -104,6 +104,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mState.setText(R.string.static_mode)
                         mState.setTextColor(resources.getColor(R.color.green))
                         mOperateBtn.isEnabled = mSafetySwitch.isChecked
+                        mOperateBtn.setText(R.string.shake_head)
                         mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
                         mToRightBtn.isEnabled = false
@@ -112,6 +113,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mState.setText(R.string.autoMode)
                         mState.setTextColor(resources.getColor(R.color.green))
                         mOperateBtn.isEnabled = mSafetySwitch.isChecked
+                        mOperateBtn.setText(R.string.switching_modes)
                         mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
                         mToRightBtn.isEnabled = false
@@ -120,6 +122,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mState.setText(R.string.switching)
                         mState.setTextColor(resources.getColor(R.color.green))
                         mOperateBtn.isEnabled = false
+                        mOperateBtn.setText(R.string.switching_modes)
                         mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
                         mToRightBtn.isEnabled = false
@@ -128,6 +131,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mState.setText(R.string.manualMode)
                         mState.setTextColor(resources.getColor(R.color.green))
                         mOperateBtn.isEnabled = mSafetySwitch.isChecked
+                        mOperateBtn.setText(R.string.switching_modes)
                         mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = mSafetySwitch.isChecked
                         mToRightBtn.isEnabled = mSafetySwitch.isChecked
@@ -136,6 +140,7 @@ class WaterGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         mState.setText(R.string.static_mode)
                         mState.setTextColor(resources.getColor(R.color.green))
                         mOperateBtn.isEnabled = mSafetySwitch.isChecked
+                        mOperateBtn.setText(R.string.shake_head)
                         mSwitchBtn.isEnabled = mSafetySwitch.isChecked && !isSwitchingNozzle
                         mToLeftBtn.isEnabled = false
                         mToRightBtn.isEnabled = false

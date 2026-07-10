@@ -121,7 +121,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/play_btn"
-                android:text="@string/switching_modes"
+                android:text="@string/shake_head"
                 android:textColor="@color/white"
                 android:enabled="false"/>
 
