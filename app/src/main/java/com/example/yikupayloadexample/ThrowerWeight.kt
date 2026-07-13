@@ -77,6 +77,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mCalibration1Btn: Button
     private lateinit var mCalibration2Btn: Button
     private lateinit var mPeelBtn: Button
+    private lateinit var mFactoryResetBtn: Button
     private lateinit var mWeightSettingBackBtn: Button
 
     private var updateTime = Date().time
@@ -132,14 +133,6 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     }
                     // 更新状态
                     updateStatus(msg)
-                }
-                else if(msg[2] == 0x2B.toByte()) { // 称重模块反馈消息
-                    updateTime = Date().time
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post {
-                        mConnectState.setText(R.string.connection_status_connected)
-                        background.setColor(ContextCompat.getColor(context, R.color.green))
-                    }
                     updateWeight(msg)
                 }
             }
@@ -171,8 +164,8 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
     fun updateWeight(msg: ByteArray) {
         val df = DecimalFormat("#0.#")   // 修改为 "#0.#" 避免 ".5" 这种显示
-        val weight1 = df.format((msg[4].toUByte().toFloat() * 256 + msg[3].toUByte().toFloat()) / 10f)
-        val weight2 = df.format((msg[6].toUByte().toFloat() * 256 + msg[5].toUByte().toFloat()) / 10f)
+        val weight1 = df.format((msg[6].toUByte().toFloat() * 256 + msg[5].toUByte().toFloat()) / 10f)
+        val weight2 = df.format((msg[8].toUByte().toFloat() * 256 + msg[7].toUByte().toFloat()) / 10f)
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             mWeight1.text = "$weight1 kg"
@@ -421,6 +414,7 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mCalibration1Btn = findViewById(R.id.calibration1Btn)
         mCalibration2Btn = findViewById(R.id.calibration2Btn)
         mPeelBtn = findViewById(R.id.peelBtn)
+        mFactoryResetBtn = findViewById(R.id.factoryResetBtn)
         mWeightSettingBackBtn = findViewById(R.id.weightSettingBackBtn)
 
         initModeView()
@@ -495,6 +489,10 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         // 去皮
         mPeelBtn.setOnClickListener {
             throwerService.weightPeel()
+        }
+        // 恢复出厂设置
+        mFactoryResetBtn.setOnClickListener {
+            throwerService.factoryReset()
         }
         // 返回
         mWeightSettingBackBtn.setOnClickListener {

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/edittext_border"
     android:padding="20dp">
 
     <TextView
@@ -65,7 +66,7 @@
         <android.widget.Button
             android:id="@+id/btnCancel"
             android:layout_width="120dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:text="@string/cancel"
             android:layout_marginEnd="10dp"
             android:background="@drawable/btn_cancel_bg" />
@@ -73,7 +74,7 @@
         <android.widget.Button
             android:id="@+id/btnUpdate"
             android:layout_width="120dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:text="@string/update_now"
             android:textColor="@color/white"
             android:background="@drawable/btn_update_bg" />
