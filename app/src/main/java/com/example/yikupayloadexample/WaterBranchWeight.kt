@@ -38,7 +38,6 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private var isFirstConnect: Boolean = true
     private var updateTime = Date().time
     private var isHoseRelease: Boolean = false
-    private var isHoseDetachment: Boolean = false
     private val hoseThread: AtomicReference<Thread> = AtomicReference()
     private val isButtonDown = AtomicBoolean(false)
 
@@ -74,7 +73,6 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             isHoseRelease = 0x01 == msg[0 + 4].toInt()
-//            isHoseDetachment = 0x01 == msg[0 + 5].toInt()
         }
     }
 
@@ -122,13 +120,7 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                 showToast(R.string.need_to_open_safety_switch)
                 return@setOnClickListener
             }
-            if(isHoseDetachment) {
-                waterBranchService.hoseDetachment(0) // 复位
-            }
-            else {
-                waterBranchService.hoseDetachment(1) // 水带脱困
-            }
-            isHoseDetachment = !isHoseDetachment
+            waterBranchService.hoseDetachment(1) // 水带脱困
 
             mHoseDetachmentBtn.setText( R.string.executing )
             mHoseDetachmentBtn.isEnabled = false
@@ -137,12 +129,6 @@ class WaterBranchWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
                     mHoseDetachmentBtn.isEnabled = mSafetySwitchSwitch.isChecked
-                    if(isHoseDetachment) {
-                        mHoseDetachmentBtn.setText(R.string.reset )
-                    }
-                    else {
-                        mHoseDetachmentBtn.setText(R.string.hoseDetachment )
-                    }
                 }
             }
         }
