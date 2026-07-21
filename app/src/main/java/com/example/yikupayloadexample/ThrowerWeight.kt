@@ -21,6 +21,8 @@ import com.yiku.yikupayloadSDK.protocol.THROWER_STATE
 import com.yiku.yikupayloadSDK.service.ThrowerService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import java.lang.Exception
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.text.DecimalFormat
 import java.util.Date
 import java.util.Timer
@@ -164,8 +166,15 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
     fun updateWeight(msg: ByteArray) {
         val df = DecimalFormat("#0.#")   // 修改为 "#0.#" 避免 ".5" 这种显示
-        val weight1 = df.format((msg[6].toUByte().toFloat() * 256 + msg[5].toUByte().toFloat()) / 10f)
-        val weight2 = df.format((msg[8].toUByte().toFloat() * 256 + msg[7].toUByte().toFloat()) / 10f)
+        val short1 = ByteBuffer.wrap(byteArrayOf(msg[5], msg[6]))
+            .order(ByteOrder.LITTLE_ENDIAN)  // 注意你的高低字节顺序：msg[6]是高字节，msg[5]是低字节 → LITTLE_ENDIAN
+            .short
+        val weight1 = df.format(short1 / 10.0)
+
+        val short2 = ByteBuffer.wrap(byteArrayOf(msg[7], msg[8]))
+            .order(ByteOrder.LITTLE_ENDIAN)
+            .short
+        val weight2 = df.format(short2 / 10.0)
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             mWeight1.text = "$weight1 kg"
