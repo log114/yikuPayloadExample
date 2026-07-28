@@ -38,7 +38,9 @@ class SettingActivity : AppCompatActivity() {
         val shout  = findViewById<EditText>(R.id.ShoutHostIP)
         val light = findViewById<EditText>(R.id.LightHostIP)
         val cacheNet = findViewById<EditText>(R.id.CacheNetHostIP)
+        val cacheNet2 = findViewById<EditText>(R.id.CacheNetHostIP2)
         val emitter = findViewById<EditText>(R.id.EmitterHostIP)
+        val emitter2 = findViewById<EditText>(R.id.EmitterHostIP2)
         val YA3 = findViewById<EditText>(R.id.YA3HostIP)
         val thrower = findViewById<EditText>(R.id.ThrowerHostIP)
         val mRebootYmBtn = findViewById<Button>(R.id.reboot_ym_btn)
@@ -62,8 +64,10 @@ class SettingActivity : AppCompatActivity() {
         // 从 SharedPreferences 中读取上次存储的值，并显示在 Shout 喊话器 中
         val valueShoutHost = preferences?.getString("ShoutHost", "")  //喊话器的
         val valueLightHost = preferences?.getString("LightHost", "") //灯的
-        val valueCacheNetHost = preferences?.getString("CacheNetHost", "") //捕捉网的
+        val valueCacheNetHost = preferences?.getString("CacheNetHost", "") //捕捉网
+        val valueCacheNetHost2 = preferences?.getString("CacheNetHost2", "") //捕捉网2
         val valueEmitterHost = preferences?.getString("EmitterHost", "")//38mm发射器
+        val valueEmitterHost2 = preferences?.getString("EmitterHost2", "")//38mm发射器2
         val valueYA3Host = preferences?.getString("YA3Host", "")//四合一
         val valueThrowerHost = preferences?.getString("ThrowerHost", "")//抛投器
         val valueSlowDescentDeviceHost = preferences?.getString("SlowDescentDeviceHost", "")//50kg缓降器ip
@@ -83,114 +87,140 @@ class SettingActivity : AppCompatActivity() {
         val defaultPort = "8519" // 如果直接用整型，setText方法会误以为这是string资源id
 
         // 当未设置过ip时，ip显示为Host.kt里面的值，否则显示设置后的值
+        // 喊话器
         if (valueShoutHost == "") {
             shout.setText(ShoutHost)
         } else {
             shout.setText(valueShoutHost)
         }
 
+        // 探照灯
         if (valueLightHost == "") {
             light.setText(LightHost)
         } else {
             light.setText(valueLightHost)
         }
 
+        // 捕捉网
         if (valueCacheNetHost == "") {
             cacheNet.setText(CacheNetHost)
         } else {
             cacheNet.setText(valueCacheNetHost)
         }
+        // 捕捉网2
+        if (valueCacheNetHost2 != "") {
+            cacheNet2.setText(valueCacheNetHost2)
+        }
 
+        // 38mm发射器
         if (valueEmitterHost == "") {
-
             emitter.setText(EmitterHost)
         } else {
             emitter.setText(valueEmitterHost)
         }
+        // 38mm发射器2
+        if (valueEmitterHost2 != "") {
+            emitter2.setText(valueEmitterHost2)
+        }
 
+        // 四合一
         if (valueYA3Host == "") {
             YA3.setText(YA3Host)
         } else {
             YA3.setText(valueYA3Host)
         }
 
+        // 抛投器
         if (valueThrowerHost == "") {
             thrower.setText(ThrowerHost)
         } else {
             thrower.setText(valueThrowerHost)
         }
 
+        // 50kg缓降器ip
         if (valueSlowDescentDeviceHost == "") {
             slowDescentDevice.setText(SlowDescentDeviceHost)
         } else {
             slowDescentDevice.setText(valueSlowDescentDeviceHost)
         }
+        // 50kg缓降器端口
         if (valueSlowDescentDevicePort == "") {
             slowDescentDevicePort.setText(defaultPort)
         } else {
             slowDescentDevicePort.setText(valueSlowDescentDevicePort)
         }
 
+        // 机械爪
         if (valueGripperHost == "") {
             gripper.setText(GripperHost)
         } else {
             gripper.setText(valueGripperHost)
         }
 
+        // 破窗器
         if (valueResqmeHost == "") {
             resqme.setText(ResqmeHost)
         } else {
             resqme.setText(valueResqmeHost)
         }
 
+        // 灭火罐
         if (valueExtinguisherHost == "") {
             extinguisher.setText(ExtinguisherHost)
         } else {
             extinguisher.setText(valueExtinguisherHost)
         }
 
+        // 清洗水枪
         if (valueWaterGunHost == "") {
             waterGun.setText(WaterGunHost)
         } else {
             waterGun.setText(valueWaterGunHost)
         }
 
+        // 吊桶
         if (valueBucketHost == "") {
             bucket.setText(BucketHost)
         } else {
             bucket.setText(valueBucketHost)
         }
 
+        // 消防水枪
         if (valueWaterBranchHost == "") {
             waterBranch.setText(WaterBranchHost)
         } else {
             waterBranch.setText(valueWaterBranchHost)
         }
 
+        // 品灵探照灯
         if (valuePLLightHost == "") {
             PL_Light.setText(PLLightHost)
         } else {
             PL_Light.setText(valuePLLightHost)
         }
 
+        // 五技吊舱
         if (valueAllInOneHost == "") {
             allInOne.setText(AllInOneHost)
         } else {
             allInOne.setText(valueAllInOneHost)
         }
 
+        // 四合一2代
         if (valueFourInOne2Host == "") {
             fourInOne2.setText(FourInOne2Host)
         } else {
             fourInOne2.setText(valueFourInOne2Host)
         }
 
+        // 200kg缓降器
         if (valueSlowDescentDevice200Host == "") {
             slowDescentDevice200.setText(SlowDescentDevice200Host)
         } else {
             slowDescentDevice200.setText(valueSlowDescentDevice200Host)
         }
 
+        // 40水枪脱困
         if (valueWaterGunEscapeHost == "") {
             waterGunEscape.setText(WaterGunEscapeHost)
         }
@@ -203,7 +233,9 @@ class SettingActivity : AppCompatActivity() {
             val textShoutHost = shout.text.toString()
             val textLightHost = light.text.toString()
             val textCacheNetHost = cacheNet.text.toString()
+            val textCacheNetHost2 = cacheNet2.text.toString()
             val textEmitterHost = emitter.text.toString()
+            val textEmitterHost2 = emitter2.text.toString()
             val textYA3Host = YA3.text.toString()
             val textThrowerHost = thrower.text.toString()
             val textSlowDescentDeviceHost = slowDescentDevice.text.toString()
@@ -224,7 +256,9 @@ class SettingActivity : AppCompatActivity() {
                 putString("ShoutHost", textShoutHost)
                 putString("LightHost", textLightHost)
                 putString("CacheNetHost", textCacheNetHost)
+                putString("CacheNetHost2", textCacheNetHost2)
                 putString("EmitterHost", textEmitterHost)
+                putString("EmitterHost2", textEmitterHost2)
                 putString("YA3Host", textYA3Host)
                 putString("ThrowerHost", textThrowerHost)
                 putString("SlowDescentDeviceHost", textSlowDescentDeviceHost)

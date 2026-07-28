@@ -361,4 +361,8 @@
     <string name="water_gun_escape_ip">" 40 waterGunEscape IP: "</string>
     <string name="port">"Port: "</string>
     <string name="shake_head">Shake Head</string>
+    <string name="CacheNetHost_name2">"CacheNetHost IP2: "</string>
+    <string name="EmitterHost_name2">"EmitterHost IP2: "</string>
+    <string name="emitter_38mm2">38mm emitter2</string>
+    <string name="capture_net2">Capture net2</string>
 </resources>

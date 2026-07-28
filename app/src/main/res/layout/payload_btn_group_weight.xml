@@ -76,7 +76,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:imagePrefix="catchnet"
         android:visibility="gone" />
-
+    <com.example.yikupayloadexample.component.StatefulImageView
+        android:id="@+id/catchNetBtn2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/capture_net"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/catchNetBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="catchnet"
+        android:visibility="gone" />
 
     <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/emitterBtn"
@@ -85,7 +95,19 @@
         android:layout_marginStart="8dp"
         android:contentDescription="@string/emitter_38mm"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/catchNetBtn"
+        app:layout_constraintStart_toEndOf="@id/catchNetBtn2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="icon_38mm"
+        android:visibility="gone" />
+
+    <com.example.yikupayloadexample.component.StatefulImageView
+        android:id="@+id/emitterBtn2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/emitter_38mm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/emitterBtn"
         app:layout_constraintTop_toTopOf="parent"
         app:imagePrefix="icon_38mm"
         android:visibility="gone" />
@@ -97,7 +119,7 @@
         android:layout_marginStart="8dp"
         android:contentDescription="@string/thrower"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/emitterBtn"
+        app:layout_constraintStart_toEndOf="@id/emitterBtn2"
         app:layout_constraintTop_toTopOf="parent"
         app:imagePrefix="thrower"
         android:visibility="gone" />

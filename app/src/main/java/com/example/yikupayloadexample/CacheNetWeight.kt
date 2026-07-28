@@ -15,19 +15,28 @@ import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
 
-class CacheNetWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
-    LinearLayout(context, attr, defStyleAttr) {
+class CacheNetWeight(
+    context: Context,
+    attr: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    private val isDevice2: Boolean = false
+) : LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "CacheNetWeight"
     private lateinit var mLightView: View
     lateinit var cacheNetService: BaseCacheNetService
     private lateinit var mSafetySwitchSwitch: Switch
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
+    private var host: String? = ""
 
-    constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
 
     init {
+        host = if(isDevice2) {
+            preferences?.getString("CacheNetHost2", "")
+        } else {
+            preferences?.getString("CacheNetHost", "")
+        }
         initView(context)
     }
 
@@ -38,11 +47,13 @@ class CacheNetWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
         val mCacheNetLaunchBtn = findViewById<Button>(R.id.cacheNetLaunchBtn)
         cacheNetService = BaseCacheNetService()
-        val host = preferences?.getString("CacheNetHost", "")
         if(host != null && "" != host) {
-            cacheNetService.setIp(host)
+            cacheNetService.setIp(host!!)
         }
-        setConnectState()
+        Log.d(TAG, "isDevice2=${isDevice2}, host=${host}")
+        if((isDevice2 && host != "" && host != null) || !isDevice2) {
+            setConnectState()
+        }
 
         mSafetySwitchSwitch.setOnCheckedChangeListener { _, isChecked ->
             mCacheNetLaunchBtn.isEnabled = isChecked

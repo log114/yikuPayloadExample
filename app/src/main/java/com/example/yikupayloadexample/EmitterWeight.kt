@@ -18,8 +18,12 @@ import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
 
-class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
-    LinearLayout(context, attr, defStyleAttr) {
+class EmitterWeight(
+    context: Context,
+    attr: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    private val isDevice2: Boolean = false
+) : LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "EmitterWeight"
     var emitterService: EmitterService
     private lateinit var connectText: TextView
@@ -37,16 +41,20 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private var isFirstConnect: Boolean = true
     private var isOpenSafetySwitch: Boolean = false
     private var updateTime = Date().time
+    private var host: String? = ""
 
-    constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
 
     init {
+        host = if(isDevice2) {
+            preferences?.getString("EmitterHost2", "")
+        } else {
+            preferences?.getString("EmitterHost", "")
+        }
         initView(context)
         emitterService = EmitterService()
-        val host = preferences?.getString("EmitterHost", "")
         if(host != null && "" != host) {
-            emitterService.setIp(host)
+            emitterService.setIp(host!!)
         }
         emitterService.registMsgCallback(object : MsgCallback {
             override fun getId(): String {
@@ -158,7 +166,10 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mEmitterLaunch5Btn = findViewById(R.id.emitterLaunch5Btn)
         mEmitterLaunch6Btn = findViewById(R.id.emitterLaunch6Btn)
         background = statusDot.background as GradientDrawable
-        setConnectState()
+        Log.d(TAG, "isDevice2=${isDevice2}, host=${host}")
+        if((isDevice2 && host != "" && host != null) || !isDevice2) {
+            setConnectState()
+        }
 
         // 安全开关
         mSafetySwitch.setOnClickListener {
