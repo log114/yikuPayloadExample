@@ -236,7 +236,7 @@ class MainActivity : AppCompatActivity() {
             })
 
         // 检查版本更新
-        checkVersionUpdate()
+//        checkVersionUpdate() // 特殊版本不支持在线更新
     }
     private fun checkVersionUpdate() {
         appUpdateManager.checkVersionUpdate()

@@ -115,6 +115,9 @@ class ThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         if(host != null && "" != host) {
             throwerService.setIp(host)
         }
+        else {
+            throwerService.setIp("192.168.144.41")
+        }
         initView(context)
         throwerService.registMsgCallback(object : MsgCallback {
             override fun getId(): String {

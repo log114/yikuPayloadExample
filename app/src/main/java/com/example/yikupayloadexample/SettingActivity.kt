@@ -115,7 +115,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         if (valueThrowerHost == "") {
-            thrower.setText(ThrowerHost)
+            thrower.setText("192.168.144.41")
         } else {
             thrower.setText(valueThrowerHost)
         }
