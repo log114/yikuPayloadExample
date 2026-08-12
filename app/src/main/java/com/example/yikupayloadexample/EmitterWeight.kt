@@ -1,13 +1,16 @@
 package com.example.yikupayloadexample;
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.yiku.yikupayloadSDK.service.EmitterService
@@ -35,8 +38,8 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mEmitterView: View
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
-    private var isOpenSafetySwitch: Boolean = false
     private var updateTime = Date().time
+    private var confirmPopup: PopupWindow? = null
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -45,8 +48,15 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         initView(context)
         emitterService = EmitterService()
         val host = preferences?.getString("EmitterHost", "")
+        val portStr = preferences?.getString("EmitterPort", "")
         if(host != null && "" != host) {
             emitterService.setIp(host)
+        }
+        if(portStr != null && "" != portStr) {
+            val port = portStr.toIntOrNull()
+            if(port != null) {
+                emitterService.setPort(port)
+            }
         }
         emitterService.registMsgCallback(object : MsgCallback {
             override fun getId(): String {
@@ -92,7 +102,7 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                     mEmitterLaunch1Btn
                 }
             }
-            if(!isOpenSafetySwitch) {
+            if(!mSafetySwitch.isChecked) {
                 btn.setText(R.string.not_detected)
                 btn.isEnabled = false
             }
@@ -127,18 +137,9 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         try {
             if (!mSafetySwitch.isChecked) {
                 showToast(R.string.need_to_open_safety_switch)
-            } else {
-                Log.i(TAG, "发射...")
-                emitterService.launch(index)
-                showToast(R.string.launch_command_executed)
-
-                mSafetySwitch.isChecked = false
-                thread {
-                    Thread.sleep(100)
-                    emitterService.safetySwitch(false)
-                }
-                isOpenSafetySwitch = false
+                return
             }
+            showConfirmPopup(index)
         } catch (e: Exception) {
             e.printStackTrace()
             showToast(R.string.launch_failed)
@@ -163,15 +164,6 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         // 安全开关
         mSafetySwitch.setOnClickListener {
             emitterService.safetySwitch(mSafetySwitch.isChecked)
-            if(mSafetySwitch.isChecked) {
-                thread {
-                    Thread.sleep(2000)
-                    isOpenSafetySwitch = mSafetySwitch.isChecked
-                }
-            }
-            else {
-                isOpenSafetySwitch = mSafetySwitch.isChecked
-            }
         }
 
         mEmitterLaunch1Btn.setOnClickListener {
@@ -202,6 +194,38 @@ class EmitterWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         }
 
 
+    }
+
+    private fun showConfirmPopup(index: Int) {
+        // 如果已有弹窗，先关闭
+        confirmPopup?.dismiss()
+
+        val popupView = LayoutInflater.from(context).inflate(R.layout.popup_confirm, null)
+        val confirmBtn = popupView.findViewById<Button>(R.id.popup_confirm)
+        val cancelBtn = popupView.findViewById<Button>(R.id.popup_cancel)
+
+        confirmBtn.setOnClickListener {
+            Log.i(TAG, "发射...")
+            emitterService.launch(index)
+            showToast(R.string.launch_command_executed)
+            confirmPopup?.dismiss()
+        }
+        cancelBtn.setOnClickListener {
+            confirmPopup?.dismiss()
+        }
+
+        confirmPopup = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true // 可聚焦
+        )
+        // 设置背景模糊（可选）
+        confirmPopup?.isOutsideTouchable = true
+        confirmPopup?.isFocusable = true
+
+        // 显示在 EmitterWeight 的中心
+        confirmPopup?.showAtLocation(this, Gravity.CENTER, 0, 0)
     }
 
     fun ByteArray.toHex(): String =

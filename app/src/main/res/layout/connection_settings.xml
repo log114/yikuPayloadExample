@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <com.google.android.flexbox.FlexboxLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:flexWrap="wrap"
+            app:alignItems="stretch"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <!-- TextView -->
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/ShoutHost_name"
+                app:layout_alignSelf="center"
+                android:textColor="@color/white_600"
+                />
+
+            <!-- EditText -->
+            <EditText
+                android:id="@+id/ShoutHostIP"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                app:layout_alignSelf="center"
+                />
+
+            <!-- Button -->
+            <Button
+                android:id="@+id/reboot_ym_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:text="@string/reboot_device"
+                android:textColor="@color/white"
+                android:background="@drawable/play_btn"
+                app:layout_alignSelf="center"
+                />
+
+        </com.google.android.flexbox.FlexboxLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:text="@string/LightHost_name"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:textColor="@color/white_600" />
+
+            <EditText
+                android:id="@+id/LightHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/CacheNetHost_name"
+                android:textColor="@color/white_600" />
+
+            <EditText
+                android:id="@+id/CacheNetHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+
+        </LinearLayout>
+        <com.google.android.flexbox.FlexboxLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:flexWrap="wrap"
+            app:alignItems="stretch"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/EmitterHost_name"
+                app:layout_alignSelf="center"
+                android:textColor="@color/white_600" />
+
+            <EditText
+                android:id="@+id/EmitterHostIP"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:text="@string/port"
+                app:layout_alignSelf="center"
+                android:textColor="@color/white_600" />
+            <EditText
+                android:id="@+id/EmitterPort"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+        </com.google.android.flexbox.FlexboxLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/YA3Host_name"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/YA3HostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/ThrowerHost_name"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/ThrowerHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+
+        </LinearLayout>
+        <com.google.android.flexbox.FlexboxLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:flexWrap="wrap"
+            app:alignItems="stretch"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/SlowDescentDeviceHost_name"
+                app:layout_alignSelf="center"
+                android:textColor="@color/white_600" />
+
+            <EditText
+                android:id="@+id/SlowDescentDeviceHostIP"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:text="@string/port"
+                app:layout_alignSelf="center"
+                android:textColor="@color/white_600" />
+            <EditText
+                android:id="@+id/SlowDescentDevicePort"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+
+        </com.google.android.flexbox.FlexboxLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/GripperHost_name"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/GripperHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/ResqmeHost_name"
+                android:textColor="@color/white_600" />
+
+            <EditText
+                android:id="@+id/ResqmeHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/ExtinguisherHost_name"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/ExtinguisherHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/WaterGunHost_name"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/WaterGunHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/BucketHost_name"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/BucketHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/WaterBranchHost_name"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/WaterBranchHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/PL_LightHost_name"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/PL_LightHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/AllInOneHost_name"
+                android:textColor="@color/white_600"/>
+            <EditText
+                android:id="@+id/AllInOneHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/four_in_one_2_ip"
+                android:textColor="@color/white_600" />
+
+            <EditText
+                android:id="@+id/FourInOne2HostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/SlowDescentDevice200Host_name"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/SlowDescentDevice200HostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="textEnd"
+                android:text="@string/water_gun_escape_ip"
+                android:textColor="@color/white_600"/>
+
+            <EditText
+                android:id="@+id/WaterGunEscapeHostIP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/edittext_border"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:textAlignment="center"
+                android:background="@drawable/play_btn"
+                android:text="@string/save_name" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

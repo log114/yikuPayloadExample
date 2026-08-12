@@ -55,19 +55,19 @@
                     android:layout_width="140dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@string/current_firmware_version"
+                    android:text="@string/state"
                     android:textAlignment="textEnd"
                     android:textColor="@color/white_600" />
 
                 <TextView
-                    android:id="@+id/currentVersion"
+                    android:id="@+id/stateText"
                     android:layout_width="0dp"
                     android:layout_height="20dp"
                     android:layout_weight="1"
                     android:text="" />
             </LinearLayout>
 
-            <!-- 固件文件选择 -->
+            <!-- ip -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,53 +80,70 @@
                     android:layout_width="140dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@string/firmware_file"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/white_600" />
-
-                <TextView
-                    android:id="@+id/fileName"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edittext_border"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text=""
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/selectFileBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/play_btn"
-                    android:text="@string/select_file"
-                    android:visibility="visible" />
-            </LinearLayout>
-
-            <!-- 新固件版本号 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp">
-
-                <TextView
-                    android:layout_width="140dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/firmware_version"
+                    android:text="IP："
                     android:textAlignment="textEnd"
                     android:textColor="@color/white_600" />
 
                 <EditText
-                    android:id="@+id/newVersion"
+                    android:id="@+id/ipEditText"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_border"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- 网关 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <TextView
+                    android:layout_width="140dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/gateway"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/white_600" />
+
+                <EditText
+                    android:id="@+id/gatewayEditText"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_border"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- 端口 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <TextView
+                    android:layout_width="140dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/port"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/white_600" />
+
+                <EditText
+                    android:id="@+id/portEditText"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edittext_border"
@@ -148,11 +165,11 @@
                 android:paddingRight="8dp">
 
                 <Button
-                    android:id="@+id/updateBtn"
+                    android:id="@+id/saveBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:background="@drawable/play_btn"
-                    android:text="@string/start_upgrade" />
+                    android:text="@string/save_name" />
 
                 <Button
                     android:id="@+id/restartBtn"
@@ -161,32 +178,14 @@
                     android:layout_marginStart="10dp"
                     android:background="@drawable/play_btn"
                     android:text="@string/reboot_device" />
-            </LinearLayout>
 
-            <!-- 进度条和提示文本 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp">
-
-                <ProgressBar
-                    android:id="@+id/progressBar_update"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    android:max="100"
-                    android:progress="0"
-                    android:visibility="invisible" />
-                <TextView
-                    android:id="@+id/updateText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
+                <Button
+                    android:id="@+id/resetBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/play_btn"
+                    android:text="@string/factory_reset" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

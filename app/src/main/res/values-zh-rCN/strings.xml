@@ -283,7 +283,7 @@
     <string name="current_firmware_version">当前版本：</string>
     <string name="firmware_version">固件版本：</string>
     <string name="start_upgrade">开始升级</string>
-    <string name="all_in_one">多合一</string>
+    <string name="all_in_one">五技吊舱</string>
     <string name="upgrading">正在升级</string>
     <string name="resetting_upgrade_info">正在重置升级信息</string>
     <string name="upgrade_info_reset_failed">升级信息重置失败</string>
@@ -361,4 +361,28 @@
     <string name="water_gun_escape_ip">"40水枪脱困IP: "</string>
     <string name="port">端口：</string>
     <string name="shake_head">左右摆头</string>
+    <string name="megaphone">喊话器</string>
+    <string name="searchlight_300W">300W探照灯</string>
+    <string name="four_in_one">四合一</string>
+    <string name="slow_descent_device_50">50kg缓降器</string>
+    <string name="confirm_launch">确定发射</string>
+    <string name="confirm_launch_message">确定要发射吗？</string>
+    <string name="four_in_one_2">四合一-二代</string>
+    <string name="slow_descent_device_200">200kg缓降器</string>
+    <string name="config_saved">配置已保存，重启APP生效</string>
+    <string name="connecting">正在连接…</string>
+    <string name="connect_failed">连接失败</string>
+    <string name="querying">正在查询…</string>
+    <string name="query_failed">查询失败，该设备可能不支持固件升级</string>
+    <string name="factory_reset">恢复出厂设置</string>
+    <string name="gateway">网关：</string>
+    <string name="query_ip_failed">查询失败，该设备可能不支持改IP</string>
+    <string name="ip_input_invalid">请检查IP输入格式</string>
+    <string name="gateway_input_invalid">请检查网关输入格式</string>
+    <string name="port_input_invalid">请检查端口输入格式</string>
+    <string name="reset_confirm">确认重置</string>
+    <string name="reset_confirm_text">确定恢复出厂设置，并重启设备？</string>
+    <string name="saving_configuration">配置保存中...</string>
+    <string name="requery_configuration">重新查询配置...</string>
+    <string name="disconnected">连接断开</string>
 </resources>
