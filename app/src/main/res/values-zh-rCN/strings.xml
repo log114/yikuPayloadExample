@@ -385,4 +385,13 @@
     <string name="saving_configuration">配置保存中...</string>
     <string name="requery_configuration">重新查询配置...</string>
     <string name="disconnected">连接断开</string>
+    <string name="restart_confirm">确认重启设备？</string>
+    <string name="cargo_box">运输箱</string>
+    <string name="cargo_box_ip">运输箱IP：</string>
+    <string name="compressor_speed">压缩机转速</string>
+    <string name="inc_rpm">提高转速</string>
+    <string name="dec_rpm">降低转速</string>
+    <string name="temperature_title">温度</string>
+    <string name="electric_current_title">电流</string>
+    <string name="voltage_title">电压</string>
 </resources>

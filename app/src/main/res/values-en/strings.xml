@@ -385,4 +385,13 @@
     <string name="saving_configuration">Saving configuration...</string>
     <string name="requery_configuration">Re-query configuration...</string>
     <string name="disconnected">Disconnected</string>
+    <string name="restart_confirm">Confirm to restart the device?</string>
+    <string name="cargo_box">Cargo Box</string>
+    <string name="cargo_box_ip">"Cargo Box IP: "</string>
+    <string name="compressor_speed">Compressor speed</string>
+    <string name="inc_rpm">Inc RPM</string>
+    <string name="dec_rpm">Dec RPM</string>
+    <string name="temperature_title">Temperature</string>
+    <string name="electric_current_title">Electric current</string>
+    <string name="voltage_title">Voltage</string>
 </resources>

@@ -67,6 +67,7 @@ class PayloadWeight : Service() {
     private lateinit var fourInOne2LightWeight: FourInOne2LightWeight
     private lateinit var slowDescentDevice200Weight: SlowDescentDevice200Weight
     private lateinit var waterGunEscapeWeight: WaterGunEscapeWeight
+    private lateinit var cargoBoxWeight: CargoBoxWeight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -96,6 +97,7 @@ class PayloadWeight : Service() {
     private lateinit var fourInOne2LightBtn: ImageView
     private lateinit var slowDescentDevice200Btn: ImageView
     private lateinit var waterGunEscapeBtn: ImageView
+    private lateinit var cargoBoxBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
     var isRotated = false
@@ -136,6 +138,7 @@ class PayloadWeight : Service() {
         fourInOne2LightBtn.isSelected = false
         slowDescentDevice200Btn.isSelected = false
         waterGunEscapeBtn.isSelected = false
+        cargoBoxBtn.isSelected = false
     }
 
     private fun openFloatingWindow() {
@@ -171,6 +174,7 @@ class PayloadWeight : Service() {
                     fourInOne2LightBtn = it.findViewById(R.id.four_in_one_2_light_Btn)
                     slowDescentDevice200Btn = it.findViewById(R.id.slowDescentDevice200Btn)
                     waterGunEscapeBtn = it.findViewById(R.id.waterGunEscapeBtn)
+                    cargoBoxBtn = it.findViewById(R.id.cargoBoxBtn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -324,6 +328,12 @@ class PayloadWeight : Service() {
                             waterGunEscapeBtn.isSelected = true
                         }
                     }
+                    cargoBoxBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.CARGO_BOX, cargoBoxBtn)) {
+                            cargoBoxBtn.isSelected = true
+                        }
+                    }
                 }
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -407,6 +417,10 @@ class PayloadWeight : Service() {
                 mShoutViewContent.removeAllViews()
                 opened = type
                 when(type) {
+                    PayloadPageIndex.CARGO_BOX -> { // 运输箱
+                        mShoutViewContent.addView(cargoBoxWeight)
+                        mWindowTitle.setText(R.string.cargo_box)
+                    }
                     PayloadPageIndex.WATER_GUN_ESCAPE -> { // 40水枪脱困
                         mShoutViewContent.addView(waterGunEscapeWeight)
                         mWindowTitle.setText(R.string.water_gun_escape)
@@ -792,6 +806,7 @@ class PayloadWeight : Service() {
         fourInOne2LightWeight = FourInOne2LightWeight(this)
         slowDescentDevice200Weight = SlowDescentDevice200Weight(this)
         waterGunEscapeWeight = WaterGunEscapeWeight(this)
+        cargoBoxWeight = CargoBoxWeight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -1139,6 +1154,7 @@ class PayloadWeight : Service() {
                 val isConnectedFourInOne2 = fourInOne2Service.getIsConnected(); // 四合一二代
                 val isConnectedSlowDescentDevice200 = slowDescentDevice200Weight.slowDescentDevice200Service.getIsConnected(); // 200kg缓降器
                 val isConnectedWaterGunEscape = waterGunEscapeWeight.waterGunEscapeService.getIsConnected(); // 40水带脱困
+                val isConnectedCargoBox = cargoBoxWeight.cargoBoxService.getIsConnected(); // 运输箱
 
                 // 喊话器
                 if(isConnectedMegaphone){
@@ -1279,6 +1295,13 @@ class PayloadWeight : Service() {
                         emptyText.visibility = GONE;
                     }
                 }
+                // 运输箱
+                if(isConnectedCargoBox) {
+                    handler.post {
+                        cargoBoxBtn.visibility = VISIBLE;
+                        emptyText.visibility = GONE;
+                    }
+                }
             }
         }
         // 定时器，0.5秒后开始执行，每1秒执行一次（延迟0.5秒是等待悬浮窗计算完成，不然可能会导致悬浮图标初始状态不对）
@@ -1289,5 +1312,5 @@ class PayloadWeight : Service() {
 enum class PayloadPageIndex {
     NONE, TTS, RECORD, SHOUT, UNITREE_LIGHT, CAPTURE_NET, EMITTER_38MM, SEARCHLIGHT, THROWER, SLOW_DESCENT, GRIPPER,
     GLASS_BREAKER, EXTINGUISHER, WATER_GUN, BUCKET, WATER_BRANCH, PL_LIGHT, ALL_IN_ONE_SPEAKER, ALL_IN_ONE_LIGHT, ALL_IN_ONE_THROWER, ALL_IN_ONE_FPV,
-    FOUR_IN_ONE_2_SPEAKER, FOUR_IN_ONE_2_LIGHT, SLOW_DESCENT_DEVICE_200, WATER_GUN_ESCAPE
+    FOUR_IN_ONE_2_SPEAKER, FOUR_IN_ONE_2_LIGHT, SLOW_DESCENT_DEVICE_200, WATER_GUN_ESCAPE, CARGO_BOX
 }

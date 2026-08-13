@@ -172,8 +172,8 @@ class DeviceIpModifyFragment : Fragment() {
         // 重启设备
         restartBtn.setOnClickListener {
             AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
-                .setTitle(R.string.reset_confirm)
-                .setMessage(R.string.reset_confirm_text)
+                .setTitle(R.string.reboot_device)
+                .setMessage(R.string.restart_confirm)
                 .setPositiveButton(R.string.ok) { _, _ ->
                     componentEnabled(false)
                     deviceIpService.restartDevice()

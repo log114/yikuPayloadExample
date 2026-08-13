@@ -12,7 +12,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
-import com.example.yikupayloadexample.FirmwareUpdateActivity
 import com.example.yikupayloadexample.MApplication
 import com.example.yikupayloadexample.R
 import com.example.yikupayloadexample.megaphoneService
@@ -48,6 +47,7 @@ class ConnectionSettingsFragment : Fragment() {
         val fourInOne2Edit = rootView.findViewById<EditText>(R.id.FourInOne2HostIP)
         val slowDescentDevice200Edit = rootView.findViewById<EditText>(R.id.SlowDescentDevice200HostIP)
         val waterGunEscapeEdit = rootView.findViewById<EditText>(R.id.WaterGunEscapeHostIP)
+        val cargoBoxEdit = rootView.findViewById<EditText>(R.id.CargoBoxHostIP)
 
         val rebootBtn = rootView.findViewById<Button>(R.id.reboot_ym_btn)
         val saveBtn = rootView.findViewById<Button>(R.id.save)
@@ -73,6 +73,7 @@ class ConnectionSettingsFragment : Fragment() {
         fourInOne2Edit.setText(preferences?.getString("FourInOne2Host", FourInOne2Host))
         slowDescentDevice200Edit.setText(preferences?.getString("SlowDescentDevice200Host", SlowDescentDevice200Host))
         waterGunEscapeEdit.setText(preferences?.getString("WaterGunEscapeHost", WaterGunEscapeHost))
+        cargoBoxEdit.setText(preferences?.getString("CargoBoxHost", CargoBoxHost))
 
         // ---------- 保存按钮 ----------
         saveBtn.setOnClickListener {
@@ -97,6 +98,7 @@ class ConnectionSettingsFragment : Fragment() {
                 putString("FourInOne2Host", fourInOne2Edit.text.toString())
                 putString("SlowDescentDevice200Host", slowDescentDevice200Edit.text.toString())
                 putString("WaterGunEscapeHost", waterGunEscapeEdit.text.toString())
+                putString("CargoBoxHost", cargoBoxEdit.text.toString())
             }
             showToast(R.string.config_saved)
         }
