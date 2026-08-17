@@ -30,6 +30,7 @@ class CargoBoxWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mContentView: View
     var cargoBoxService: CargoBoxService = CargoBoxService()
     private lateinit var mSafetySwitch: Switch
+    private lateinit var mCompressorSwitch: Switch
     private lateinit var mCompressorSpeed: TextView
     private lateinit var mTemperature: TextView
     private lateinit var mVoltage: TextView
@@ -41,7 +42,7 @@ class CargoBoxWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private var updateTime = Date().time
 
     @Volatile
-    private var isSettingSafetySwitch: Boolean = false
+    private var isSettingCompressorSwitch: Boolean = false
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -71,24 +72,27 @@ class CargoBoxWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         })
     }
 
+    // 状态更新
     private fun updateState(msg: ByteArray) {
-        val isEnabled = msg[3].toInt() == 1
+        val stateCode = msg[3].toInt()
         val rotationSpeed = byteArrayToInt16(msg.slice(4 until 6).toByteArray())
         val temperature = byteArrayToInt16(msg.slice(6 until 8).toByteArray())
         val volatile = byteArrayToInt16(msg.slice(8 until 10).toByteArray())
         val current = byteArrayToInt16(msg.slice(10 until 12).toByteArray())
+        val errorCode = byteArrayToInt16(msg.slice(12 until 14).toByteArray())
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             mCompressorSpeed.text = context.getString(R.string.rotation_speed_text, rotationSpeed)
             mTemperature.text = context.getString(R.string.temperature_text, temperature/10f)
-            mVoltage.text = context.getString(R.string.voltage_text, volatile)
-            mCurrent.text = context.getString(R.string.electric_current_text, current)
-            if(!isSettingSafetySwitch) {
-                mSafetySwitch.isEnabled = true
-                mSafetySwitch.isChecked = isEnabled
+            mVoltage.text = context.getString(R.string.voltage_text, volatile/1000f)
+            mCurrent.text = context.getString(R.string.electric_current_text, current/1000f)
+            if(!isSettingCompressorSwitch) {
+                mCompressorSwitch.isEnabled = true
+                mCompressorSwitch.isChecked = stateCode == 5
+                if(stateCode == 6) {
+                    showToast(context.getString(R.string.compressor_error, errorCode), Toast.LENGTH_LONG)
+                }
             }
-            mIncRPMBtn.isEnabled = isEnabled
-            mDecRPMBtn.isEnabled = isEnabled
         }
     }
 
@@ -97,6 +101,7 @@ class CargoBoxWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         LayoutInflater.from(context).inflate(R.layout.cargo_box_weight, this, true)
         mContentView = findViewById(R.id.cargoBox_view)
         mSafetySwitch = findViewById(R.id.safetySwitch)
+        mCompressorSwitch = findViewById(R.id.compressorSwitch)
         mCompressorSpeed = findViewById(R.id.compressorSpeed)
         mTemperature = findViewById(R.id.temperature)
         mVoltage = findViewById(R.id.voltage)
@@ -107,12 +112,19 @@ class CargoBoxWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
         // 安全开关
         mSafetySwitch.setOnClickListener {
-            mSafetySwitch.isEnabled = false
-            isSettingSafetySwitch = true
-            cargoBoxService.setEnable(mSafetySwitch.isChecked)
+            mCompressorSwitch.isEnabled = mSafetySwitch.isChecked
+            mIncRPMBtn.isEnabled = mSafetySwitch.isChecked
+            mDecRPMBtn.isEnabled = mSafetySwitch.isChecked
+        }
+        
+        // 压缩机使能，压缩机开关
+        mCompressorSwitch.setOnClickListener {
+            mCompressorSwitch.isEnabled = false
+            isSettingCompressorSwitch = true
+            cargoBoxService.setEnable(mCompressorSwitch.isChecked)
             thread {
                 Thread.sleep(2000)
-                isSettingSafetySwitch = false
+                isSettingCompressorSwitch = false
             }
         }
 
@@ -129,12 +141,20 @@ class CargoBoxWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     fun ByteArray.toHex(): String =
         joinToString(separator = "") { eachByte -> "%02x ".format(eachByte) }
 
-
-    private fun showToast(msg: Int, duration: Int = Toast.LENGTH_LONG) {
+    private fun showToast(msg: Int, duration: Int = Toast.LENGTH_SHORT) {
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             Toast.makeText(
-                MApplication.applicationContext, msg, Toast.LENGTH_LONG
+                MApplication.applicationContext, msg, duration
+            ).show()
+        }
+    }
+
+    private fun showToast(msg: String, duration: Int = Toast.LENGTH_SHORT) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            Toast.makeText(
+                MApplication.applicationContext, msg, duration
             ).show()
         }
     }

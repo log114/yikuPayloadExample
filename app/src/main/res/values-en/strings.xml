@@ -392,6 +392,8 @@
     <string name="inc_rpm">Inc RPM</string>
     <string name="dec_rpm">Dec RPM</string>
     <string name="temperature_title">Temperature</string>
-    <string name="electric_current_title">Electric current</string>
-    <string name="voltage_title">Voltage</string>
+    <string name="electric_current_title">Compressor current</string>
+    <string name="voltage_title">Compressor voltage</string>
+    <string name="compressor_switch">"Compressor switch: "</string>
+    <string name="compressor_error">Compressor anomaly, error code: %d</string>
 </resources>

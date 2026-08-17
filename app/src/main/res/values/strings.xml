@@ -438,8 +438,10 @@
     <string name="dec_rpm">降低转速</string>
     <string name="temperature_title">温度</string>
     <string name="temperature_text" translatable="false">%1$.1f °C</string>
-    <string name="electric_current_title">电流</string>
-    <string name="voltage_title">电压</string>
-    <string name="electric_current_text" translatable="false">%d mA</string>
-    <string name="voltage_text" translatable="false">%d mV</string>
+    <string name="electric_current_title">压缩机电流</string>
+    <string name="voltage_title">压缩机电压</string>
+    <string name="electric_current_text" translatable="false">%1$.1f A</string>
+    <string name="voltage_text" translatable="false">%1$.1f V</string>
+    <string name="compressor_switch">压缩机开关：</string>
+    <string name="compressor_error">压缩机异常，错误码：%d</string>
 </resources>

@@ -81,7 +81,7 @@ class FirmwareUpdateFragment : Fragment() {
 //        R.string.bucket to DeviceInfo("BucketHost", BucketHost, 8519),
 //        R.string.waterBranch to DeviceInfo("WaterBranchHost", WaterBranchHost, 8519),
         R.string.all_in_one to DeviceInfo("AllInOneHost", AllInOneHost, 8529),
-//        R.string.four_in_one_2 to DeviceInfo("FourInOne2Host", FourInOne2Host, 8519),
+        R.string.four_in_one_2 to DeviceInfo("FourInOne2Host", FourInOne2Host, 8529),
 //        R.string.slow_descent_device_200 to DeviceInfo("SlowDescentDevice200Host", SlowDescentDevice200Host, 8519),
 //        R.string.water_gun_escape to DeviceInfo("WaterGunEscapeHost", WaterGunEscapeHost, 8519)
     )
@@ -229,16 +229,20 @@ class FirmwareUpdateFragment : Fragment() {
             val handler = Handler(Looper.getMainLooper())
 
             while (shouldRetryConnect && !isDestroying) {
+                upgradeService.disConnect()   // 先断开任何现有连接
+                Thread.sleep(200)
                 // 显示“正在连接”
                 handler.post {
                     if (!isAdded) return@post
                     currentVersionText.text = getString(R.string.connecting)
                 }
 
+                if(!shouldRetryConnect) break
                 // 发起一次连接
                 upgradeService.connect(ip, port)
 
                 Thread.sleep(1000)
+                if(!shouldRetryConnect) break
 
                 if (upgradeService.getIsConnected()) {
                     // 连接成功，开始查询设备信息
@@ -281,7 +285,8 @@ class FirmwareUpdateFragment : Fragment() {
                 currentVersionText.text = getString(R.string.not_connected)
             }
             upgradeService.disConnect()
-            Thread.sleep(500)
+            Handler(Looper.getMainLooper()).removeCallbacksAndMessages(null)
+            Thread.sleep(2000) // 等待两秒再重连，等connectDevice里面的线程彻底结束
             connectDevice() // 重新开始连接（会设置 shouldRetryConnect = true）
         }
     }
