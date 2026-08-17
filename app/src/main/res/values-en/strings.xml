@@ -396,4 +396,8 @@
     <string name="voltage_title">Compressor voltage</string>
     <string name="compressor_switch">"Compressor switch: "</string>
     <string name="compressor_error">Compressor anomaly, error code: %d</string>
+    <string name="weight_1">"Hook #3 weight: "</string>
+    <string name="weight_2">"Hook #4 weight: "</string>
+    <string name="thrower200_ip">"200kg Thrower IP: "</string>
+    <string name="thrower200">200kg Thrower</string>
 </resources>

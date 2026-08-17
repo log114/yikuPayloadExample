@@ -396,4 +396,8 @@
     <string name="voltage_title">压缩机电压</string>
     <string name="compressor_switch">压缩机开关：</string>
     <string name="compressor_error">压缩机异常，错误码：%d</string>
+    <string name="weight_1">3号钩重量：</string>
+    <string name="weight_2">4号钩重量：</string>
+    <string name="thrower200_ip">200kg抛投器IP：</string>
+    <string name="thrower200">200kg抛投器</string>
 </resources>

@@ -67,6 +67,7 @@ class PayloadWeight : Service() {
     private lateinit var fourInOne2LightWeight: FourInOne2LightWeight
     private lateinit var slowDescentDevice200Weight: SlowDescentDevice200Weight
     private lateinit var waterGunEscapeWeight: WaterGunEscapeWeight
+    private lateinit var thrower200weight: Thrower200Weight
     private lateinit var cargoBoxWeight: CargoBoxWeight
 
     private var isInit = false
@@ -97,6 +98,7 @@ class PayloadWeight : Service() {
     private lateinit var fourInOne2LightBtn: ImageView
     private lateinit var slowDescentDevice200Btn: ImageView
     private lateinit var waterGunEscapeBtn: ImageView
+    private lateinit var thrower200Btn: ImageView
     private lateinit var cargoBoxBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
@@ -138,6 +140,7 @@ class PayloadWeight : Service() {
         fourInOne2LightBtn.isSelected = false
         slowDescentDevice200Btn.isSelected = false
         waterGunEscapeBtn.isSelected = false
+        thrower200Btn.isSelected = false
         cargoBoxBtn.isSelected = false
     }
 
@@ -174,6 +177,7 @@ class PayloadWeight : Service() {
                     fourInOne2LightBtn = it.findViewById(R.id.four_in_one_2_light_Btn)
                     slowDescentDevice200Btn = it.findViewById(R.id.slowDescentDevice200Btn)
                     waterGunEscapeBtn = it.findViewById(R.id.waterGunEscapeBtn)
+                    thrower200Btn = it.findViewById(R.id.thrower200Btn)
                     cargoBoxBtn = it.findViewById(R.id.cargoBoxBtn)
 
                     emptyText = it.findViewById(R.id.emptyText)
@@ -328,6 +332,12 @@ class PayloadWeight : Service() {
                             waterGunEscapeBtn.isSelected = true
                         }
                     }
+                    thrower200Btn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.THROWER_200, thrower200Btn)) {
+                            thrower200Btn.isSelected = true
+                        }
+                    }
                     cargoBoxBtn.setOnClickListener {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(PayloadPageIndex.CARGO_BOX, cargoBoxBtn)) {
@@ -420,6 +430,28 @@ class PayloadWeight : Service() {
                     PayloadPageIndex.CARGO_BOX -> { // 运输箱
                         mShoutViewContent.addView(cargoBoxWeight)
                         mWindowTitle.setText(R.string.cargo_box)
+                    }
+                    PayloadPageIndex.THROWER_200 -> { // 200kg抛投
+                        mShoutViewContent.addView(thrower200weight)
+                        mWindowTitle.setText(R.string.thrower200)
+                        val detonateHeightEditText = mShoutViewContent.findViewById<EditText>(R.id.detonateHeight)
+                        detonateHeightEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                detonateHeightEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                        val calibrationWeightEditText = mShoutViewContent.findViewById<EditText>(R.id.calibrationWeight)
+                        calibrationWeightEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                calibrationWeightEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                        // 测量内容并决定是否旋转
+                        measureAndAdjustLayout()
                     }
                     PayloadPageIndex.WATER_GUN_ESCAPE -> { // 40水枪脱困
                         mShoutViewContent.addView(waterGunEscapeWeight)
@@ -806,6 +838,7 @@ class PayloadWeight : Service() {
         fourInOne2LightWeight = FourInOne2LightWeight(this)
         slowDescentDevice200Weight = SlowDescentDevice200Weight(this)
         waterGunEscapeWeight = WaterGunEscapeWeight(this)
+        thrower200weight = Thrower200Weight(this)
         cargoBoxWeight = CargoBoxWeight(this)
 
         if (!isInit) {
@@ -1154,6 +1187,7 @@ class PayloadWeight : Service() {
                 val isConnectedFourInOne2 = fourInOne2Service.getIsConnected(); // 四合一二代
                 val isConnectedSlowDescentDevice200 = slowDescentDevice200Weight.slowDescentDevice200Service.getIsConnected(); // 200kg缓降器
                 val isConnectedWaterGunEscape = waterGunEscapeWeight.waterGunEscapeService.getIsConnected(); // 40水带脱困
+                val isConnectedThrower200 = thrower200weight.throwerService.getIsConnected(); // 200kg抛投
                 val isConnectedCargoBox = cargoBoxWeight.cargoBoxService.getIsConnected(); // 运输箱
 
                 // 喊话器
@@ -1295,6 +1329,13 @@ class PayloadWeight : Service() {
                         emptyText.visibility = GONE;
                     }
                 }
+                // 200kg抛投
+                if(isConnectedThrower200) {
+                    handler.post {
+                        thrower200Btn.visibility = VISIBLE;
+                        emptyText.visibility = GONE;
+                    }
+                }
                 // 运输箱
                 if(isConnectedCargoBox) {
                     handler.post {
@@ -1312,5 +1353,5 @@ class PayloadWeight : Service() {
 enum class PayloadPageIndex {
     NONE, TTS, RECORD, SHOUT, UNITREE_LIGHT, CAPTURE_NET, EMITTER_38MM, SEARCHLIGHT, THROWER, SLOW_DESCENT, GRIPPER,
     GLASS_BREAKER, EXTINGUISHER, WATER_GUN, BUCKET, WATER_BRANCH, PL_LIGHT, ALL_IN_ONE_SPEAKER, ALL_IN_ONE_LIGHT, ALL_IN_ONE_THROWER, ALL_IN_ONE_FPV,
-    FOUR_IN_ONE_2_SPEAKER, FOUR_IN_ONE_2_LIGHT, SLOW_DESCENT_DEVICE_200, WATER_GUN_ESCAPE, CARGO_BOX
+    FOUR_IN_ONE_2_SPEAKER, FOUR_IN_ONE_2_LIGHT, SLOW_DESCENT_DEVICE_200, WATER_GUN_ESCAPE, THROWER_200, CARGO_BOX
 }

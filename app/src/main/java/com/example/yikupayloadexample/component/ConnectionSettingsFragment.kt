@@ -47,6 +47,7 @@ class ConnectionSettingsFragment : Fragment() {
         val fourInOne2Edit = rootView.findViewById<EditText>(R.id.FourInOne2HostIP)
         val slowDescentDevice200Edit = rootView.findViewById<EditText>(R.id.SlowDescentDevice200HostIP)
         val waterGunEscapeEdit = rootView.findViewById<EditText>(R.id.WaterGunEscapeHostIP)
+        val thrower200Edit = rootView.findViewById<EditText>(R.id.Thrower200HostIP)
         val cargoBoxEdit = rootView.findViewById<EditText>(R.id.CargoBoxHostIP)
 
         val rebootBtn = rootView.findViewById<Button>(R.id.reboot_ym_btn)
@@ -73,6 +74,7 @@ class ConnectionSettingsFragment : Fragment() {
         fourInOne2Edit.setText(preferences?.getString("FourInOne2Host", FourInOne2Host))
         slowDescentDevice200Edit.setText(preferences?.getString("SlowDescentDevice200Host", SlowDescentDevice200Host))
         waterGunEscapeEdit.setText(preferences?.getString("WaterGunEscapeHost", WaterGunEscapeHost))
+        thrower200Edit.setText(preferences?.getString("Thrower200Host", Thrower200Host))
         cargoBoxEdit.setText(preferences?.getString("CargoBoxHost", CargoBoxHost))
 
         // ---------- 保存按钮 ----------
@@ -98,6 +100,7 @@ class ConnectionSettingsFragment : Fragment() {
                 putString("FourInOne2Host", fourInOne2Edit.text.toString())
                 putString("SlowDescentDevice200Host", slowDescentDevice200Edit.text.toString())
                 putString("WaterGunEscapeHost", waterGunEscapeEdit.text.toString())
+                putString("Thrower200Host", thrower200Edit.text.toString())
                 putString("CargoBoxHost", cargoBoxEdit.text.toString())
             }
             showToast(R.string.config_saved)
