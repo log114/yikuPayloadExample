@@ -40,7 +40,6 @@ class SettingActivity : AppCompatActivity() {
         val cacheNet = findViewById<EditText>(R.id.CacheNetHostIP)
         val cacheNet2 = findViewById<EditText>(R.id.CacheNetHostIP2)
         val emitter = findViewById<EditText>(R.id.EmitterHostIP)
-        val emitter2 = findViewById<EditText>(R.id.EmitterHostIP2)
         val YA3 = findViewById<EditText>(R.id.YA3HostIP)
         val thrower = findViewById<EditText>(R.id.ThrowerHostIP)
         val mRebootYmBtn = findViewById<Button>(R.id.reboot_ym_btn)
@@ -48,6 +47,7 @@ class SettingActivity : AppCompatActivity() {
         val slowDescentDevicePort = findViewById<EditText>(R.id.SlowDescentDevicePort)
         val gripper = findViewById<EditText>(R.id.GripperHostIP)
         val resqme = findViewById<EditText>(R.id.ResqmeHostIP)
+        val resqme2 = findViewById<EditText>(R.id.ResqmeHostIP2)
         val extinguisher = findViewById<EditText>(R.id.ExtinguisherHostIP)
         val waterGun = findViewById<EditText>(R.id.WaterGunHostIP)
         val bucket = findViewById<EditText>(R.id.BucketHostIP)
@@ -67,13 +67,13 @@ class SettingActivity : AppCompatActivity() {
         val valueCacheNetHost = preferences?.getString("CacheNetHost", "") //捕捉网
         val valueCacheNetHost2 = preferences?.getString("CacheNetHost2", "") //捕捉网2
         val valueEmitterHost = preferences?.getString("EmitterHost", "")//38mm发射器
-        val valueEmitterHost2 = preferences?.getString("EmitterHost2", "")//38mm发射器2
         val valueYA3Host = preferences?.getString("YA3Host", "")//四合一
         val valueThrowerHost = preferences?.getString("ThrowerHost", "")//抛投器
         val valueSlowDescentDeviceHost = preferences?.getString("SlowDescentDeviceHost", "")//50kg缓降器ip
         val valueSlowDescentDevicePort = preferences?.getString("SlowDescentDevicePort", "")//50kg缓降器端口
         val valueGripperHost = preferences?.getString("GripperHost", "")//机械爪
         val valueResqmeHost = preferences?.getString("ResqmeHost", "")//破窗器
+        val valueResqmeHost2 = preferences?.getString("ResqmeHost2", "")//破窗器2
         val valueExtinguisherHost = preferences?.getString("ExtinguisherHost", "")//灭火罐
         val valueWaterGunHost = preferences?.getString("WaterGunHost", "")//水枪
         val valueBucketHost = preferences?.getString("BucketHost", "")// 吊桶
@@ -118,10 +118,6 @@ class SettingActivity : AppCompatActivity() {
         } else {
             emitter.setText(valueEmitterHost)
         }
-        // 38mm发射器2
-        if (valueEmitterHost2 != "") {
-            emitter2.setText(valueEmitterHost2)
-        }
 
         // 四合一
         if (valueYA3Host == "") {
@@ -162,6 +158,11 @@ class SettingActivity : AppCompatActivity() {
             resqme.setText(ResqmeHost)
         } else {
             resqme.setText(valueResqmeHost)
+        }
+
+        // 破窗器2
+        if (valueResqmeHost2 != "") {
+            resqme.setText(valueResqmeHost2)
         }
 
         // 灭火罐
@@ -235,13 +236,13 @@ class SettingActivity : AppCompatActivity() {
             val textCacheNetHost = cacheNet.text.toString()
             val textCacheNetHost2 = cacheNet2.text.toString()
             val textEmitterHost = emitter.text.toString()
-            val textEmitterHost2 = emitter2.text.toString()
             val textYA3Host = YA3.text.toString()
             val textThrowerHost = thrower.text.toString()
             val textSlowDescentDeviceHost = slowDescentDevice.text.toString()
             val textSlowDescentDevicePort = slowDescentDevicePort.text.toString()
             val textGripperHost = gripper.text.toString()
             val textResqmeHost = resqme.text.toString()
+            val textResqmeHost2 = resqme2.text.toString()
             val textExtinguisherHost = extinguisher.text.toString()
             val textWaterGunHost = waterGun.text.toString()
             val textBucketHost = bucket.text.toString()
@@ -258,13 +259,13 @@ class SettingActivity : AppCompatActivity() {
                 putString("CacheNetHost", textCacheNetHost)
                 putString("CacheNetHost2", textCacheNetHost2)
                 putString("EmitterHost", textEmitterHost)
-                putString("EmitterHost2", textEmitterHost2)
                 putString("YA3Host", textYA3Host)
                 putString("ThrowerHost", textThrowerHost)
                 putString("SlowDescentDeviceHost", textSlowDescentDeviceHost)
                 putString("SlowDescentDevicePort", textSlowDescentDevicePort)
                 putString("GripperHost", textGripperHost)
                 putString("ResqmeHost", textResqmeHost)
+                putString("ResqmeHost2", textResqmeHost2)
                 putString("ExtinguisherHost", textExtinguisherHost)
                 putString("WaterGunHost", textWaterGunHost)
                 putString("BucketHost", textBucketHost)

@@ -50,12 +50,12 @@ class PayloadWeight : Service() {
     private lateinit var cacheNetWeight: CacheNetWeight
     private lateinit var cacheNetWeight2: CacheNetWeight
     private lateinit var emitterWeight: EmitterWeight
-    private lateinit var emitterWeight2: EmitterWeight
     private lateinit var lightYl300Weight: LightWeight
     private lateinit var throwerweight: ThrowerWeight
     private lateinit var slowDescentDeviceWeight: SlowDescentDeviceWeight
     private lateinit var gripperWeight: GripperWeight
     private lateinit var resqmeWeight: ResqmeWeight
+    private lateinit var resqmeWeight2: ResqmeWeight
     private lateinit var extinguisherWeight: ExtinguisherWeight
     private lateinit var waterGunWeight: WaterGunWeight
     private lateinit var bucketWeight: BucketWeight
@@ -81,12 +81,12 @@ class PayloadWeight : Service() {
     private lateinit var mCacheNetBtn: ImageView
     private lateinit var mCacheNetBtn2: ImageView
     private lateinit var mEmitterBtn: ImageView
-    private lateinit var mEmitterBtn2: ImageView
     private lateinit var mLightYl300Btn: ImageView
     private lateinit var throwerBtn: ImageView
     private lateinit var slowDescentDeviceBtn: ImageView
     private lateinit var gripperBtn: ImageView
     private lateinit var resqmeBtn: ImageView
+    private lateinit var resqmeBtn2: ImageView
     private lateinit var extinguisherBtn: ImageView
     private lateinit var waterGunBtn: ImageView
     private lateinit var bucketBtn: ImageView
@@ -123,12 +123,12 @@ class PayloadWeight : Service() {
         mCacheNetBtn.isSelected = false
         mCacheNetBtn2.isSelected = false
         mEmitterBtn.isSelected = false
-        mEmitterBtn2.isSelected = false
         mLightYl300Btn.isSelected = false
         throwerBtn.isSelected = false
         slowDescentDeviceBtn.isSelected = false
         gripperBtn.isSelected = false
         resqmeBtn.isSelected = false
+        resqmeBtn2.isSelected = false
         extinguisherBtn.isSelected = false
         waterGunBtn.isSelected = false
         bucketBtn.isSelected = false
@@ -160,12 +160,12 @@ class PayloadWeight : Service() {
                     mCacheNetBtn2 = it.findViewById(R.id.catchNetBtn2)
 //                    it.findViewById<ImageView>(R.id.openFloatingWindowBtn).visibility = INVISIBLE
                     mEmitterBtn = it.findViewById(R.id.emitterBtn)
-                    mEmitterBtn2 = it.findViewById(R.id.emitterBtn2)
                     mLightYl300Btn = it.findViewById(R.id.light_yl300_Btn)
                     throwerBtn = it.findViewById(R.id.throwerBtn)
                     slowDescentDeviceBtn = it.findViewById(R.id.slowDescentDeviceBtn)
                     gripperBtn = it.findViewById(R.id.gripperBtn)
                     resqmeBtn = it.findViewById(R.id.resqmeBtn)
+                    resqmeBtn2 = it.findViewById(R.id.resqmeBtn2)
                     extinguisherBtn = it.findViewById(R.id.extinguisherBtn)
                     waterGunBtn = it.findViewById(R.id.waterGunBtn)
                     bucketBtn = it.findViewById(R.id.bucketBtn)
@@ -231,12 +231,6 @@ class PayloadWeight : Service() {
                             mEmitterBtn.isSelected = true
                         }
                     }
-                    mEmitterBtn2.setOnClickListener {
-                        resetShoutBtnsBackground()
-                        if (this.setSVVisibility(PayloadPageIndex.EMITTER_38MM2, mEmitterBtn2)) {
-                            mEmitterBtn2.isSelected = true
-                        }
-                    }
 
                     mLightYl300Btn.setOnClickListener {
                         resetShoutBtnsBackground()
@@ -266,6 +260,12 @@ class PayloadWeight : Service() {
                         resetShoutBtnsBackground()
                         if (this.setSVVisibility(PayloadPageIndex.GLASS_BREAKER, resqmeBtn)) {
                             resqmeBtn.isSelected = true
+                        }
+                    }
+                    resqmeBtn2.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.GLASS_BREAKER2, resqmeBtn2)) {
+                            resqmeBtn2.isSelected = true
                         }
                     }
                     extinguisherBtn.setOnClickListener {
@@ -545,6 +545,10 @@ class PayloadWeight : Service() {
                         mShoutViewContent.addView(extinguisherWeight)
                         mWindowTitle.setText(R.string.extinguisher)
                     }
+                    PayloadPageIndex.GLASS_BREAKER2 -> { // 破窗发射器2
+                        mShoutViewContent.addView(resqmeWeight2)
+                        mWindowTitle.setText(R.string.glass_breaker2)
+                    }
                     PayloadPageIndex.GLASS_BREAKER -> { // 破窗发射器
                         mShoutViewContent.addView(resqmeWeight)
                         mWindowTitle.setText(R.string.glass_breaker)
@@ -590,10 +594,6 @@ class PayloadWeight : Service() {
                     PayloadPageIndex.SEARCHLIGHT -> { // 300W探照灯
                         mShoutViewContent.addView(lightYl300Weight)
                         mWindowTitle.setText(R.string.searchlight)
-                    }
-                    PayloadPageIndex.EMITTER_38MM2 -> { // 38mm发射器2
-                        mShoutViewContent.addView(emitterWeight2)
-                        mWindowTitle.setText(R.string.emitter_38mm2)
                     }
                     PayloadPageIndex.EMITTER_38MM -> { // 38mm发射器
                         mShoutViewContent.addView(emitterWeight)
@@ -801,12 +801,12 @@ class PayloadWeight : Service() {
         cacheNetWeight = CacheNetWeight(this)
         cacheNetWeight2 = CacheNetWeight(this, null, 0, true)
         emitterWeight = EmitterWeight(this)
-        emitterWeight2 = EmitterWeight(this, null, 0, true)
         lightYl300Weight = LightWeight(this)
         throwerweight = ThrowerWeight(this)
         slowDescentDeviceWeight = SlowDescentDeviceWeight(this)
         gripperWeight = GripperWeight(this)
         resqmeWeight = ResqmeWeight(this)
+        resqmeWeight2 = ResqmeWeight(this, null, 0, true)
         extinguisherWeight = ExtinguisherWeight(this)
         waterGunWeight = WaterGunWeight(this)
         bucketWeight = BucketWeight(this)
@@ -1157,13 +1157,13 @@ class PayloadWeight : Service() {
                 val isConnectedYA3 = (megaphoneService?.getIsConnectedYA3() == true); // 四合一
                 val isConnectedCacheNet = cacheNetWeight.cacheNetService.getIsConnected(); // 网枪
                 val isConnectedCacheNet2 = cacheNetWeight2.cacheNetService.getIsConnected(); // 网枪2
-                val isConnectedEmitter = emitterWeight.emitterService.getIsConnected(); // 38mm发射器2
-                val isConnectedEmitter2 = emitterWeight2.emitterService.getIsConnected(); // 38mm发射器
+                val isConnectedEmitter = emitterWeight.emitterService.getIsConnected(); // 38mm发射器
                 val isConnectedLightYl300 = lightYl300Weight.lightService.getIsConnected(); // 探照灯
                 val isConnectedThrower = throwerweight.throwerService.getIsConnected(); // 抛投器
                 val isConnectedSlowDescentDevice = slowDescentDeviceWeight.slowDescentDeviceService.getIsConnected(); // 缓降器
                 val isConnectedGripper = gripperWeight.gripperService.getIsConnected(); // 机械爪
                 val isConnectedResqme = resqmeWeight.resqmeService.getIsConnected(); // 破窗器
+                val isConnectedResqme2 = resqmeWeight2.resqmeService.getIsConnected(); // 破窗器2
                 val isConnectedExtinguisher = extinguisherWeight.extinguisherService.getIsConnected(); // 灭火罐
                 val isConnectedWaterGun = waterGunWeight.waterGunService.getIsConnected(); // 清洗水枪
                 val isConnectedBucket = bucketWeight.bucketService.getIsConnected(); // 吊桶
@@ -1205,13 +1205,6 @@ class PayloadWeight : Service() {
                         emptyText.visibility = GONE;
                     }
                 }
-                // 38mm发射器2
-                if(isConnectedEmitter2){
-                    handler.post {
-                        mEmitterBtn2.visibility = VISIBLE;
-                        emptyText.visibility = GONE;
-                    }
-                }
                 // 探照灯
                 if(isConnectedLightYl300){
                     handler.post {
@@ -1244,6 +1237,13 @@ class PayloadWeight : Service() {
                 if(isConnectedResqme){
                     handler.post {
                         resqmeBtn.visibility = VISIBLE;
+                        emptyText.visibility = GONE;
+                    }
+                }
+                // 破窗器2
+                if(isConnectedResqme2){
+                    handler.post {
+                        resqmeBtn2.visibility = VISIBLE;
                         emptyText.visibility = GONE;
                     }
                 }
@@ -1335,7 +1335,7 @@ class PayloadWeight : Service() {
 }
 
 enum class PayloadPageIndex {
-    NONE, TTS, RECORD, SHOUT, UNITREE_LIGHT, CAPTURE_NET, CAPTURE_NET2, EMITTER_38MM, EMITTER_38MM2, SEARCHLIGHT, THROWER, SLOW_DESCENT, GRIPPER,
-    GLASS_BREAKER, EXTINGUISHER, WATER_GUN, BUCKET, WATER_BRANCH, PL_LIGHT, ALL_IN_ONE_SPEAKER, ALL_IN_ONE_LIGHT, ALL_IN_ONE_THROWER, ALL_IN_ONE_FPV,
+    NONE, TTS, RECORD, SHOUT, UNITREE_LIGHT, CAPTURE_NET, CAPTURE_NET2, EMITTER_38MM, SEARCHLIGHT, THROWER, SLOW_DESCENT, GRIPPER,
+    GLASS_BREAKER, GLASS_BREAKER2, EXTINGUISHER, WATER_GUN, BUCKET, WATER_BRANCH, PL_LIGHT, ALL_IN_ONE_SPEAKER, ALL_IN_ONE_LIGHT, ALL_IN_ONE_THROWER, ALL_IN_ONE_FPV,
     FOUR_IN_ONE_2_SPEAKER, FOUR_IN_ONE_2_LIGHT, SLOW_DESCENT_DEVICE_200, WATER_GUN_ESCAPE
 }

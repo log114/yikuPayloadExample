@@ -23,7 +23,11 @@ import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
 
-class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
+class ResqmeWeight (
+    context: Context,
+    attr: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    private val isDevice2: Boolean = false) :
     LinearLayout(context, attr, defStyleAttr) {
 
     private val TAG = "ResqmeWeight"
@@ -41,14 +45,19 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
     private var updateTime = Date().time
+    private var host: String? = ""
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
 
     init {
-        val host = preferences?.getString("ResqmeHost", "")
+        host = if(isDevice2) {
+            preferences?.getString("ResqmeHost2", "")
+        } else {
+            preferences?.getString("ResqmeHost", "")
+        }
         if(host != null && "" != host) {
-            resqmeService.setIp(host)
+            resqmeService.setIp(host!!)
         }
         initView(context)
         resqmeService.registMsgCallback(object : MsgCallback {
@@ -186,7 +195,9 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
         }
 
-        setConnectState()
+        if((isDevice2 && host != "" && host != null) || !isDevice2) {
+            setConnectState()
+        }
     }
 
     private fun showToast(msg: Int) {

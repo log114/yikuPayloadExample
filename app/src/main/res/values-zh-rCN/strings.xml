@@ -365,4 +365,6 @@
     <string name="EmitterHost_name2">"38毫米IP2: "</string>
     <string name="emitter_38mm2">38mm 发射器2</string>
     <string name="capture_net2">捕捉网2</string>
+    <string name="ResqmeHost2_name">破窗器IP2：</string>
+    <string name="glass_breaker2">破窗器2</string>
 </resources>

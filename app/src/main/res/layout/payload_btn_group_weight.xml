@@ -101,25 +101,13 @@
         android:visibility="gone" />
 
     <com.example.yikupayloadexample.component.StatefulImageView
-        android:id="@+id/emitterBtn2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:contentDescription="@string/emitter_38mm"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/emitterBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:imagePrefix="icon_38mm"
-        android:visibility="gone" />
-
-    <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/throwerBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:contentDescription="@string/thrower"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/emitterBtn2"
+        app:layout_constraintStart_toEndOf="@id/emitterBtn"
         app:layout_constraintTop_toTopOf="parent"
         app:imagePrefix="thrower"
         android:visibility="gone" />
@@ -159,6 +147,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:imagePrefix="glassbreaker"
         android:visibility="gone"/>
+
+    <com.example.yikupayloadexample.component.StatefulImageView
+        android:id="@+id/resqmeBtn2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/glass_breaker"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/resqmeBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="glassbreaker"
+        android:visibility="gone" />
     <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/extinguisherBtn"
         android:layout_width="40dp"

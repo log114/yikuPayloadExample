@@ -365,4 +365,6 @@
     <string name="EmitterHost_name2">"EmitterHost IP2: "</string>
     <string name="emitter_38mm2">38mm emitter2</string>
     <string name="capture_net2">Capture net2</string>
+    <string name="ResqmeHost2_name">"GlassBreakerHost IP2: "</string>
+    <string name="glass_breaker2">Glass breaker2</string>
 </resources>
