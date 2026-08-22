@@ -162,7 +162,7 @@ class SettingActivity : AppCompatActivity() {
 
         // 破窗器2
         if (valueResqmeHost2 != "") {
-            resqme.setText(valueResqmeHost2)
+            resqme2.setText(valueResqmeHost2)
         }
 
         // 灭火罐
