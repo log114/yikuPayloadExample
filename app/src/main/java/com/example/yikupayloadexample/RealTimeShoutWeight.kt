@@ -264,6 +264,47 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                         val rc = opusUtils.decode(
                             createDecoder, msg.slice(4 until msg.size).toByteArray(), data
                         )
+                        if (rc <= 0) return
+
+                        // ★ 不在锁里做 PN 混合和参考帧入队
+                        val pcmToPlay: ShortArray
+                        if (isStartSpeak) {
+                            pcmToPlay = probeMixer.mix(data)
+                            // ★ 同步调用，不入协程（inputReferenceFrame 只是往队列放数据，很快）
+                            megaphoneService?.inputReferenceFrame(pcmToPlay)
+                        } else {
+                            pcmToPlay = data
+                        }
+
+                        // ★ 只锁 write 操作
+                        val written = synchronized(audioTrack) {
+                            if (isAudioTrackReleased.get()) return
+                            if (audioTrack.playState != AudioTrack.PLAYSTATE_PLAYING) {
+                                audioTrack.play()
+                            }
+                            audioTrack.write(pcmToPlay, 0, rc)
+                        }
+
+                        if (written <= 0) {
+                            Log.e(TAG, "AudioTrack写入失败: $written")
+                            synchronized(audioTrack) {
+                                if (!isAudioTrackReleased.get()) {
+                                    audioTrack.stop()
+                                    audioTrack.release()
+                                    isAudioTrackReleased.set(true)
+                                }
+                            }
+                            initAudioTrack()
+                            audioTrack.play()
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "音频处理异常", e)
+                    }
+                    try {
+                        val data = ShortArray(frameSize)
+                        val rc = opusUtils.decode(
+                            createDecoder, msg.slice(4 until msg.size).toByteArray(), data
+                        )
                         // 检查AudioTrack状态
                         if (audioTrack.playState != AudioTrack.PLAYSTATE_PLAYING) {
                             Log.w(TAG, "AudioTrack未播放，尝试恢复")
