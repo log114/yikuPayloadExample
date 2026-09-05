@@ -385,34 +385,32 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
                         val rc = opusUtils.decode(
                             createDecoder, msg.slice(4 until msg.size).toByteArray(), data
                         )
+
+                        if (isAudioTrackReleased.get()) return
                         // 检查AudioTrack状态
                         if (audioTrack.playState != AudioTrack.PLAYSTATE_PLAYING) {
                             Log.w(TAG, "AudioTrack未播放，尝试恢复")
                             audioTrack.play()
                         }
 
-                        synchronized(audioTrack) {
-                            if (isAudioTrackReleased.get()) return
-
-                            val written = if (isStartSpeak) {
-                                val pcm16kWithPN = probeMixer.mix(data)
-                                aecmScope.launch(Dispatchers.IO) {
-                                    fourInOne2Service.inputReferenceFrame(pcm16kWithPN)
-                                }
-                                audioTrack.write(pcm16kWithPN, 0, rc) //  用 rc 而不是 size
-                            } else {
-                                audioTrack.write(data, 0, rc)
+                        val written = if (isStartSpeak) {
+                            val pcm16kWithPN = probeMixer.mix(data)
+                            aecmScope.launch(Dispatchers.IO) {
+                                fourInOne2Service.inputReferenceFrame(pcm16kWithPN)
                             }
+                            audioTrack.write(pcm16kWithPN, 0, rc) //  用 rc 而不是 size
+                        } else {
+                            audioTrack.write(data, 0, rc)
+                        }
 
-                            if (written <= 0) {
-                                Log.e(TAG, "AudioTrack写入失败: $written, 尝试重新初始化")
-                                // 写入失败说明底层状态坏了，重新初始化
-                                audioTrack.stop()
-                                audioTrack.release()
-                                isAudioTrackReleased.set(true)
-                                initAudioTrack()
-                                audioTrack.play()
-                            }
+                        if (written <= 0) {
+                            Log.e(TAG, "AudioTrack写入失败: $written, 尝试重新初始化")
+                            // 写入失败说明底层状态坏了，重新初始化
+                            audioTrack.stop()
+                            audioTrack.release()
+                            isAudioTrackReleased.set(true)
+                            initAudioTrack()
+                            audioTrack.play()
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "音频处理异常", e)

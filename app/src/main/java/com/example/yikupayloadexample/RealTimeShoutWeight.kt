@@ -266,7 +266,6 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                         )
                         if (rc <= 0) return
 
-                        // ★ 不在锁里做 PN 混合和参考帧入队
                         val pcmToPlay: ShortArray
                         if (isStartSpeak) {
                             pcmToPlay = probeMixer.mix(data)
@@ -276,62 +275,21 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                             pcmToPlay = data
                         }
 
-                        // ★ 只锁 write 操作
-                        val written = synchronized(audioTrack) {
-                            if (isAudioTrackReleased.get()) return
-                            if (audioTrack.playState != AudioTrack.PLAYSTATE_PLAYING) {
-                                audioTrack.play()
-                            }
-                            audioTrack.write(pcmToPlay, 0, rc)
+                        if (isAudioTrackReleased.get()) return
+                        if (audioTrack.playState != AudioTrack.PLAYSTATE_PLAYING) {
+                            audioTrack.play()
                         }
+                        val written = audioTrack.write(pcmToPlay, 0, rc)
 
                         if (written <= 0) {
                             Log.e(TAG, "AudioTrack写入失败: $written")
-                            synchronized(audioTrack) {
-                                if (!isAudioTrackReleased.get()) {
-                                    audioTrack.stop()
-                                    audioTrack.release()
-                                    isAudioTrackReleased.set(true)
-                                }
-                            }
-                            initAudioTrack()
-                            audioTrack.play()
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "音频处理异常", e)
-                    }
-                    try {
-                        val data = ShortArray(frameSize)
-                        val rc = opusUtils.decode(
-                            createDecoder, msg.slice(4 until msg.size).toByteArray(), data
-                        )
-                        // 检查AudioTrack状态
-                        if (audioTrack.playState != AudioTrack.PLAYSTATE_PLAYING) {
-                            Log.w(TAG, "AudioTrack未播放，尝试恢复")
-                            audioTrack.play()
-                        }
-                        synchronized(audioTrack) {
-                            if (isAudioTrackReleased.get()) return
-
-                            val written = if (isStartSpeak) {
-                                val pcm16kWithPN = probeMixer.mix(data)
-                                aecmScope.launch(Dispatchers.IO) {
-                                    megaphoneService?.inputReferenceFrame(pcm16kWithPN)
-                                }
-                                audioTrack.write(pcm16kWithPN, 0, rc) //  用 rc 而不是 size
-                            } else {
-                                audioTrack.write(data, 0, rc)
-                            }
-
-                            if (written <= 0) {
-                                Log.e(TAG, "AudioTrack写入失败: $written, 尝试重新初始化")
-                                // 写入失败说明底层状态坏了，重新初始化
+                            if (!isAudioTrackReleased.get()) {
                                 audioTrack.stop()
                                 audioTrack.release()
                                 isAudioTrackReleased.set(true)
-                                initAudioTrack()
-                                audioTrack.play()
                             }
+                            initAudioTrack()
+                            audioTrack.play()
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "音频处理异常", e)
