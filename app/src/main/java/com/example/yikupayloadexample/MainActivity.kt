@@ -15,10 +15,8 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
 import android.os.Process
-import android.provider.Settings
 import android.util.Log
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -40,7 +38,6 @@ var megaphoneService: BaseMegaphoneService? = null
 var allInOneService: AllInOneService = AllInOneService()
 var fourInOne2Service: FourInOne2Service = FourInOne2Service()
 var preferences: SharedPreferences? = null
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appUpdateManager: AppUpdateManager

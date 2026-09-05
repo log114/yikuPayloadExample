@@ -36,6 +36,12 @@ import com.example.yikupayloadexample.MApplication.applicationContext
 import com.example.yikupayloadexample.component.AudioListAdapter
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.OpusUtils
+import com.yiku.yikupayloadSDK.util.ProbeMixer16k
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
@@ -96,6 +102,10 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private val channels = 1
     private val frameSize = 320
     private val channelsConfig = AudioFormat.CHANNEL_OUT_MONO  // CHANNEL_OUT_MONO 单声道 CHANNEL_OUT_STEREO双声道
+    private var isAudioTrackReleased = AtomicBoolean(true)
+    val probeMixer = ProbeMixer16k()
+    // 创建一个专用于 AECM 处理的协程作用域
+    private val aecmScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     init {
         initView(context)
@@ -336,6 +346,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     }
 
     private fun initAudioTrack() {
+        isAudioTrackReleased.set(false)
         val mMinBufferSize = AudioTrack.getMinBufferSize(
             radioRate, channelsConfig, AudioFormat.ENCODING_PCM_16BIT
         );//计算最小缓冲区
@@ -363,8 +374,8 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
             }
 
             override fun onMsg(msg: ByteArray) {
-                Log.i(TAG, "收音数据长度："+ msg.size)
                 if (msg.size > 4 && String(msg.slice(0..3).toByteArray()) == "[40]") {
+                    Log.i(TAG, "收音数据长度："+ msg.size)
                     if(!isRadio) {
                         Log.d(TAG, "收音已关闭")
                         return
@@ -380,9 +391,28 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
                             audioTrack.play()
                         }
 
-                        val written = audioTrack.write(data, 0, rc)
-                        if (written <= 0) {
-                            Log.e(TAG, "AudioTrack写入失败，错误码：$written")
+                        synchronized(audioTrack) {
+                            if (isAudioTrackReleased.get()) return
+
+                            val written = if (isStartSpeak) {
+                                val pcm16kWithPN = probeMixer.mix(data)
+                                aecmScope.launch(Dispatchers.IO) {
+                                    fourInOne2Service.inputReferenceFrame(pcm16kWithPN)
+                                }
+                                audioTrack.write(pcm16kWithPN, 0, rc) //  用 rc 而不是 size
+                            } else {
+                                audioTrack.write(data, 0, rc)
+                            }
+
+                            if (written <= 0) {
+                                Log.e(TAG, "AudioTrack写入失败: $written, 尝试重新初始化")
+                                // 写入失败说明底层状态坏了，重新初始化
+                                audioTrack.stop()
+                                audioTrack.release()
+                                isAudioTrackReleased.set(true)
+                                initAudioTrack()
+                                audioTrack.play()
+                            }
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "音频处理异常", e)
@@ -396,6 +426,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private fun stopRadio() {
         isRadio = false
         fourInOne2Service.unRegistMsgCallback("radioCallback")
+        isAudioTrackReleased.set(true)
         audioTrack.stop()
         audioTrack.release()
         fourInOne2Service.stopRadio()
@@ -604,7 +635,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
         }
 
         // 开始录音
-        fourInOne2Service.startRealTimeShout(true)
+        fourInOne2Service.startRealTimeShout(isRadio)
     }
 
     private fun startForegroundService() {
