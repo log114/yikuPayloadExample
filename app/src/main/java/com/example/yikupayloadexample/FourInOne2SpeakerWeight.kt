@@ -385,6 +385,14 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
                         val rc = opusUtils.decode(
                             createDecoder, msg.slice(4 until msg.size).toByteArray(), data
                         )
+                        val pcmToPlay: ShortArray
+                        if (isStartSpeak) {
+                            pcmToPlay = probeMixer.mix(data)
+                            // ★ 同步调用，不入协程（inputReferenceFrame 只是往队列放数据，很快）
+                            fourInOne2Service.inputReferenceFrame(pcmToPlay)
+                        } else {
+                            pcmToPlay = data
+                        }
 
                         if (isAudioTrackReleased.get()) return
                         // 检查AudioTrack状态
@@ -393,15 +401,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
                             audioTrack.play()
                         }
 
-                        val written = if (isStartSpeak) {
-                            val pcm16kWithPN = probeMixer.mix(data)
-                            aecmScope.launch(Dispatchers.IO) {
-                                fourInOne2Service.inputReferenceFrame(pcm16kWithPN)
-                            }
-                            audioTrack.write(pcm16kWithPN, 0, rc) //  用 rc 而不是 size
-                        } else {
-                            audioTrack.write(data, 0, rc)
-                        }
+                        val written = audioTrack.write(pcmToPlay, 0, rc)
 
                         if (written <= 0) {
                             Log.e(TAG, "AudioTrack写入失败: $written, 尝试重新初始化")
@@ -633,7 +633,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
         }
 
         // 开始录音
-        fourInOne2Service.startRealTimeShout(isRadio)
+        fourInOne2Service.startRealTimeShout(isStartSpeak)
     }
 
     private fun startForegroundService() {

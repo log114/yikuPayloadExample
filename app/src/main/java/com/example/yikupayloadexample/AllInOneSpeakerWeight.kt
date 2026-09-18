@@ -611,7 +611,7 @@ class AllInOneSpeakerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
         }
 
         // 开始录音
-        allInOneService.startRealTimeShout(true)
+        allInOneService.startRealTimeShout()
     }
 
     private fun startForegroundService() {

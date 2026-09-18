@@ -474,7 +474,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         }
 
         // 开始录音
-        megaphoneService?.startRealTimeShout(isRadio)
+        megaphoneService?.startRealTimeShout(isStartSpeak)
     }
 
     private fun startForegroundService() {
