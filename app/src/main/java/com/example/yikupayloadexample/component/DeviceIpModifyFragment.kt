@@ -23,6 +23,7 @@ import com.example.yikupayloadexample.MApplication
 import com.example.yikupayloadexample.R
 import com.yiku.yikupayloadSDK.protocol.SETIP_READ_IP
 import com.yiku.yikupayloadSDK.service.SetDeviceIpService
+import com.yiku.yikupayloadSDK.util.EMNetGunHost
 import com.yiku.yikupayloadSDK.util.EmitterHost
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.byteArrayToInt16LE
@@ -80,6 +81,7 @@ class DeviceIpModifyFragment : Fragment() {
 //        R.string.four_in_one_2 to DeviceInfo("FourInOne2Host", FourInOne2Host, 8519),
 //        R.string.slow_descent_device_200 to DeviceInfo("SlowDescentDevice200Host", SlowDescentDevice200Host, 8519),
 //        R.string.water_gun_escape to DeviceInfo("WaterGunEscapeHost", WaterGunEscapeHost, 8519)
+        R.string.EM_net_gun to DeviceInfo("EMNetGunHost", EMNetGunHost, "EMNetGunPort", 8519)
     )
 
     // 存储资源 ID 的顺序列表（用于 Spinner 位置映射）

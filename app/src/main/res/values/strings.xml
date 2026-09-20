@@ -448,4 +448,12 @@
     <string name="weight_2">4号钩重量：</string>
     <string name="thrower200_ip">200kg抛投器IP：</string>
     <string name="thrower200">200kg抛投器</string>
+    <string name="EM_net_gun_ip">电磁网枪IP：</string>
+    <string name="EM_net_gun">电磁网枪</string>
+    <string name="installed">已安装</string>
+    <string name="not_installed">未安装</string>
+    <string name="laser">激光</string>
+    <string name="laser_on">打开激光</string>
+    <string name="laser_off">关闭激光</string>
+    <string name="launch_capture_net_prompt">确定要发射捕捉网吗？</string>
 </resources>

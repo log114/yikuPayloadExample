@@ -313,6 +313,18 @@
         app:imagePrefix="cargobox"
         android:visibility="gone"/>
 
+    <com.example.yikupayloadexample.component.StatefulImageView
+        android:id="@+id/EMNetGunBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/EM_net_gun"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cargoBoxBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:imagePrefix="catchnet"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/emptyText"
         android:layout_width="wrap_content"

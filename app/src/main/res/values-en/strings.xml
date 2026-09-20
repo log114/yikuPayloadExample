@@ -400,4 +400,12 @@
     <string name="weight_2">"Hook #4 weight: "</string>
     <string name="thrower200_ip">"200kg Thrower IP: "</string>
     <string name="thrower200">200kg Thrower</string>
+    <string name="EM_net_gun_ip">"EM Net Gun IP: "</string>
+    <string name="EM_net_gun">EM Net Gun</string>
+    <string name="installed">Installed</string>
+    <string name="not_installed">Not installed</string>
+    <string name="laser">Laser</string>
+    <string name="laser_on">LASER ON</string>
+    <string name="laser_off">LASER OFF</string>
+    <string name="launch_capture_net_prompt">Are you sure you want to launch the capture net?</string>
 </resources>

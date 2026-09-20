@@ -203,41 +203,4 @@
                 android:enabled="false"/>
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/prompt_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/white"
-            android:text="@string/nozzleSwitchPrompt"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center_horizontal"
-            android:visibility="visible">
-            <Button
-                android:id="@+id/okBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/play_btn"
-                android:text="@string/ok"
-                android:textColor="@color/white"/>
-            <Button
-                android:id="@+id/cancelBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/cancel_btn"
-                android:text="@string/cancel"
-                android:textColor="@color/white"/>
-        </LinearLayout>
-    </LinearLayout>
 </RelativeLayout>
