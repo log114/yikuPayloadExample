@@ -408,4 +408,7 @@
     <string name="laser_on">打开激光</string>
     <string name="laser_off">关闭激光</string>
     <string name="launch_capture_net_prompt">确定要发射捕捉网吗？</string>
+    <string name="charge">充能</string>
+    <string name="fully_charged">已充能</string>
+    <string name="not_charged">未充能</string>
 </resources>

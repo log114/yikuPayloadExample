@@ -73,6 +73,60 @@
                 android:visibility="visible"
                 android:background="@drawable/edittext_border">
                 <TextView
+                    android:id="@+id/chargeState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/not_charged'
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text='@string/charge'
+                    android:textSize="11sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:paddingHorizontal="8dp"
+            android:layout_marginTop="2dp"
+            android:visibility="visible">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:background="@drawable/edittext_border">
+                <TextView
+                    android:id="@+id/pitchState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@string/angle_value'
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text='@string/pitch_angle'
+                    android:textSize="11sp"
+                    android:textColor="#9EABB2" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                android:background="@drawable/edittext_border">
+                <TextView
                     android:id="@+id/laserState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -94,6 +148,18 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="8dp"
             android:background="#383D40" />
+
+        <Switch
+            android:id="@+id/safetySwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/safety_switch"
+            android:textColor="@color/white"
+            android:switchPadding="4dp"
+            android:track="@drawable/switch_track_bg"
+            android:thumb="@drawable/switch_thumb"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -133,7 +199,8 @@
                 android:layout_marginStart="8dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/laser_on"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/launchBtn"
@@ -145,43 +212,6 @@
                 android:text="@string/launch"
                 android:textColor="@color/white"
                 android:enabled="false"/>
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/prompt_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/white"
-            android:text="@string/launch_capture_net_prompt"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center_horizontal"
-            android:visibility="visible">
-            <Button
-                android:id="@+id/okBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/play_btn"
-                android:text="@string/ok"
-                android:textColor="@color/white"/>
-            <Button
-                android:id="@+id/cancelBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/cancel_btn"
-                android:text="@string/cancel"
-                android:textColor="@color/white"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

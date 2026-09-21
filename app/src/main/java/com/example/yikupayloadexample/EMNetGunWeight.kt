@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.SeekBar
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -28,15 +29,15 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "EMNetGunWeight"
     private lateinit var mContentView: View
-    private lateinit var mPromptView: View
     var emNetGunService: EMNetGunService = EMNetGunService()
     private lateinit var mNetInstallState: TextView
+    private lateinit var mChargeState: TextView
+    private lateinit var mPitchState: TextView
     private lateinit var mLaserState: TextView
+    private lateinit var mSafetySwitch: Switch
     private lateinit var mPitchSeekbar: SeekBar
     private lateinit var mLaserBtn: Button
     private lateinit var mLaunchBtn: Button
-    private lateinit var mOkBtn: Button
-    private lateinit var mCancelBtn: Button
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
     private var isLaserOpened: Boolean = false
@@ -74,20 +75,33 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
     // 状态更新
     private fun updateState(msg: ByteArray) {
-        val laserState = msg[4].toInt() == 0x01
+        isLaserOpened = msg[4].toInt() == 0x01
         val pitch = msg[5].toInt()
         val volatile = byteArrayToInt16(msg.slice(6 until 8).toByteArray())
         val isInstallNet = msg[8].toInt() == 0x00
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             mNetInstallState.text = if(isInstallNet) context.getString(R.string.installed) else context.getString(R.string.not_installed)
-            mLaserState.text = if(laserState) context.getString(R.string.opened) else context.getString(R.string.closed)
-            if(!isSettingPitch) {
-                mPitchSeekbar.progress = pitch
+            if(isLaserOpened) {
+                mLaserState.setText(R.string.opened)
+                mLaserBtn.setText(R.string.laser_off)
             }
-            if(volatile > 400 && !isLaunching) {
+            else {
+                mLaserState.setText(R.string.closed)
+                mLaserBtn.setText(R.string.laser_on)
+            }
+//            if(!isSettingPitch) {
+//                mPitchSeekbar.progress = pitch
+//            }
+            if(volatile > 400) {
                 mLaunchBtn.isEnabled = true
+                mChargeState.setText(R.string.fully_charged)
             }
+            else {
+                mLaunchBtn.isEnabled = false
+                mChargeState.setText(R.string.not_charged)
+            }
+            mPitchState.text = context.getString(R.string.angle_value, pitch)
         }
     }
 
@@ -95,21 +109,21 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.em_net_gun_weight, this, true)
         mContentView = findViewById(R.id.emNetGun_view)
-        mPromptView = findViewById(R.id.prompt_view)
         mNetInstallState = findViewById(R.id.netInstallState)
+        mChargeState = findViewById(R.id.chargeState)
+        mPitchState = findViewById(R.id.pitchState)
         mLaserState = findViewById(R.id.laserState)
+        mSafetySwitch = findViewById(R.id.safetySwitch)
         mPitchSeekbar = findViewById(R.id.pitch_seekbar)
         mLaserBtn = findViewById(R.id.laserBtn)
         mLaunchBtn = findViewById(R.id.launchBtn)
-        mOkBtn = findViewById(R.id.okBtn)
-        mCancelBtn = findViewById(R.id.cancelBtn)
         setConnectState()
 
         mPitchSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (seekBar != null) {
-                    emNetGunService.setPitch(seekBar.progress)
-                }
+//                if (seekBar != null) {
+//                    emNetGunService.setPitch(seekBar.progress)
+//                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -117,14 +131,15 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                mPitchSeekbar.isEnabled = false
-                thread {
-                    Thread.sleep(1000)
-                    Handler(Looper.getMainLooper()).post {
-                        mPitchSeekbar.isEnabled = true
-                    }
-                    isSettingPitch = false
-                }
+//                mPitchSeekbar.isEnabled = false
+//                thread {
+//                    Thread.sleep(1000)
+//                    Handler(Looper.getMainLooper()).post {
+//                        mPitchSeekbar.isEnabled = true
+//                    }
+//                    isSettingPitch = false
+//                }
+                emNetGunService.setPitch(mPitchSeekbar.progress)
             }
 
         })
@@ -142,26 +157,18 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
         // 发射按键
         mLaunchBtn.setOnClickListener {
-            mContentView.visibility = GONE
-            mPromptView.visibility = VISIBLE
-        }
-
-        // 确定发射
-        mOkBtn.setOnClickListener {
-            isLaunching = true
-            mLaunchBtn.isEnabled = false
-            emNetGunService.launch()
-            mContentView.visibility = VISIBLE
-            mPromptView.visibility = GONE
-            thread {
-                Thread.sleep(2000)
-                isLaunching = false
+            if(mSafetySwitch.isChecked) {
+                isLaunching = true
+                mLaunchBtn.isEnabled = false
+                emNetGunService.launch()
+                thread {
+                    Thread.sleep(2000)
+                    isLaunching = false
+                }
             }
-        }
-        // 取消发射
-        mCancelBtn.setOnClickListener {
-            mContentView.visibility = VISIBLE
-            mPromptView.visibility = GONE
+            else {
+                showToast(R.string.need_to_open_safety_switch)
+            }
         }
     }
 

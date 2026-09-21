@@ -408,4 +408,7 @@
     <string name="laser_on">LASER ON</string>
     <string name="laser_off">LASER OFF</string>
     <string name="launch_capture_net_prompt">Are you sure you want to launch the capture net?</string>
+    <string name="charge">Charge</string>
+    <string name="fully_charged">Fully charged</string>
+    <string name="not_charged">Not charged</string>
 </resources>
