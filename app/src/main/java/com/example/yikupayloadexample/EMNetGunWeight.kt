@@ -50,8 +50,15 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
     init {
         val host = preferences?.getString("EMNetGunHost", "")
+        val portStr = preferences?.getString("EMNetGunPort", "")
         if(host != null && "" != host) {
             emNetGunService.setIp(host)
+        }
+        if(portStr != null && "" != portStr) {
+            val port = portStr.toIntOrNull()
+            if(port != null) {
+                emNetGunService.setPort(port)
+            }
         }
         initView(context)
         emNetGunService.registMsgCallback(object : MsgCallback {

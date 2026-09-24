@@ -460,4 +460,9 @@
     <string name="fully_charged">已充能</string>
     <string name="not_charged">未充能</string>
     <string name="angle_value" translatable="false">%d °</string>
+    <string name="paint_spraying_ip">油漆喷涂IP：</string>
+    <string name="distance">距离</string>
+    <string name="flow_rate">流量</string>
+    <string name="gear" translatable="false">%d 挡</string>
+    <string name="paint_spraying">油漆喷涂</string>
 </resources>

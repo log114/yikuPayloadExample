@@ -51,6 +51,7 @@ class ConnectionSettingsFragment : Fragment() {
         val cargoBoxEdit = rootView.findViewById<EditText>(R.id.CargoBoxHostIP)
         val EMNetGunEdit = rootView.findViewById<EditText>(R.id.EMNetGunHostIP)
         val EMNetGunPortEdit = rootView.findViewById<EditText>(R.id.EMNetGunPort)
+        val paintSprayingEdit = rootView.findViewById<EditText>(R.id.PaintSprayingHostIP)
 
         val rebootBtn = rootView.findViewById<Button>(R.id.reboot_ym_btn)
         val saveBtn = rootView.findViewById<Button>(R.id.save)
@@ -80,6 +81,7 @@ class ConnectionSettingsFragment : Fragment() {
         cargoBoxEdit.setText(preferences?.getString("CargoBoxHost", CargoBoxHost))
         EMNetGunEdit.setText(preferences?.getString("EMNetGunHost", EMNetGunHost))
         EMNetGunPortEdit.setText(preferences?.getString("EMNetGunPort", "8519"))
+        paintSprayingEdit.setText(preferences?.getString("PaintSprayingHost", PaintSprayingHost))
 
         // ---------- 保存按钮 ----------
         saveBtn.setOnClickListener {
@@ -108,6 +110,7 @@ class ConnectionSettingsFragment : Fragment() {
                 putString("CargoBoxHost", cargoBoxEdit.text.toString())
                 putString("EMNetGunHost", EMNetGunEdit.text.toString())
                 putString("EMNetGunPort", EMNetGunPortEdit.text.toString())
+                putString("PaintSprayingHost", paintSprayingEdit.text.toString())
             }
             showToast(R.string.config_saved)
         }

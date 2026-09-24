@@ -411,4 +411,8 @@
     <string name="charge">Charge</string>
     <string name="fully_charged">Fully charged</string>
     <string name="not_charged">Not charged</string>
+    <string name="paint_spraying_ip">"Paint Spraying IP: "</string>
+    <string name="distance">Distance</string>
+    <string name="flow_rate">Flow rate</string>
+    <string name="paint_spraying">Paint Spraying</string>
 </resources>

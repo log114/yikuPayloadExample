@@ -70,6 +70,7 @@ class PayloadWeight : Service() {
     private lateinit var thrower200weight: Thrower200Weight
     private lateinit var cargoBoxWeight: CargoBoxWeight
     private lateinit var emNetGunWeight: EMNetGunWeight
+    private lateinit var paintSprayingWeight: PaintSprayingWeight
 
     private var isInit = false
     private var floatingWindowStatus = false
@@ -102,6 +103,7 @@ class PayloadWeight : Service() {
     private lateinit var thrower200Btn: ImageView
     private lateinit var cargoBoxBtn: ImageView
     private lateinit var emNetGunBtn: ImageView
+    private lateinit var paintSprayingBtn: ImageView
     private lateinit var lockBtn: ImageView
     private var isLockWindow = false
     var isRotated = false
@@ -145,6 +147,7 @@ class PayloadWeight : Service() {
         thrower200Btn.isSelected = false
         cargoBoxBtn.isSelected = false
         emNetGunBtn.isSelected = false
+        paintSprayingBtn.isSelected = false
     }
 
     private fun openFloatingWindow() {
@@ -183,6 +186,7 @@ class PayloadWeight : Service() {
                     thrower200Btn = it.findViewById(R.id.thrower200Btn)
                     cargoBoxBtn = it.findViewById(R.id.cargoBoxBtn)
                     emNetGunBtn = it.findViewById(R.id.EMNetGunBtn)
+                    paintSprayingBtn = it.findViewById(R.id.paintSprayingBtn)
 
                     emptyText = it.findViewById(R.id.emptyText)
 
@@ -354,6 +358,12 @@ class PayloadWeight : Service() {
                             emNetGunBtn.isSelected = true
                         }
                     }
+                    paintSprayingBtn.setOnClickListener {
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.PAINT_SPRAYING, paintSprayingBtn)) {
+                            paintSprayingBtn.isSelected = true
+                        }
+                    }
                 }
                 // 设置浮窗显示类型，默认只在当前Activity显示，可选一直显示、仅前台显示
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -437,6 +447,10 @@ class PayloadWeight : Service() {
                 mShoutViewContent.removeAllViews()
                 opened = type
                 when(type) {
+                    PayloadPageIndex.PAINT_SPRAYING -> { // 油漆喷涂
+                        mShoutViewContent.addView(paintSprayingWeight)
+                        mWindowTitle.setText(R.string.paint_spraying)
+                    }
                     PayloadPageIndex.EM_NET_GUN -> { // 电磁网枪
                         mShoutViewContent.addView(emNetGunWeight)
                         mWindowTitle.setText(R.string.EM_net_gun)
@@ -855,6 +869,7 @@ class PayloadWeight : Service() {
         thrower200weight = Thrower200Weight(this)
         cargoBoxWeight = CargoBoxWeight(this)
         emNetGunWeight = EMNetGunWeight(this)
+        paintSprayingWeight = PaintSprayingWeight(this)
 
         if (!isInit) {
             EasyFloat.with(applicationContext)
@@ -1205,6 +1220,7 @@ class PayloadWeight : Service() {
                 val isConnectedThrower200 = thrower200weight.throwerService.getIsConnected(); // 200kg抛投
                 val isConnectedCargoBox = cargoBoxWeight.cargoBoxService.getIsConnected(); // 运输箱
                 val isConnectedEMNetGun = emNetGunWeight.emNetGunService.getIsConnected() // 电磁网枪
+                val isConnectedPaintSpraying = paintSprayingWeight.paintSprayingService.getIsConnected() // 油漆喷涂
 
                 // 喊话器
                 if(isConnectedMegaphone){
@@ -1366,6 +1382,13 @@ class PayloadWeight : Service() {
                         emptyText.visibility = GONE;
                     }
                 }
+                // 油漆喷涂
+                if(isConnectedPaintSpraying) {
+                    handler.post {
+                        paintSprayingBtn.visibility = VISIBLE;
+                        emptyText.visibility = GONE;
+                    }
+                }
             }
         }
         // 定时器，0.5秒后开始执行，每1秒执行一次（延迟0.5秒是等待悬浮窗计算完成，不然可能会导致悬浮图标初始状态不对）
@@ -1376,5 +1399,5 @@ class PayloadWeight : Service() {
 enum class PayloadPageIndex {
     NONE, TTS, RECORD, SHOUT, UNITREE_LIGHT, CAPTURE_NET, EMITTER_38MM, SEARCHLIGHT, THROWER, SLOW_DESCENT, GRIPPER,
     GLASS_BREAKER, EXTINGUISHER, WATER_GUN, BUCKET, WATER_BRANCH, PL_LIGHT, ALL_IN_ONE_SPEAKER, ALL_IN_ONE_LIGHT, ALL_IN_ONE_THROWER, ALL_IN_ONE_FPV,
-    FOUR_IN_ONE_2_SPEAKER, FOUR_IN_ONE_2_LIGHT, SLOW_DESCENT_DEVICE_200, WATER_GUN_ESCAPE, THROWER_200, CARGO_BOX, EM_NET_GUN
+    FOUR_IN_ONE_2_SPEAKER, FOUR_IN_ONE_2_LIGHT, SLOW_DESCENT_DEVICE_200, WATER_GUN_ESCAPE, THROWER_200, CARGO_BOX, EM_NET_GUN, PAINT_SPRAYING
 }
