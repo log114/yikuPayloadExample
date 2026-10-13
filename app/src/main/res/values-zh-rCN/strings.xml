@@ -415,4 +415,5 @@
     <string name="distance">距离</string>
     <string name="flow_rate">流量</string>
     <string name="paint_spraying">油漆喷涂</string>
+    <string name="YA3Host_name_2">四合一IP 2:</string>
 </resources>

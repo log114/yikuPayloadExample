@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 import com.lzf.easyfloat.EasyFloat
 import com.yiku.yikupayloadSDK.protocol.BEGIN_UPLOAD_AUDIO
 import com.yiku.yikupayloadSDK.protocol.UPLOAD_AUDIO
+import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
 import com.yiku.yikupayloadSDK.service.UploadFileCallback
 import com.yiku.yikupayloadSDK.util.GetFilePathFromUri
 import com.yiku.yikupayloadSDK.util.ProgressRequestBody
@@ -31,6 +32,8 @@ class AddRecordActivity : AppCompatActivity() {
     private lateinit var mUploadPlan: LinearLayout
     private lateinit var mProgressBarUpload: ProgressBar
     var isStartRecord: Boolean = false
+    private var deviceIndex = 0;
+    private var thisService: BaseMegaphoneService? = null
     private fun httpUploadFile() {
         runOnUiThread {
             mProgressBarUpload.max = uploadFile.length().toInt()
@@ -46,7 +49,7 @@ class AddRecordActivity : AppCompatActivity() {
         thread {
             try {
                 Log.i(TAG, "uploadFile:${uploadFile}")
-                if (megaphoneService?.uploadFile(uploadFile, callback) == true) {
+                if (thisService?.uploadFile(uploadFile, callback) == true) {
                     showToast(R.string.upload_successful)
                 } else {
                     showToast(R.string.upload_failed)
@@ -102,7 +105,7 @@ class AddRecordActivity : AppCompatActivity() {
                 try {
                     thread {
                         var lastUpdatePackage = 0
-                        megaphoneService?.uploadFile(sendDataArr, object : UploadFileCallback {
+                        thisService?.uploadFile(sendDataArr, object : UploadFileCallback {
                             override fun onUploadPackageSuccess(totalNum: Int, finishNum: Int) {
 //                                    Log.i(TAG, "t:${totalNum} f:${finishNum}")
 //                                    if (totalNum - 1 == finishNum) {
@@ -147,6 +150,16 @@ class AddRecordActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 从 Intent 中取出参数
+        intent?.let {
+            deviceIndex = it.getIntExtra("deviceIndex", 0)
+        }
+        thisService = when(deviceIndex) {
+            1 -> fourInOneService
+            2 -> fourInOneService2
+            else -> megaphoneService
+        }
+
         setContentView(R.layout.activity_add_record)
 
         mSelectFile = findViewById(R.id.selectFile)
@@ -176,7 +189,7 @@ class AddRecordActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             // 针对大疆因速率限制无法使用http上传，上传会导致超时，在此限制使用socket 方式上传。
-            if (megaphoneService?.platform == VehiclePlatform.M300) {
+            if (thisService?.platform == VehiclePlatform.M300) {
                 socketUploadFile()
             } else {
                 httpUploadFile()

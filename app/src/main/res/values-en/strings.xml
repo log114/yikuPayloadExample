@@ -415,4 +415,5 @@
     <string name="distance">Distance</string>
     <string name="flow_rate">Flow rate</string>
     <string name="paint_spraying">Paint Spraying</string>
+    <string name="YA3Host_name_2">YA3Host IP 2:</string>
 </resources>

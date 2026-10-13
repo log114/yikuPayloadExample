@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import org.json.JSONException
 import org.json.JSONObject
@@ -27,7 +28,11 @@ val audioPlayingStatusMap = HashMap<String, Boolean>()
 val audioLoopStatusMap = HashMap<String, Boolean>()
 
 
-class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
+class RecordShoutWeight(
+    context: Context,
+    attr: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    private val deviceIndex: Int = 0) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "RecordShoutWeight"
     private val datas: ArrayList<RecordPo> = ArrayList()
@@ -46,19 +51,25 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private var volumeLimit = 100
     private var temperature = "0"
     private var sharedPreferences: SharedPreferences? = null
+    private var service: BaseMegaphoneService? = null
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
 
     init {
+        service = when(deviceIndex) {
+            1 -> fourInOneService
+            2 -> fourInOneService2
+            else -> megaphoneService
+        }
         initView(context)
         setCallbacksTask()
     }
 
     fun onShow() {
         if (recordAdapter == null) {
-            recordAdapter = RecordAdapter(datas, context)
-            megaphoneService?.registMsgCallback(object : MsgCallback {
+            recordAdapter = RecordAdapter(datas, context, deviceIndex)
+            service?.registMsgCallback(object : MsgCallback {
                 override fun getId(): String {
                     return "recordAdapter"
                 }
@@ -76,7 +87,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
 
         thread {
             try {
-                val files = megaphoneService?.fetchFiles()
+                val files = service?.fetchFiles()
 //                val files = arrayOf("康姆-我在画中走.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3", "林俊杰-江南.mp3", "王心凌-梦的光点.mp3", "王忻辰&苏星婕-清空.mp3")
                 if (files == null) {
 //                    showToast("获取文件列表失败!")
@@ -120,6 +131,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         mAddRecordBtn.setOnClickListener {
             val intent = Intent(this.context, AddRecordActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+            intent.putExtra("deviceIndex", deviceIndex)
             startActivity(this.context, intent, null)
             this.thisPayloadWeight?.hideFloatWindow()
         }
@@ -135,7 +147,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                             // 删除同时停止播放
                             for (data in recordAdapter?.getData()!!) {
                                 if (data.playing && data.recordName == item.recordName) {
-                                    megaphoneService?.stopPlayAudio()
+                                    service?.stopPlayAudio()
                                 }
                             }
                         } catch (e: Exception) {
@@ -143,7 +155,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                             showToast("停止删除播放音频失败，请手动停止.")
                         }
                         thread {
-                            megaphoneService?.delFile(item.recordName)
+                            service?.delFile(item.recordName)
 //                        if () {
 //                            showToast("删除成功!")
 //                        } else {
@@ -170,7 +182,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             }
         }
         mStopAudioBtn.setOnClickListener {
-            megaphoneService?.stopLoopPlayAudio()
+            service?.stopLoopPlayAudio()
             recordAdapter?.resetAllImageStatus()
 
         }
@@ -185,7 +197,7 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (seekBar != null) {
                     hasNewVolumeSetting = true
-                    megaphoneService?.setVolume(seekBar.progress)
+                    service?.setVolume(seekBar.progress)
                     Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                     thread {
                         hasNewVolumeSetting = false
@@ -208,8 +220,8 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         mTemperature.text = "${context.resources.getString(R.string.temperature)} 0℃"
     }
 
-    fun attachFloatingWindow(service: PayloadWeight) {
-        this.thisPayloadWeight = service
+    fun attachFloatingWindow(payloadService: PayloadWeight) {
+        this.thisPayloadWeight = payloadService
     }
 
     // 定时器，同步更新温度音量等
@@ -243,6 +255,14 @@ class RecordShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
                             mStatus.setTextColor(Color.WHITE)
                         }
 
+                        if(service == null) {
+                            service = when(deviceIndex) {
+                                1 -> fourInOneService
+                                2 -> fourInOneService2
+                                else -> megaphoneService
+                            }
+                            Log.d(TAG, "service为空")
+                        }
                         if(connectStatus) {
                             connectText.setText(R.string.connection_status_connected)
                             background.setColor(ContextCompat.getColor(context, R.color.green))

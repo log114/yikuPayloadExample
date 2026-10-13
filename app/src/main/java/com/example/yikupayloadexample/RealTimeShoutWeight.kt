@@ -37,7 +37,11 @@ import kotlin.concurrent.thread
 import androidx.core.content.edit
 
 @RequiresApi(Build.VERSION_CODES.S)
-class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
+class RealTimeShoutWeight(
+    context: Context,
+    attr: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    private val deviceIndex: Int = 0) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "RealTimeShoutWeight"
     private var isInit = false
@@ -49,8 +53,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private var isStartSpeak = false
     private var isPlayAlarm = false;
     private lateinit var mServoControlSeekbar: SeekBar // 舵机控制
-    private var isConnecting_1 = false; // 喊话器是否正在连接
-    private var isConnecting_2 = false; // 四合一是否正在连接
+    private var isConnecting = false; // 是否正在连接
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var mRadioBtn: Button
     private lateinit var audioTrack: AudioTrack
@@ -66,16 +69,22 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     private var volumeReal = 0;
     private var volumeLimit = 100
     private var temperature = "0"
+    private var service: BaseMegaphoneService? = null
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
 
     init {
+        service = when(deviceIndex) {
+            1 -> fourInOneService
+            2 -> fourInOneService2
+            else -> megaphoneService
+        }
         initView(context)
     }
 
     fun setCallbacks() {
-        megaphoneService!!.msgCallbacks += object : MsgCallback {
+        service!!.msgCallbacks += object : MsgCallback {
             override fun getId(): String {
                 return "RealTimeShoutWeightCallback"
             }
@@ -178,12 +187,12 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         // 如果缓存里的状态是正在喊话
         if (sharedPreferences.getBoolean("record", false)) {
             // 如果megaphoneService里的状态是未在喊话，可能是在喊话未关闭的情况下关闭了APP，停止喊话同步状态
-            if(megaphoneService?.isRecording == true){
+            if(service?.isRecording == true){
                 isStartSpeak = true
                 mRealTimeSpeakBtn.setText(R.string.stop_speak)
             }
             else {
-                megaphoneService?.stopRealTimeShout()
+                service?.stopRealTimeShout()
                 val edit = sharedPreferences.edit()
                 edit.putBoolean("record", false)
                 edit.apply()
@@ -235,7 +244,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 
         initAudioTrack()
         audioTrack.play()
-        megaphoneService?.registMsgCallback(object : MsgCallback {
+        service?.registMsgCallback(object : MsgCallback {
             val opusUtils = OpusUtils.getInstant()
             val createDecoder = opusUtils.createDecoder(radioRate, channels)// 新收音麦的数据opus编码使用的是16000采样率
             override fun getId(): String {
@@ -270,15 +279,15 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                 }
             }
         })
-        megaphoneService?.startRadio()
+        service?.startRadio()
     }
 
     private fun stopRadio() {
         isRadio = false
-        megaphoneService?.unRegistMsgCallback("radioCallback")
+        service?.unRegistMsgCallback("radioCallback")
         audioTrack.stop()
         audioTrack.release()
-        megaphoneService?.stopRadio()
+        service?.stopRadio()
         mRadioBtn.setText(R.string.start_listening)
     }
 
@@ -298,17 +307,17 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 
         mRadioDisable.setOnClickListener{
             if (mRadioDisable.isChecked) {
-                megaphoneService?.disableRadio()
+                service?.disableRadio()
             } else {
-                megaphoneService?.restartRadio()
+                service?.restartRadio()
             }
         }
         // 收音
         mRadioBtn.setOnClickListener {
             if (!isRadio) {
-//                megaphoneService?.stopRealTimeShout()
+//                service?.stopRealTimeShout()
 //                if (isRadio) {
-//                    megaphoneService?.stopRadio()
+//                    service?.stopRadio()
 //                }
                 startRadio()
             } else {
@@ -325,12 +334,12 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                 if (seekBar != null) {
                     Log.i(TAG, "(seekBar != null)")
                     Thread {
-                        megaphoneService?.servoControl(seekBar.progress.toUInt())
+                        service?.servoControl(seekBar.progress.toUInt())
 //                        val msg = Msg()
 //                        msg.msgId = 0x09.toByte()
 //                        msg.payload = ByteArray(1)
 //                        msg.payload[0] = seekBar.progress.toUInt().toByte()
-//                        megaphoneService?.sendData2Payload(msg.getMsg())
+//                        service?.sendData2Payload(msg.getMsg())
 //                        Log.i(TAG, "Thread start，msg:"+ bytesToHex(msg.getMsg()) )
                     }.start()
                 }
@@ -347,14 +356,14 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         mPlayAlarm.setOnClickListener {
 
             val edit = sharedPreferences.edit()
-            if (megaphoneService?.isPlayAlarm != true) {
+            if (service?.isPlayAlarm != true) {
                 // 播放警报
-                megaphoneService?.playAlarm()
+                service?.playAlarm()
                 mPlayAlarm.setText(R.string.stop_playing)
                 edit.putBoolean("alar_status", true);
             } else {
                 // 停止警报
-                megaphoneService?.stopPlayAlarm()
+                service?.stopPlayAlarm()
                 mPlayAlarm.setText(R.string.play_alarm)
                 edit.putBoolean("alar_status", false);
             }
@@ -372,7 +381,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (seekBar != null) {
-                    megaphoneService?.setVolume(seekBar.progress)
+                    service?.setVolume(seekBar.progress)
                     Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                     thread {
                         Thread.sleep(500)
@@ -399,11 +408,11 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
 //                stopRadio()
 //            }
 
-            if (megaphoneService?.isRecording == true) {
+            if (service?.isRecording == true) {
                 mRealTimeSpeakBtn.setText(R.string.start_speak)
                 Log.i(TAG, "stopRecord...")
                 stopForegroundService()
-                megaphoneService?.stopRealTimeShout()
+                service?.stopRealTimeShout()
                 edit.putBoolean("record", false)
             } else {
                 // 麦克风权限检查
@@ -438,7 +447,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         mRealTimeSpeakBtn.isEnabled = false
 
         // 设置录音准备回调
-        megaphoneService?.onRecordingReady = {
+        service?.onRecordingReady = {
             Handler(Looper.getMainLooper()).post {
                 mRealTimeSpeakBtn.setText(R.string.stop_speak)
                 mRealTimeSpeakBtn.isEnabled = true
@@ -446,7 +455,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         }
 
         // 开始录音
-        megaphoneService?.startRealTimeShout(mRadioDisable.isEnabled)
+        service?.startRealTimeShout(mRadioDisable.isEnabled)
     }
 
     private fun startForegroundService() {
@@ -522,7 +531,16 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask() {
             override fun run() {
-                if (megaphoneService?.getIsConnected() == true || megaphoneService?.getIsConnectedYA3() == true) {
+                if(service == null) {
+                    service = when(deviceIndex) {
+                        1 -> fourInOneService
+                        2 -> fourInOneService2
+                        else -> megaphoneService
+                    }
+                    Log.d(TAG, "service为空")
+                    return
+                }
+                if (service?.getIsConnected() == true || service?.getIsConnectedYA3() == true) {
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
                         background.setColor(ContextCompat.getColor(context, R.color.green))
@@ -531,7 +549,7 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                         putBoolean("shoutConnectStatus", true);
                     }
 
-                    if (!isInit && megaphoneService != null) {
+                    if (!isInit && service != null) {
                         isInit = true
                         setCallbacks()
                     }
@@ -540,54 +558,34 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
                         connectText.setText(R.string.connection_status_notconnected)
                         background.setColor(ContextCompat.getColor(context, R.color.red))
                     }
-                    sharedPreferences.edit {
-                        putBoolean("shoutConnectStatus", false);
-                    }
-                    if(!isConnecting_1) {
-                        isConnecting_1 = true
-                        // 尝试重连
-                        val megaphoneService1: BaseMegaphoneService = MegaphoneService()// 喊话器
-                        val host1 = preferences?.getString("ShoutHost", "")
-                        if(host1 != null && "" != host1) {
-                            megaphoneService1.setIp(host1)
-                        }
-                        thread {
-                            Log.i(TAG, "喊话器连接："+ megaphoneService1.getIp())
-                            megaphoneService1.connect()
-                            if (megaphoneService1.getIsConnected()) {
-                                megaphoneService = megaphoneService1;
-                                setCallbacks()
-                                megaphoneService?.setContext(context)
-                            }
-                            isConnecting_1 = false
-                        }
 
-                    }
-                    if(!isConnecting_2) {
-                        isConnecting_2 = true
-                        val megaphoneService2: BaseMegaphoneService = FourInOneService()// 四合一
-                        val host2 = preferences?.getString("YA3Host", "")
-                        if (host2 != null && "" != host2) {
-                            megaphoneService2.setIp(host2)
-                        }
+                    if(!isConnecting) {
+                        isConnecting = true
                         thread {
-                            Log.i(TAG, "四合一连接：" + megaphoneService2.getIp())
-                            megaphoneService2.connect()
-                            if (megaphoneService2.getIsConnectedYA3()) {
-                                megaphoneService = megaphoneService2;
-                                setCallbacks()
-                                megaphoneService?.setContext(context)
+                            Log.i(TAG, "喊话器、四合一连接：" + service!!.getIp())
+                            service!!.connect()
+                            if(deviceIndex == 0){
+                                if (service!!.getIsConnected()) {
+                                    setCallbacks()
+                                    service?.setContext(context)
+                                }
                             }
-                            isConnecting_2 = false
+                            else {
+                                if (service!!.getIsConnectedYA3()) {
+                                    setCallbacks()
+                                    service?.setContext(context)
+                                }
+                            }
+                            isConnecting = false
                         }
                     }
                 }
-                if(megaphoneService?.getIsConnectedYA3() == true) {
+                if(service?.getIsConnectedYA3() == true) {
                     handler.post {
                         mRadioBtn.visibility = VISIBLE;
                     }
                 }
-                else if(megaphoneService?.getIsConnected() == true) {
+                else if(service?.getIsConnected() == true) {
                     handler.post {
                         mRadioBtn.visibility = GONE;
                     }
@@ -603,8 +601,8 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
         val timer = Timer();
         val task = object : TimerTask() {
             override fun run() {
-                if (megaphoneService != null && (megaphoneService?.getIsConnected() == true || megaphoneService?.getIsConnectedYA3() == true)) {
-                    megaphoneService?.setVolume(mVolumeSeekBar.progress)// 设置默认音量
+                if (service != null && (service?.getIsConnected() == true || service?.getIsConnectedYA3() == true)) {
+                    service?.setVolume(mVolumeSeekBar.progress)// 设置默认音量
                     Log.i(TAG, "设置默认音量：${mVolumeSeekBar.progress}")
                     timer.cancel()// 关闭定时器
                 }
@@ -617,9 +615,9 @@ class RealTimeShoutWeight(context: Context, attr: AttributeSet?, defStyleAttr: I
     // 释放资源
     fun releaseResources() {
         stopForegroundService()
-        megaphoneService?.stopRealTimeShout()
+        service?.stopRealTimeShout()
         // 其他清理工作
         stopRadio() // 确保停止收音
-        megaphoneService?.releaseAudioResources() // 释放SDK音频资源
+        service?.releaseAudioResources() // 释放SDK音频资源
     }
 }

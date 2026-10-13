@@ -465,4 +465,5 @@
     <string name="flow_rate">流量</string>
     <string name="gear" translatable="false">%d 挡</string>
     <string name="paint_spraying">油漆喷涂</string>
+    <string name="YA3Host_name_2">四合一IP 2:</string>
 </resources>

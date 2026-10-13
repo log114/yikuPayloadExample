@@ -44,9 +44,16 @@ class PayloadWeight : Service() {
 
     // 组件
     private lateinit var realTimeShoutWeight: RealTimeShoutWeight
-    private lateinit var unitreeLightWeight: UnitreeLightWeight
     private lateinit var ttsShoutWeight: TtsShoutWeight
     private lateinit var recordShoutWeight: RecordShoutWeight
+    private lateinit var realTimeShoutWeight1: RealTimeShoutWeight
+    private lateinit var unitreeLightWeight1: UnitreeLightWeight
+    private lateinit var ttsShoutWeight1: TtsShoutWeight
+    private lateinit var recordShoutWeight1: RecordShoutWeight
+    private lateinit var realTimeShoutWeight2: RealTimeShoutWeight
+    private lateinit var unitreeLightWeight2: UnitreeLightWeight
+    private lateinit var ttsShoutWeight2: TtsShoutWeight
+    private lateinit var recordShoutWeight2: RecordShoutWeight
     private lateinit var cacheNetWeight: CacheNetWeight
     private lateinit var emitterWeight: EmitterWeight
     private lateinit var lightYl300Weight: LightWeight
@@ -79,7 +86,14 @@ class PayloadWeight : Service() {
     private lateinit var mShoutBtn: ImageView
     private lateinit var mTTSBtn: ImageView
     private lateinit var mRecordBtn: ImageView
-    private lateinit var mLightBtn: ImageView
+    private lateinit var mShoutBtn1: ImageView
+    private lateinit var mTTSBtn1: ImageView
+    private lateinit var mRecordBtn1: ImageView
+    private lateinit var mLightBtn1: ImageView
+    private lateinit var mShoutBtn2: ImageView
+    private lateinit var mTTSBtn2: ImageView
+    private lateinit var mRecordBtn2: ImageView
+    private lateinit var mLightBtn2: ImageView
     private lateinit var mCacheNetBtn: ImageView
     private lateinit var mEmitterBtn: ImageView
     private lateinit var mLightYl300Btn: ImageView
@@ -123,7 +137,14 @@ class PayloadWeight : Service() {
         mShoutBtn.isSelected = false
         mTTSBtn.isSelected = false
         mRecordBtn.isSelected = false
-        mLightBtn.isSelected = false
+        mShoutBtn1.isSelected = false
+        mTTSBtn1.isSelected = false
+        mRecordBtn1.isSelected = false
+        mLightBtn1.isSelected = false
+        mShoutBtn2.isSelected = false
+        mTTSBtn2.isSelected = false
+        mRecordBtn2.isSelected = false
+        mLightBtn2.isSelected = false
         mCacheNetBtn.isSelected = false
         mEmitterBtn.isSelected = false
         mLightYl300Btn.isSelected = false
@@ -158,10 +179,16 @@ class PayloadWeight : Service() {
                     val view = it
 //                    val _mShoutWeight = view
                     mShoutBtn = it.findViewById(R.id.startShoutBtn)
-
                     mTTSBtn = it.findViewById(R.id.ttsBtn)
                     mRecordBtn = it.findViewById(R.id.recordBtn)
-                    mLightBtn = it.findViewById(R.id.lightBtn)
+                    mShoutBtn1 = it.findViewById(R.id.startShoutBtn1)
+                    mTTSBtn1 = it.findViewById(R.id.ttsBtn1)
+                    mRecordBtn1 = it.findViewById(R.id.recordBtn1)
+                    mLightBtn1 = it.findViewById(R.id.lightBtn1)
+                    mShoutBtn2 = it.findViewById(R.id.startShoutBtn2)
+                    mTTSBtn2 = it.findViewById(R.id.ttsBtn2)
+                    mRecordBtn2 = it.findViewById(R.id.recordBtn2)
+                    mLightBtn2 = it.findViewById(R.id.lightBtn2)
                     mCacheNetBtn = it.findViewById(R.id.catchNetBtn)
 //                    it.findViewById<ImageView>(R.id.openFloatingWindowBtn).visibility = INVISIBLE
                     mEmitterBtn = it.findViewById(R.id.emitterBtn)
@@ -212,11 +239,62 @@ class PayloadWeight : Service() {
                         }
                     }
 
-                    mLightBtn.setOnClickListener {
+                    mShoutBtn1.setOnClickListener {
+                        Log.i(TAG, "mShoutBtn clicked!");
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.SHOUT1, mShoutBtn1)) {
+                            mShoutBtn1.isSelected = true
+                        }
+                    }
+                    mTTSBtn1.setOnClickListener {
+                        Log.i(TAG, "mTTSBtn clicked!");
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.TTS1, mTTSBtn1)) {
+                            mTTSBtn1.isSelected = true
+                        }
+                    }
+                    mRecordBtn1.setOnClickListener {
+                        Log.i(TAG, "mRecordBtn clicked!");
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.RECORD1, mRecordBtn1)) {
+                            mRecordBtn1.isSelected = true
+                        }
+                    }
+
+                    mLightBtn1.setOnClickListener {
 //                        Log.i(TAG, "mShoutBtn clicked!");
                         resetShoutBtnsBackground()
-                        if (this.setSVVisibility(PayloadPageIndex.UNITREE_LIGHT, mLightBtn)) {
-                            mLightBtn.isSelected = true
+                        if (this.setSVVisibility(PayloadPageIndex.UNITREE_LIGHT1, mLightBtn1)) {
+                            mLightBtn1.isSelected = true
+                        }
+                    }
+                    mShoutBtn2.setOnClickListener {
+                        Log.i(TAG, "mShoutBtn clicked!");
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.SHOUT2, mShoutBtn2)) {
+                            mShoutBtn2.isSelected = true
+                        }
+                    }
+                    mTTSBtn2.setOnClickListener {
+                        Log.i(TAG, "mTTSBtn clicked!");
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.TTS2, mTTSBtn2)) {
+                            mTTSBtn2.isSelected = true
+                        }
+                    }
+                    mRecordBtn2.setOnClickListener {
+                        Log.i(TAG, "mRecordBtn clicked!");
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.RECORD2, mRecordBtn2)) {
+                            mRecordBtn2.isSelected = true
+                        }
+                    }
+
+                    mLightBtn2.setOnClickListener {
+//                        Log.i(TAG, "mShoutBtn clicked!");
+                        resetShoutBtnsBackground()
+                        if (this.setSVVisibility(PayloadPageIndex.UNITREE_LIGHT2, mLightBtn2)) {
+                            mLightBtn2.isSelected = true
                         }
                     }
 
@@ -651,9 +729,55 @@ class PayloadWeight : Service() {
                         mShoutViewContent.addView(cacheNetWeight)
                         mWindowTitle.setText(R.string.capture_net)
                     }
-                    PayloadPageIndex.UNITREE_LIGHT -> { // 四合一照明
-                        mShoutViewContent.addView(unitreeLightWeight)
+                    PayloadPageIndex.UNITREE_LIGHT2 -> { // 四合一照明
+                        mShoutViewContent.addView(unitreeLightWeight2)
                         mWindowTitle.setText(R.string.lamplight)
+                    }
+                    PayloadPageIndex.SHOUT2 -> { // 实时喊话
+                        mShoutViewContent.addView(realTimeShoutWeight2)
+                        mWindowTitle.setText(R.string.shout)
+                    }
+                    PayloadPageIndex.RECORD2 -> { // 音频文件
+                        mShoutViewContent.addView(recordShoutWeight2)
+                        mWindowTitle.setText(R.string.audio_file)
+                        recordShoutWeight2.onShow()
+                    }
+                    PayloadPageIndex.TTS2 -> { // 文字转语音
+                        mShoutViewContent.addView(ttsShoutWeight2)
+                        mWindowTitle.setText(R.string.tts)
+                        val editText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
+                        editText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                editText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
+                    }
+                    PayloadPageIndex.UNITREE_LIGHT1 -> { // 四合一照明
+                        mShoutViewContent.addView(unitreeLightWeight1)
+                        mWindowTitle.setText(R.string.lamplight)
+                    }
+                    PayloadPageIndex.SHOUT1 -> { // 实时喊话
+                        mShoutViewContent.addView(realTimeShoutWeight1)
+                        mWindowTitle.setText(R.string.shout)
+                    }
+                    PayloadPageIndex.RECORD1 -> { // 音频文件
+                        mShoutViewContent.addView(recordShoutWeight1)
+                        mWindowTitle.setText(R.string.audio_file)
+                        recordShoutWeight1.onShow()
+                    }
+                    PayloadPageIndex.TTS1 -> { // 文字转语音
+                        mShoutViewContent.addView(ttsShoutWeight1)
+                        mWindowTitle.setText(R.string.tts)
+                        val editText = mShoutViewContent.findViewById<EditText>(R.id.tts_text)
+                        editText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                editText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
                     }
                     PayloadPageIndex.SHOUT -> { // 实时喊话
                         mShoutViewContent.addView(realTimeShoutWeight)
@@ -841,7 +965,16 @@ class PayloadWeight : Service() {
         ttsShoutWeight = TtsShoutWeight(this)
         recordShoutWeight = RecordShoutWeight(this)
         recordShoutWeight.attachFloatingWindow(this)
-        unitreeLightWeight = UnitreeLightWeight(this)
+        realTimeShoutWeight1 = RealTimeShoutWeight(this, null, 0, 1)
+        ttsShoutWeight1 = TtsShoutWeight(this, null, 0, 1)
+        recordShoutWeight1 = RecordShoutWeight(this, null, 0, 1)
+        recordShoutWeight1.attachFloatingWindow(this)
+        unitreeLightWeight1 = UnitreeLightWeight(this, null, 0, 1)
+        realTimeShoutWeight2 = RealTimeShoutWeight(this, null, 0, 2)
+        ttsShoutWeight2 = TtsShoutWeight(this, null, 0, 2)
+        recordShoutWeight2 = RecordShoutWeight(this, null, 0, 2)
+        recordShoutWeight2.attachFloatingWindow(this)
+        unitreeLightWeight2 = UnitreeLightWeight(this, null, 0, 2)
         cacheNetWeight = CacheNetWeight(this)
         emitterWeight = EmitterWeight(this)
         lightYl300Weight = LightWeight(this)
@@ -1199,8 +1332,9 @@ class PayloadWeight : Service() {
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
             override fun run() {
-                val isConnectedMegaphone = (megaphoneService?.getIsConnected() == true);// 喊话器
-                val isConnectedYA3 = (megaphoneService?.getIsConnectedYA3() == true); // 四合一
+                val isConnectedMegaphone = (megaphoneService.getIsConnected());// 喊话器
+                val isConnectedYA3 = (fourInOneService.getIsConnectedYA3()); // 四合一
+                val isConnectedYA3_2 = (fourInOneService2.getIsConnectedYA3()); // 四合一2
                 val isConnectedCacheNet = cacheNetWeight.cacheNetService.getIsConnected(); // 网枪
                 val isConnectedEmitter = emitterWeight.emitterService.getIsConnected(); // 38mm发射器
                 val isConnectedLightYl300 = lightYl300Weight.lightService.getIsConnected(); // 探照灯
@@ -1221,6 +1355,8 @@ class PayloadWeight : Service() {
                 val isConnectedCargoBox = cargoBoxWeight.cargoBoxService.getIsConnected(); // 运输箱
                 val isConnectedEMNetGun = emNetGunWeight.emNetGunService.getIsConnected() // 电磁网枪
                 val isConnectedPaintSpraying = paintSprayingWeight.paintSprayingService.getIsConnected() // 油漆喷涂
+
+                Log.d(TAG, "四合一连接状态，1：${isConnectedYA3}，2：${isConnectedYA3_2}")
 
                 // 喊话器
                 if(isConnectedMegaphone){
@@ -1314,11 +1450,24 @@ class PayloadWeight : Service() {
                 if(isConnectedYA3){
                     handler.post {
                         // 喊话器、收音
-                        mShoutBtn.visibility = VISIBLE;
-                        mTTSBtn.visibility = VISIBLE;
-                        mRecordBtn.visibility = VISIBLE;
+                        mShoutBtn1.visibility = VISIBLE;
+                        mTTSBtn1.visibility = VISIBLE;
+                        mRecordBtn1.visibility = VISIBLE;
                         // 灯光、红蓝
-                        mLightBtn.visibility = VISIBLE;
+                        mLightBtn1.visibility = VISIBLE;
+                        emptyText.visibility = GONE;
+                    }
+                }
+
+                // 四合一2（喊话器、灯光、红蓝、收音），放到最后判断，此时该隐藏的已经都隐藏了，只需要判断是否显示
+                if(isConnectedYA3_2){
+                    handler.post {
+                        // 喊话器、收音
+                        mShoutBtn2.visibility = VISIBLE;
+                        mTTSBtn2.visibility = VISIBLE;
+                        mRecordBtn2.visibility = VISIBLE;
+                        // 灯光、红蓝
+                        mLightBtn2.visibility = VISIBLE;
                         emptyText.visibility = GONE;
                     }
                 }
@@ -1397,7 +1546,7 @@ class PayloadWeight : Service() {
 }
 
 enum class PayloadPageIndex {
-    NONE, TTS, RECORD, SHOUT, UNITREE_LIGHT, CAPTURE_NET, EMITTER_38MM, SEARCHLIGHT, THROWER, SLOW_DESCENT, GRIPPER,
+    NONE, TTS, RECORD, SHOUT, TTS1, RECORD1, SHOUT1, UNITREE_LIGHT1, TTS2, RECORD2, SHOUT2, UNITREE_LIGHT2, CAPTURE_NET, EMITTER_38MM, SEARCHLIGHT, THROWER, SLOW_DESCENT, GRIPPER,
     GLASS_BREAKER, EXTINGUISHER, WATER_GUN, BUCKET, WATER_BRANCH, PL_LIGHT, ALL_IN_ONE_SPEAKER, ALL_IN_ONE_LIGHT, ALL_IN_ONE_THROWER, ALL_IN_ONE_FPV,
     FOUR_IN_ONE_2_SPEAKER, FOUR_IN_ONE_2_LIGHT, SLOW_DESCENT_DEVICE_200, WATER_GUN_ESCAPE, THROWER_200, CARGO_BOX, EM_NET_GUN, PAINT_SPRAYING
 }

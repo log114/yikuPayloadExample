@@ -12,12 +12,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
+import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
 import com.yiku.yikupayloadSDK.util.MsgCallback
 
 import java.util.Timer
 import java.util.TimerTask
 
-class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
+class UnitreeLightWeight(
+    context: Context,
+    attr: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    private val deviceIndex: Int = 0) :
     LinearLayout(context, attr, defStyleAttr) {
     private val TAG = "UnitreeLightWeight"
     private lateinit var mLightView: View
@@ -28,11 +33,17 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
     private lateinit var mLuminanceText: TextView
     private lateinit var mLuminanceChangePitch: SeekBar // 舵机控制
     private var rbModel = 0
+    private var service: BaseMegaphoneService? = null
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
 
     init {
+        service = when(deviceIndex) {
+            1 -> fourInOneService
+            2 -> fourInOneService2
+            else -> megaphoneService
+        }
         initView(context)
     }
 
@@ -83,7 +94,7 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
         mLuminanceChangePitch.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (seekBar != null) {
-                    megaphoneService?.controlServo(seekBar.progress + 100)
+                    service?.controlServo(seekBar.progress + 100)
                 }
             }
 
@@ -92,23 +103,23 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
 //                if (seekBar != null) {
-//                    megaphoneService.setVolume(seekBar.progress)
+//                    service.setVolume(seekBar.progress)
 //                }
             }
 
         })
         // 初始化通讯回调函数
-        megaphoneService?.registMsgCallback(LightMsgCallback())
+        service?.registMsgCallback(LightMsgCallback())
 
 
         // 查询初始化状态
-        megaphoneService?.openLight(0, true) // 开灯状态
-        megaphoneService?.sharpFlash(0, true) // 爆闪状态
-        megaphoneService?.fetchTemperature() // 温度
+        service?.openLight(0, true) // 开灯状态
+        service?.sharpFlash(0, true) // 爆闪状态
+        service?.fetchTemperature() // 温度
         setConnectState()
         fun close_light() {
-            megaphoneService?.openLight(0, false)
-            megaphoneService?.sharpFlash(0, false)
+            service?.openLight(0, false)
+            service?.sharpFlash(0, false)
             openLightStatus = 0
             mOpenLightBtn.setText(R.string.turn_on_the_light)
             sharpFlashStatus = 0
@@ -116,7 +127,7 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
         }
         mOpenLightBtn.setOnClickListener {
 //            close_light()
-            megaphoneService?.openLight(if (openLightStatus == 0) 1 else 0, false)
+            service?.openLight(if (openLightStatus == 0) 1 else 0, false)
             if (openLightStatus == 0) {
                 openLightStatus = 1
                 mOpenLightBtn.setText(R.string.turn_off_the_light)
@@ -124,13 +135,13 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
                 openLightStatus = 0
                 mOpenLightBtn.setText(R.string.turn_on_the_light)
                 // 关灯时自动关爆闪
-                megaphoneService?.sharpFlash(0, false)
+                service?.sharpFlash(0, false)
                 sharpFlashStatus = 0
                 mSharpFlashBtn.setText(R.string.explosive_flashing)
             }
         }
         mSharpFlashBtn.setOnClickListener {
-            megaphoneService?.sharpFlash(if (sharpFlashStatus == 0) 1 else 0, false)
+            service?.sharpFlash(if (sharpFlashStatus == 0) 1 else 0, false)
             // 如果是打开爆闪
             if (sharpFlashStatus == 0) {
                 sharpFlashStatus = 1
@@ -139,7 +150,7 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
                 sharpFlashStatus = 0
                 mSharpFlashBtn.setText(R.string.explosive_flashing)
                 // 关爆闪时，自动关灯
-                megaphoneService?.openLight(0, false)
+                service?.openLight(0, false)
                 openLightStatus = 0
                 mOpenLightBtn.setText(R.string.turn_on_the_light)
             }
@@ -156,7 +167,7 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (seekBar != null) {
-                    megaphoneService?.luminanceChange(seekBar.progress, false)
+                    service?.luminanceChange(seekBar.progress, false)
 
                 }
             }
@@ -166,56 +177,56 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
         fun setRbModel(vrbModel: Int) {
 //                        rbModel = 0
             if (vrbModel == 0) {
-                megaphoneService?.redBlueLedControl(0x00)
+                service?.redBlueLedControl(0x00)
                 mRbModelText.setText(R.string.red_and_blue_not_turned_on)
             }
             if (vrbModel == 1) {
-                megaphoneService?.redBlueLedControl(0x01)
+                service?.redBlueLedControl(0x01)
             }
             if (vrbModel == 2) {
-                megaphoneService?.redBlueLedControl(0x02)
+                service?.redBlueLedControl(0x02)
             }
             if (vrbModel == 3) {
-                megaphoneService?.redBlueLedControl(0x03)
+                service?.redBlueLedControl(0x03)
             }
             if (vrbModel == 4) {
-                megaphoneService?.redBlueLedControl(0x04)
+                service?.redBlueLedControl(0x04)
             }
             if (vrbModel == 5) {
-                megaphoneService?.redBlueLedControl(0x05)
+                service?.redBlueLedControl(0x05)
             }
             if (vrbModel == 6) {
-                megaphoneService?.redBlueLedControl(0x06)
+                service?.redBlueLedControl(0x06)
             }
             if (vrbModel == 7) {
-                megaphoneService?.redBlueLedControl(0x07)
+                service?.redBlueLedControl(0x07)
             }
             if (vrbModel == 8) {
-                megaphoneService?.redBlueLedControl(0x08)
+                service?.redBlueLedControl(0x08)
             }
             if (vrbModel == 9) {
-                megaphoneService?.redBlueLedControl(0x09)
+                service?.redBlueLedControl(0x09)
             }
             if (vrbModel == 10) {
-                megaphoneService?.redBlueLedControl(0x0a)
+                service?.redBlueLedControl(0x0a)
             }
             if (vrbModel == 11) {
-                megaphoneService?.redBlueLedControl(0x0b)
+                service?.redBlueLedControl(0x0b)
             }
             if (vrbModel == 12) {
-                megaphoneService?.redBlueLedControl(0x0c)
+                service?.redBlueLedControl(0x0c)
             }
             if (vrbModel == 13) {
-                megaphoneService?.redBlueLedControl(0x0d)
+                service?.redBlueLedControl(0x0d)
             }
             if (vrbModel == 14) {
-                megaphoneService?.redBlueLedControl(0x0e)
+                service?.redBlueLedControl(0x0e)
             }
             if (vrbModel == 15) {
-                megaphoneService?.redBlueLedControl(0x0f)
+                service?.redBlueLedControl(0x0f)
             }
             if (vrbModel == 16) {
-                megaphoneService?.redBlueLedControl(0x10)
+                service?.redBlueLedControl(0x10)
             }
             rbModel = vrbModel
             if (rbModel > 0) {
@@ -238,8 +249,8 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
         // 定时获取温度
         timerTask = object : TimerTask() {
             override fun run() {
-                if (megaphoneService != null && megaphoneService?.getIsConnectedYA3() == true) {
-                    megaphoneService?.fetchTemperature()
+                if (service != null && service?.getIsConnectedYA3() == true) {
+                    service?.fetchTemperature()
                 }
             }
         }
@@ -268,7 +279,16 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask(){
             override fun run() {
-                if(megaphoneService?.getIsConnectedYA3() == true){
+                if(service == null) {
+                    service = when(deviceIndex) {
+                        1 -> fourInOneService
+                        2 -> fourInOneService2
+                        else -> megaphoneService
+                    }
+                    Log.d(TAG, "service为空")
+                    return
+                }
+                if(service?.getIsConnectedYA3() == true){
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
                         background.setColor(ContextCompat.getColor(context, R.color.green))

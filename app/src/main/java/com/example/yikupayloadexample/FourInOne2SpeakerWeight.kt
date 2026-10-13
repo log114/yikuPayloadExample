@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioFormat
 import android.media.AudioTrack
@@ -36,6 +37,8 @@ import com.example.yikupayloadexample.MApplication.applicationContext
 import com.example.yikupayloadexample.component.AudioListAdapter
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.OpusUtils
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
@@ -286,7 +289,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
         ttsBackBtn = findViewById(R.id.tts_back_btn)
         audioBackBtn = findViewById(R.id.audio_back_btn)
 
-        sharedPreferences = context.getSharedPreferences("RealTimeShoutWeight", Context.MODE_PRIVATE)
+        sharedPreferences = context.getSharedPreferences("FourInOne2SpeakerWeight", Context.MODE_PRIVATE)
         // 实时喊话
         realTimeSpeakBtn.setOnClickListener {
             val edit = sharedPreferences.edit()
@@ -497,6 +500,65 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
         settingTimer?.purge()
         settingTimer = null
     }
+
+//    fun setCallbacks() {
+//        fourInOne2Service.msgCallbacks += object : MsgCallback {
+//            override fun getId(): String {
+//                return "FourInOne2SpeakerWeightCallback"
+//            }
+//
+//            override fun onMsg(msg: ByteArray) {
+//                // 温度、音量返回
+//                if (msg.size > 6 && String(msg.slice(0..3).toByteArray()) == "[99]") {
+//                    // 假设 msg 是一个 ByteArray
+//                    val dataLength = msg.size - 2 - 4
+//                    // 使用 Kotlin 的 sliceArray 方法提取子数组，更简洁
+//                    val valueBytes = msg.sliceArray(5 until 5 + dataLength)
+//                    // 将字节数组（ASCII字符）转换为字符串
+//                    val jsonString = valueBytes.toString(Charsets.US_ASCII)
+//                    try {
+//                        // 使用 Kotlin 标准库的 JSONObject 进行解析
+//                        val jsonObject = JSONObject(jsonString)
+//                        // 从JSON对象中提取数据
+//                        volumeReal = jsonObject.getInt("volume_real")
+//                        volumeLimit = jsonObject.getInt("volume_limit")
+//                        temperature = jsonObject.getString("temperature")
+//                        // 记录日志以便调试
+//                        Log.i(TAG, "解析结果 - 实际音量: $volumeReal, 音量上限: $volumeLimit, 温度: $temperature")
+//                        // 更新到主线程
+//                        val handler = Handler(Looper.getMainLooper())
+//                        handler.post {
+//                            // 更新音量进度条
+//                            if (!isSettingVolume) {
+//                                mVolumeSeekBar.progress = volumeReal
+//                            }
+//                            mTemperature.text = "${context.resources.getString(R.string.temperature)} ${temperature}℃"
+//                            if(volumeLimit < 100) {
+//                                mStatus.setText(R.string.excessive_temperature)
+//                                mStatus.setTextColor(Color.RED)
+//                            }
+//                            else {
+//                                mStatus.setText(R.string.normal_temperature)
+//                                mStatus.setTextColor(Color.WHITE)
+//                            }
+//                        }
+//                        // 将内容更新到内存里
+//                        sharedPreferences.edit {
+//                            putInt("volume_real", volumeReal);
+//                            putInt("volume_limit", volumeLimit);
+//                            putString("temperature", temperature);
+//                        }
+//                    } catch (e: JSONException) {
+//                        // 处理JSON解析错误（如键不存在、类型不匹配、格式错误等）
+//                        Log.e(TAG, "JSON解析失败: ${e.message}")
+//                    } catch (e: Exception) {
+//                        // 处理其他潜在异常
+//                        Log.e(TAG, "处理消息时发生未知错误: ${e.message}")
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     // 定时器，判断连接状态
     private fun setConnectState() {

@@ -271,17 +271,13 @@ class FourInOne2LightWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                 }
                 // 已连接
                 if (fourInOne2Service.getMainIsConnected()) {
-                    // 5秒没收到信息，显示未连接
-                    if (Date().time - updateTime > 5000) {
+                    // 10秒没收到信息，断连并显示未连接
+                    if (Date().time - updateTime > 10000) {
+                        fourInOne2Service.mainDisConnect()
                         handler.post {
                             connectState.setText(R.string.connection_status_notconnected)
                             background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
-                    }
-                    // 如果超过10s没收到消息，主动断开连接，等待重连
-                    if (Date().time - updateTime > 10000) {
-                        // 断连
-                        fourInOne2Service.mainDisConnect()
                     }
                 }
             }

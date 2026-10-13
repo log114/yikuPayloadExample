@@ -11,6 +11,7 @@ import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import com.yiku.yikupayloadSDK.service.BaseMegaphoneService
 import java.util.*
 
 
@@ -22,9 +23,14 @@ data class RecordPo(
     var loop: Boolean
 )
 
-class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?) : BaseAdapter() {
+class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?, deviceIndex: Int = 0) : BaseAdapter() {
     lateinit var mPlayerAudio: ImageView
     lateinit var mLoopPlayerAudio: ImageView
+    private var thisService: BaseMegaphoneService? = when(deviceIndex) {
+        1 -> fourInOneService
+        2 -> fourInOneService2
+        else -> megaphoneService
+    }
     private val TAG = "RecordAdapter"
     fun getData(): ArrayList<RecordPo> {
         return mData
@@ -80,7 +86,7 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?) : Ba
                 audioPlayingStatusMap[mData[position].recordName] = false
                 audioLoopStatusMap[mData[position].recordName] = false
                 if (mData[position].playing) {
-                    megaphoneService?.stopPlayAudio()
+                    thisService?.stopPlayAudio()
                     resetAllImageStatus()
                     return@setOnClickListener
                 }
@@ -90,7 +96,7 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?) : Ba
                 mData[position].loop = false
                 mData[position].playing = true
                 notifyDataSetChanged()
-                megaphoneService?.playAudio(mData[position].recordName)
+                thisService?.playAudio(mData[position].recordName)
             }
             mRecordCheckbox.setOnClickListener {
                 mData[position].checked = mRecordCheckbox.isChecked
@@ -100,7 +106,7 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?) : Ba
                 audioPlayingStatusMap[mData[position].recordName] = false
                 audioLoopStatusMap[mData[position].recordName] = false
                 if (mData[position].playing) {
-                    megaphoneService?.stopPlayAudio()
+                    thisService?.stopPlayAudio()
                     resetAllImageStatus()
                     return@setOnClickListener
                 }
@@ -110,7 +116,7 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?) : Ba
                 audioPlayingStatusMap[mData[position].recordName] = true
                 audioLoopStatusMap[mData[position].recordName] = true
                 notifyDataSetChanged()
-                megaphoneService?.startLoopPlayAudio(mData[position].recordName)
+                thisService?.startLoopPlayAudio(mData[position].recordName)
 
             }
         } catch (e: Exception) {

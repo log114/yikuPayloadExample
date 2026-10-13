@@ -34,9 +34,14 @@ import com.example.yikupayloadexample.util.AppUpdateManager
 import com.example.yikupayloadexample.util.VersionData
 import com.yiku.yikupayloadSDK.service.AllInOneService
 import com.yiku.yikupayloadSDK.service.FourInOne2Service
+import com.yiku.yikupayloadSDK.service.FourInOneService
 import java.io.File
 
-var megaphoneService: BaseMegaphoneService? = null
+@Volatile
+var megaphoneService: BaseMegaphoneService = MegaphoneService()
+var fourInOneService: FourInOneService = FourInOneService()
+@Volatile
+var fourInOneService2: FourInOneService = FourInOneService()
 var allInOneService: AllInOneService = AllInOneService()
 var fourInOne2Service: FourInOne2Service = FourInOne2Service()
 var preferences: SharedPreferences? = null
@@ -95,10 +100,19 @@ class MainActivity : AppCompatActivity() {
                         val serviceBinder = binder as PayloadWeight.PayloadWeightBinder
                         serviceBinder.showWindow()
                         serviceBinder.openFloatingWindow()
-                        megaphoneService = MegaphoneService()
                         val shoutHost = preferences?.getString("ShoutHost", "")
                         if(shoutHost != null && "" != shoutHost) {
-                            megaphoneService?.setIp(shoutHost)
+                            megaphoneService.setIp(shoutHost)
+                        }
+                        // 四合一
+                        val YA3Host = preferences?.getString("YA3Host", "")
+                        if(YA3Host != null && "" != YA3Host) {
+                            fourInOneService.setIp(YA3Host)
+                        }
+                        // 四合一2
+                        val YA3Host2 = preferences?.getString("YA3Host2", "")
+                        if(YA3Host2 != null && "" != YA3Host2) {
+                            fourInOneService2.setIp(YA3Host2)
                         }
                         val allInOneHost = preferences?.getString("AllInOneHost", "")
                         if(allInOneHost != null && "" != allInOneHost) {
