@@ -93,6 +93,29 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener;
             }
             isOpenedPayloadWeight = true
+
+            val shoutHost = preferences?.getString("ShoutHost", "")
+            if(shoutHost != null && "" != shoutHost) {
+                megaphoneService.setIp(shoutHost)
+            }
+            // 四合一
+            val YA3Host = preferences?.getString("YA3Host", "")
+            if(YA3Host != null && "" != YA3Host) {
+                fourInOneService.setIp(YA3Host)
+            }
+            // 四合一2
+            val YA3Host2 = preferences?.getString("YA3Host2", "")
+            if(YA3Host2 != null && "" != YA3Host2) {
+                fourInOneService2.setIp(YA3Host2)
+            }
+            val allInOneHost = preferences?.getString("AllInOneHost", "")
+            if(allInOneHost != null && "" != allInOneHost) {
+                allInOneService.setIp(allInOneHost)
+            }
+            val fourInOne2Host = preferences?.getString("FourInOne2Host", "")
+            if(fourInOne2Host != null && "" != fourInOne2Host) {
+                fourInOne2Service.setIp(fourInOne2Host)
+            }
             conn = object : ServiceConnection {
                 override fun onServiceDisconnected(name: ComponentName) {}
                 override fun onServiceConnected(name: ComponentName, binder: IBinder) {
@@ -100,28 +123,6 @@ class MainActivity : AppCompatActivity() {
                         val serviceBinder = binder as PayloadWeight.PayloadWeightBinder
                         serviceBinder.showWindow()
                         serviceBinder.openFloatingWindow()
-                        val shoutHost = preferences?.getString("ShoutHost", "")
-                        if(shoutHost != null && "" != shoutHost) {
-                            megaphoneService.setIp(shoutHost)
-                        }
-                        // 四合一
-                        val YA3Host = preferences?.getString("YA3Host", "")
-                        if(YA3Host != null && "" != YA3Host) {
-                            fourInOneService.setIp(YA3Host)
-                        }
-                        // 四合一2
-                        val YA3Host2 = preferences?.getString("YA3Host2", "")
-                        if(YA3Host2 != null && "" != YA3Host2) {
-                            fourInOneService2.setIp(YA3Host2)
-                        }
-                        val allInOneHost = preferences?.getString("AllInOneHost", "")
-                        if(allInOneHost != null && "" != allInOneHost) {
-                            allInOneService.setIp(allInOneHost)
-                        }
-                        val fourInOne2Host = preferences?.getString("FourInOne2Host", "")
-                        if(fourInOne2Host != null && "" != fourInOne2Host) {
-                            fourInOne2Service.setIp(fourInOne2Host)
-                        }
                     }
                 }
             }

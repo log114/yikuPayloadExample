@@ -540,6 +540,7 @@ class RealTimeShoutWeight(
                     Log.d(TAG, "service为空")
                     return
                 }
+                Log.d(TAG, "index=${deviceIndex}， ip=${service!!.getIp()}")
                 if (service?.getIsConnected() == true || service?.getIsConnectedYA3() == true) {
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
@@ -571,6 +572,18 @@ class RealTimeShoutWeight(
                                 }
                             }
                             else {
+                                if(deviceIndex == 2) {
+                                    val YA3Host2 = preferences?.getString("YA3Host2", "")
+                                    Log.i(TAG, "四合一2：" + YA3Host2)
+                                    if(YA3Host2 != null && "" != YA3Host2) {
+                                        service!!.setIp(YA3Host2)
+                                    }
+                                    else {
+                                        isConnecting = false
+                                        return@thread
+                                    }
+                                    Log.i(TAG, "四合一2：" + service!!.getIp())
+                                }
                                 if (service!!.getIsConnectedYA3()) {
                                     setCallbacks()
                                     service?.setContext(context)
