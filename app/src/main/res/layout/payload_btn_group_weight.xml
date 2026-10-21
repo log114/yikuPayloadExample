@@ -87,53 +87,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:imagePrefix="light"
         android:visibility="gone" />
-    <com.example.yikupayloadexample.component.StatefulImageView
-        android:id="@+id/startShoutBtn2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:contentDescription="@string/shout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/lightBtn1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:imagePrefix="shout"
-        android:visibility="gone"/>
-
-    <com.example.yikupayloadexample.component.StatefulImageView
-        android:id="@+id/ttsBtn2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:contentDescription="@string/shout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/startShoutBtn2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:imagePrefix="tts"
-        android:visibility="gone" />
-
-    <com.example.yikupayloadexample.component.StatefulImageView
-        android:id="@+id/recordBtn2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:contentDescription="@string/shout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ttsBtn2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:imagePrefix="audio"
-        android:visibility="gone" />
-
-    <com.example.yikupayloadexample.component.StatefulImageView
-        android:id="@+id/lightBtn2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:contentDescription="@string/light"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/recordBtn2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:imagePrefix="light"
-        android:visibility="gone" />
     <!--300W 照明-->
     <com.example.yikupayloadexample.component.StatefulImageView
         android:id="@+id/light_yl300_Btn"
@@ -142,7 +95,7 @@
         android:layout_marginStart="8dp"
         android:contentDescription="@string/light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/lightBtn2"
+        app:layout_constraintStart_toEndOf="@id/lightBtn1"
         app:layout_constraintTop_toTopOf="parent"
         app:imagePrefix="light"
         android:visibility="gone" />

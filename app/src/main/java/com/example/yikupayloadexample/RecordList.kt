@@ -28,7 +28,6 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?, devi
     lateinit var mLoopPlayerAudio: ImageView
     private var thisService: BaseMegaphoneService? = when(deviceIndex) {
         1 -> fourInOneService
-        2 -> fourInOneService2
         else -> megaphoneService
     }
     private val TAG = "RecordAdapter"
@@ -87,6 +86,7 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?, devi
                 audioLoopStatusMap[mData[position].recordName] = false
                 if (mData[position].playing) {
                     thisService?.stopPlayAudio()
+                    fourInOneService2.stopPlayAudio()
                     resetAllImageStatus()
                     return@setOnClickListener
                 }
@@ -97,6 +97,7 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?, devi
                 mData[position].playing = true
                 notifyDataSetChanged()
                 thisService?.playAudio(mData[position].recordName)
+                fourInOneService2.playAudio(mData[position].recordName)
             }
             mRecordCheckbox.setOnClickListener {
                 mData[position].checked = mRecordCheckbox.isChecked
@@ -107,6 +108,7 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?, devi
                 audioLoopStatusMap[mData[position].recordName] = false
                 if (mData[position].playing) {
                     thisService?.stopPlayAudio()
+                    fourInOneService2.stopPlayAudio()
                     resetAllImageStatus()
                     return@setOnClickListener
                 }
@@ -117,6 +119,7 @@ class RecordAdapter(val mData: ArrayList<RecordPo>, val mContext: Context?, devi
                 audioLoopStatusMap[mData[position].recordName] = true
                 notifyDataSetChanged()
                 thisService?.startLoopPlayAudio(mData[position].recordName)
+                fourInOneService2.startLoopPlayAudio(mData[position].recordName)
 
             }
         } catch (e: Exception) {

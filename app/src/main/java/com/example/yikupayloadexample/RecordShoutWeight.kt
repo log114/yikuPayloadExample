@@ -59,7 +59,6 @@ class RecordShoutWeight(
     init {
         service = when(deviceIndex) {
             1 -> fourInOneService
-            2 -> fourInOneService2
             else -> megaphoneService
         }
         initView(context)
@@ -148,6 +147,7 @@ class RecordShoutWeight(
                             for (data in recordAdapter?.getData()!!) {
                                 if (data.playing && data.recordName == item.recordName) {
                                     service?.stopPlayAudio()
+                                    fourInOneService2.stopPlayAudio()
                                 }
                             }
                         } catch (e: Exception) {
@@ -156,6 +156,7 @@ class RecordShoutWeight(
                         }
                         thread {
                             service?.delFile(item.recordName)
+                            fourInOneService2.delFile(item.recordName)
 //                        if () {
 //                            showToast("删除成功!")
 //                        } else {
@@ -183,6 +184,7 @@ class RecordShoutWeight(
         }
         mStopAudioBtn.setOnClickListener {
             service?.stopLoopPlayAudio()
+            fourInOneService2.stopLoopPlayAudio()
             recordAdapter?.resetAllImageStatus()
 
         }
@@ -198,6 +200,7 @@ class RecordShoutWeight(
                 if (seekBar != null) {
                     hasNewVolumeSetting = true
                     service?.setVolume(seekBar.progress)
+                    fourInOneService2.setVolume(seekBar.progress)
                     Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                     thread {
                         hasNewVolumeSetting = false
@@ -258,7 +261,6 @@ class RecordShoutWeight(
                         if(service == null) {
                             service = when(deviceIndex) {
                                 1 -> fourInOneService
-                                2 -> fourInOneService2
                                 else -> megaphoneService
                             }
                             Log.d(TAG, "service为空")

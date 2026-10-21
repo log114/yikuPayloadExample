@@ -41,7 +41,6 @@ class UnitreeLightWeight(
     init {
         service = when(deviceIndex) {
             1 -> fourInOneService
-            2 -> fourInOneService2
             else -> megaphoneService
         }
         initView(context)
@@ -95,6 +94,7 @@ class UnitreeLightWeight(
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (seekBar != null) {
                     service?.controlServo(seekBar.progress + 100)
+                    fourInOneService2.controlServo(seekBar.progress + 100)
                 }
             }
 
@@ -128,6 +128,7 @@ class UnitreeLightWeight(
         mOpenLightBtn.setOnClickListener {
 //            close_light()
             service?.openLight(if (openLightStatus == 0) 1 else 0, false)
+            fourInOneService2.openLight(if (openLightStatus == 0) 1 else 0, false)
             if (openLightStatus == 0) {
                 openLightStatus = 1
                 mOpenLightBtn.setText(R.string.turn_off_the_light)
@@ -136,12 +137,14 @@ class UnitreeLightWeight(
                 mOpenLightBtn.setText(R.string.turn_on_the_light)
                 // 关灯时自动关爆闪
                 service?.sharpFlash(0, false)
+                fourInOneService2.sharpFlash(0, false)
                 sharpFlashStatus = 0
                 mSharpFlashBtn.setText(R.string.explosive_flashing)
             }
         }
         mSharpFlashBtn.setOnClickListener {
             service?.sharpFlash(if (sharpFlashStatus == 0) 1 else 0, false)
+            fourInOneService2.sharpFlash(if (sharpFlashStatus == 0) 1 else 0, false)
             // 如果是打开爆闪
             if (sharpFlashStatus == 0) {
                 sharpFlashStatus = 1
@@ -151,6 +154,7 @@ class UnitreeLightWeight(
                 mSharpFlashBtn.setText(R.string.explosive_flashing)
                 // 关爆闪时，自动关灯
                 service?.openLight(0, false)
+                fourInOneService2.openLight(0, false)
                 openLightStatus = 0
                 mOpenLightBtn.setText(R.string.turn_on_the_light)
             }
@@ -168,7 +172,7 @@ class UnitreeLightWeight(
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (seekBar != null) {
                     service?.luminanceChange(seekBar.progress, false)
-
+                    fourInOneService2.luminanceChange(seekBar.progress, false)
                 }
             }
 
@@ -178,56 +182,11 @@ class UnitreeLightWeight(
 //                        rbModel = 0
             if (vrbModel == 0) {
                 service?.redBlueLedControl(0x00)
+                fourInOneService2.redBlueLedControl(0x00)
                 mRbModelText.setText(R.string.red_and_blue_not_turned_on)
             }
-            if (vrbModel == 1) {
-                service?.redBlueLedControl(0x01)
-            }
-            if (vrbModel == 2) {
-                service?.redBlueLedControl(0x02)
-            }
-            if (vrbModel == 3) {
-                service?.redBlueLedControl(0x03)
-            }
-            if (vrbModel == 4) {
-                service?.redBlueLedControl(0x04)
-            }
-            if (vrbModel == 5) {
-                service?.redBlueLedControl(0x05)
-            }
-            if (vrbModel == 6) {
-                service?.redBlueLedControl(0x06)
-            }
-            if (vrbModel == 7) {
-                service?.redBlueLedControl(0x07)
-            }
-            if (vrbModel == 8) {
-                service?.redBlueLedControl(0x08)
-            }
-            if (vrbModel == 9) {
-                service?.redBlueLedControl(0x09)
-            }
-            if (vrbModel == 10) {
-                service?.redBlueLedControl(0x0a)
-            }
-            if (vrbModel == 11) {
-                service?.redBlueLedControl(0x0b)
-            }
-            if (vrbModel == 12) {
-                service?.redBlueLedControl(0x0c)
-            }
-            if (vrbModel == 13) {
-                service?.redBlueLedControl(0x0d)
-            }
-            if (vrbModel == 14) {
-                service?.redBlueLedControl(0x0e)
-            }
-            if (vrbModel == 15) {
-                service?.redBlueLedControl(0x0f)
-            }
-            if (vrbModel == 16) {
-                service?.redBlueLedControl(0x10)
-            }
+            service?.redBlueLedControl(vrbModel.toByte())
+            fourInOneService2.redBlueLedControl(vrbModel.toByte())
             rbModel = vrbModel
             if (rbModel > 0) {
                 mRbModelText.setText(R.string.mode)
@@ -282,7 +241,6 @@ class UnitreeLightWeight(
                 if(service == null) {
                     service = when(deviceIndex) {
                         1 -> fourInOneService
-                        2 -> fourInOneService2
                         else -> megaphoneService
                     }
                     Log.d(TAG, "service为空")

@@ -54,6 +54,7 @@ class RealTimeShoutWeight(
     private var isPlayAlarm = false;
     private lateinit var mServoControlSeekbar: SeekBar // 舵机控制
     private var isConnecting = false; // 是否正在连接
+    private var isConnecting_1 = false
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var mRadioBtn: Button
     private lateinit var audioTrack: AudioTrack
@@ -77,7 +78,6 @@ class RealTimeShoutWeight(
     init {
         service = when(deviceIndex) {
             1 -> fourInOneService
-            2 -> fourInOneService2
             else -> megaphoneService
         }
         initView(context)
@@ -192,7 +192,7 @@ class RealTimeShoutWeight(
                 mRealTimeSpeakBtn.setText(R.string.stop_speak)
             }
             else {
-                service?.stopRealTimeShout()
+                service?.stopRealTimeShout(getService2())
                 val edit = sharedPreferences.edit()
                 edit.putBoolean("record", false)
                 edit.apply()
@@ -335,6 +335,7 @@ class RealTimeShoutWeight(
                     Log.i(TAG, "(seekBar != null)")
                     Thread {
                         service?.servoControl(seekBar.progress.toUInt())
+                        fourInOneService2.servoControl(seekBar.progress.toUInt())
 //                        val msg = Msg()
 //                        msg.msgId = 0x09.toByte()
 //                        msg.payload = ByteArray(1)
@@ -359,11 +360,13 @@ class RealTimeShoutWeight(
             if (service?.isPlayAlarm != true) {
                 // 播放警报
                 service?.playAlarm()
+                fourInOneService2.playAlarm()
                 mPlayAlarm.setText(R.string.stop_playing)
                 edit.putBoolean("alar_status", true);
             } else {
                 // 停止警报
                 service?.stopPlayAlarm()
+                fourInOneService2.stopPlayAlarm()
                 mPlayAlarm.setText(R.string.play_alarm)
                 edit.putBoolean("alar_status", false);
             }
@@ -382,6 +385,7 @@ class RealTimeShoutWeight(
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (seekBar != null) {
                     service?.setVolume(seekBar.progress)
+                    fourInOneService2.setVolume(seekBar.progress)
                     Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                     thread {
                         Thread.sleep(500)
@@ -412,7 +416,7 @@ class RealTimeShoutWeight(
                 mRealTimeSpeakBtn.setText(R.string.start_speak)
                 Log.i(TAG, "stopRecord...")
                 stopForegroundService()
-                service?.stopRealTimeShout()
+                service?.stopRealTimeShout(getService2())
                 edit.putBoolean("record", false)
             } else {
                 // 麦克风权限检查
@@ -455,7 +459,7 @@ class RealTimeShoutWeight(
         }
 
         // 开始录音
-        service?.startRealTimeShout(mRadioDisable.isEnabled)
+        service?.startRealTimeShout(mRadioDisable.isEnabled, getService2())
     }
 
     private fun startForegroundService() {
@@ -534,7 +538,6 @@ class RealTimeShoutWeight(
                 if(service == null) {
                     service = when(deviceIndex) {
                         1 -> fourInOneService
-                        2 -> fourInOneService2
                         else -> megaphoneService
                     }
                     Log.d(TAG, "service为空")
@@ -572,18 +575,6 @@ class RealTimeShoutWeight(
                                 }
                             }
                             else {
-                                if(deviceIndex == 2) {
-                                    val YA3Host2 = preferences?.getString("YA3Host2", "")
-                                    Log.i(TAG, "四合一2：" + YA3Host2)
-                                    if(YA3Host2 != null && "" != YA3Host2) {
-                                        service!!.setIp(YA3Host2)
-                                    }
-                                    else {
-                                        isConnecting = false
-                                        return@thread
-                                    }
-                                    Log.i(TAG, "四合一2：" + service!!.getIp())
-                                }
                                 if (service!!.getIsConnectedYA3()) {
                                     setCallbacks()
                                     service?.setContext(context)
@@ -601,6 +592,25 @@ class RealTimeShoutWeight(
                 else if(service?.getIsConnected() == true) {
                     handler.post {
                         mRadioBtn.visibility = GONE;
+                    }
+                }
+                if(deviceIndex == 1 && !fourInOneService2.getIsConnectedYA3()) {
+                    if(!isConnecting_1) {
+                        isConnecting_1 = true
+                        val YA3Host2 = preferences?.getString("YA3Host2", "")
+                        Log.i(TAG, "四合一2：" + YA3Host2)
+                        if(YA3Host2 != null && "" != YA3Host2) {
+                            fourInOneService2.setIp(YA3Host2)
+
+                            thread {
+                                fourInOneService2.connect()
+                                isConnecting_1 = false
+                                if(fourInOneService2.getIsConnectedYA3()) {
+                                    Thread.sleep(200)
+                                    fourInOneService2.setVolume(mVolumeSeekBar.progress)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -623,6 +633,10 @@ class RealTimeShoutWeight(
         }
         // 定时器，100毫秒后开始执行，每1秒执行一次
         timer.schedule(task, 100, 1000);
+    }
+
+    fun getService2(): FourInOneService? {
+        return if(deviceIndex == 1) fourInOneService2 else null
     }
 
     // 释放资源

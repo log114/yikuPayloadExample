@@ -60,7 +60,6 @@ class TtsShoutWeight(
     init {
         service = when(deviceIndex) {
             1 -> fourInOneService
-            2 -> fourInOneService2
             else -> megaphoneService
         }
         initView(context)
@@ -112,7 +111,6 @@ class TtsShoutWeight(
                 if(service == null) {
                     service = when(deviceIndex) {
                         1 -> fourInOneService
-                        2 -> fourInOneService2
                         else -> megaphoneService
                     }
                     Log.d(TAG, "service为空")
@@ -164,11 +162,13 @@ class TtsShoutWeight(
         if (!loopPlayback) {
             Log.i(TAG, "voice:${voice}")
             service?.ttsV2(translateText, voice)
+            fourInOneService2.ttsV2(translateText, voice)
             return
         }
 
         if (isPlaying) {
             service?.stopLoopTts()
+            fourInOneService2.ttsV2(translateText, voice)
             isPlaying = false
             return
         }
@@ -177,12 +177,14 @@ class TtsShoutWeight(
          */
         Log.i(TAG, "voice:${voice}")
         service?.startLoopTtsV2(translateText, voice)
+        fourInOneService2.startLoopTtsV2(translateText, voice)
         isPlaying = true
 
     }
 
     private fun stopTTSPlay() {
         service?.stopLoopTts()
+        fourInOneService2.stopLoopTts()
         mTtsPlayBtn.setText(R.string.play)
         isPlaying = false
     }
@@ -260,6 +262,7 @@ class TtsShoutWeight(
                 if (seekBar != null) {
                     hasNewVolumeSetting = true
                     service?.setVolume(seekBar.progress)
+                    fourInOneService2.setVolume(seekBar.progress)
                     Log.i(TAG, "音量设置，当前音量：${seekBar.progress}")
                     thread {
                         hasNewVolumeSetting = false
@@ -289,6 +292,7 @@ class TtsShoutWeight(
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (seekBar != null) {
                     service?.setTtsSpeechRate(seekBar.progress)
+                    fourInOneService2.setTtsSpeechRate(seekBar.progress)
                     Log.i(TAG, "语速设置，当前语速：${seekBar.progress}")
                 }
             }

@@ -49,6 +49,9 @@ class AddRecordActivity : AppCompatActivity() {
         thread {
             try {
                 Log.i(TAG, "uploadFile:${uploadFile}")
+                thread {
+                    fourInOneService2.uploadFile(uploadFile, callback)
+                }
                 if (thisService?.uploadFile(uploadFile, callback) == true) {
                     showToast(R.string.upload_successful)
                 } else {
@@ -156,7 +159,6 @@ class AddRecordActivity : AppCompatActivity() {
         }
         thisService = when(deviceIndex) {
             1 -> fourInOneService
-            2 -> fourInOneService2
             else -> megaphoneService
         }
 
