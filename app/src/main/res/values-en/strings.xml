@@ -414,5 +414,9 @@
     <string name="paint_spraying_ip">"Paint Spraying IP: "</string>
     <string name="distance">Distance</string>
     <string name="flow_rate">Flow rate</string>
+    <string name="gear">%d gear</string>
     <string name="paint_spraying">Paint Spraying</string>
+    <string name="tts_loop_interval">TTS loop interval:</string>
+    <string name="audio_loop_interval">Audio loop interval:</string>
+    <string name="set_interval">set interval</string>
 </resources>

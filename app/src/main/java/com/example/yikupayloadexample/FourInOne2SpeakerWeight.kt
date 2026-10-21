@@ -34,6 +34,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.edit
 import com.example.yikupayloadexample.MApplication.applicationContext
 import com.example.yikupayloadexample.component.AudioListAdapter
+import com.example.yikupayloadexample.component.DurationSliderView
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.OpusUtils
 import java.util.Timer
@@ -51,6 +52,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private lateinit var speakerSecondPage: LinearLayout
     private lateinit var ttsSettingPage: LinearLayout
     private lateinit var audioFileListPage: LinearLayout
+    private lateinit var loopIntervalSetPage: LinearLayout
     private lateinit var realTimeSpeakBtn: Button
     private lateinit var playAlarmBtn: Button
     private lateinit var mConnectState: TextView
@@ -72,6 +74,11 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private lateinit var ttsBackBtn: Button
     private lateinit var audioBackBtn: Button
     private lateinit var mRadioBtn: Button
+    private lateinit var audioSetIntervalBtn: Button
+    private lateinit var ttsSetIntervalBtn: Button
+    private lateinit var ttsSlider: DurationSliderView
+    private lateinit var audioSlider: DurationSliderView
+    private lateinit var loopSetBackBtn: Button
     private var thisPayloadWeight: PayloadWeight? = null
     private var isConnecting: Boolean = false
     private var isForegroundServiceRunning = false
@@ -96,6 +103,8 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private val channels = 1
     private val frameSize = 320
     private val channelsConfig = AudioFormat.CHANNEL_OUT_MONO  // CHANNEL_OUT_MONO 单声道 CHANNEL_OUT_STEREO双声道
+    private var ttsLoopInterval = 0; // tts的循环播放时间间隔，单位：0.1秒
+    private var audioLoopInterval = 0; // 音频文件的循环播放时间间隔，单位：0.1秒
 
     init {
         initView(context)
@@ -165,7 +174,27 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
             speakerMainPage.visibility = GONE
             speakerSecondPage.visibility = VISIBLE
             ttsSettingPage.visibility = VISIBLE
-            audioFileListPage.visibility = GONE
+        }
+
+        audioSetIntervalBtn.setOnClickListener {
+            speakerMainPage.visibility = GONE
+            speakerSecondPage.visibility = VISIBLE
+            loopIntervalSetPage.visibility = VISIBLE
+            ttsSlider.setSliderValue(ttsLoopInterval)
+            audioSlider.setSliderValue(audioLoopInterval)
+        }
+
+        ttsSetIntervalBtn.setOnClickListener {
+            speakerMainPage.visibility = GONE
+            speakerSecondPage.visibility = VISIBLE
+            ttsSettingPage.visibility = GONE
+            loopIntervalSetPage.visibility = VISIBLE
+            ttsSlider.setSliderValue(ttsLoopInterval)
+            audioSlider.setSliderValue(audioLoopInterval)
+        }
+
+        loopSetBackBtn.setOnClickListener {
+            comeBackToMainPage()
         }
 
         // 音量控制
@@ -243,17 +272,23 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
 
         // 返回主界面
         ttsBackBtn.setOnClickListener {
-            speakerMainPage.visibility = VISIBLE
-            speakerSecondPage.visibility = GONE
+            comeBackToMainPage()
         }
         audioBackBtn.setOnClickListener {
-            speakerMainPage.visibility = VISIBLE
-            speakerSecondPage.visibility = GONE
+            comeBackToMainPage()
         }
 
         audioFileNameText.isSelected = true
         initStatus()
         setConnectState()
+    }
+
+    private fun comeBackToMainPage() {
+        speakerMainPage.visibility = VISIBLE
+        speakerSecondPage.visibility = GONE
+        ttsSettingPage.visibility = GONE
+        audioFileListPage.visibility = GONE
+        loopIntervalSetPage.visibility = GONE
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -263,6 +298,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
         speakerSecondPage = findViewById(R.id.speakerSecondPage)
         ttsSettingPage = findViewById(R.id.tts_setting_page)
         audioFileListPage = findViewById(R.id.audio_file_list_page)
+        loopIntervalSetPage = findViewById(R.id.loop_interval_set_page)
         realTimeSpeakBtn = findViewById(R.id.real_time_speak_btn)
         mRadioBtn = findViewById(R.id.radio_btn)
         playAlarmBtn = findViewById(R.id.play_alarm)
@@ -285,7 +321,22 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
         volumeText = findViewById(R.id.volumeText)
         ttsBackBtn = findViewById(R.id.tts_back_btn)
         audioBackBtn = findViewById(R.id.audio_back_btn)
+        audioSetIntervalBtn = findViewById(R.id.audio_set_interval_btn)
+        ttsSetIntervalBtn = findViewById(R.id.tts_set_interval_btn)
+        ttsSlider = findViewById(R.id.tts_slider)
+        audioSlider = findViewById(R.id.audio_slider)
+        loopSetBackBtn = findViewById(R.id.loop_set_back_btn)
 
+        ttsSlider.setSliderValue(ttsLoopInterval)
+        ttsSlider.onValueConfirmed = { value ->
+            ttsLoopInterval = value
+            fourInOne2Service.setTTSLoopInterval(ttsLoopInterval)
+        }
+        audioSlider.setSliderValue(audioLoopInterval)
+        audioSlider.onValueConfirmed = { value ->
+            audioLoopInterval = value
+            fourInOne2Service.setAudioLoopInterval(audioLoopInterval)
+        }
         sharedPreferences = context.getSharedPreferences("RealTimeShoutWeight", Context.MODE_PRIVATE)
         // 实时喊话
         realTimeSpeakBtn.setOnClickListener {

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
+
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="24dp"
+        android:minHeight="2dp"
+        android:maxHeight="2dp"
+        android:progressDrawable="@drawable/bg_adjust_seek_bar"
+        android:thumb="@drawable/bg_seek_bar_thumb"/>
+
+    <TextView
+        android:id="@+id/tv_duration_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:minWidth="64dp"
+        android:text="@string/second"
+        android:textSize="14sp"
+        android:textColor="@color/white" />
+</LinearLayout>
