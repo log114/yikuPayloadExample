@@ -31,9 +31,9 @@ class SettingActivity : AppCompatActivity() {
         // 关联 TabLayout 与 ViewPager2
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
-                0 -> tab.text = "连接设置"
-                1 -> tab.text = "设备IP修改"
-                2 -> tab.text = "固件升级"
+                0 -> tab.setText(R.string.connection_settings)
+                1 -> tab.setText(R.string.device_ip)
+                2 -> tab.setText(R.string.firmware_upgrade)
             }
         }.attach()
     }

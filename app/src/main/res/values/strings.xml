@@ -469,4 +469,7 @@
     <string name="audio_loop_interval">音频文件循环间隔：</string>
     <string name="second" translatable="false">%1$.1f s</string>
     <string name="set_interval">设置间隔</string>
+    <string name="connection_settings">连接设置</string>
+    <string name="firmware_upgrade">固件升级</string>
+    <string name="device_ip">设备IP修改</string>
 </resources>
