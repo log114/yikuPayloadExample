@@ -36,17 +36,8 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private var sharpFlashStatus = 0
     private val timer: Timer = Timer()
     private lateinit var timerTask: TimerTask
-    private lateinit var openInvertedModeCheckBox: CheckBox
     private lateinit var mDriveTemperatureText: TextView
     private lateinit var mLampHeadTemperatureText: TextView
-    private var pitchVal = 0
-    private var yawVal = 0
-    private val pitchMedianVal = 3000
-    private val yawMedianVal = 17000
-    private val pitchMax = 12000
-    private val yawMax = 34000
-    private lateinit var mPitchValueText: TextView
-    private lateinit var mYawValueText: TextView
     private var lastRecvTime: Long = 0L
     private var isFirstConnect = true
     private var isConnecting = false
@@ -61,22 +52,6 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             lightService.setIp(host)
         }
         initView(context)
-    }
-
-    private fun yawReset() {
-        yawVal = yawMedianVal
-        sendTripodHead()
-    }
-
-    private fun pitchDown() {
-        pitchVal = 0
-        sendTripodHead()
-    }
-
-    private fun gimbalCentering() {
-        yawVal = yawMedianVal
-        pitchVal = 9000
-        sendTripodHead()
     }
 
     private fun resetShoutBtnsBackground() {
@@ -113,29 +88,6 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mLampHeadTemperatureText.text = "${ledLuminance}℃"
     }
 
-    fun sendTripodHead() {
-        Log.i(
-            TAG, "Picth:${pitchVal.toShort()}, Yaw:${yawVal.toShort()}"
-        )
-        val pv = pitchVal / 100 - 90
-        val yv = yawVal / 100 - 170
-        mPitchValueText.post {
-            mPitchValueText.text = "${context.resources.getString(R.string.pitch)}:  ${pv}°"
-            mYawValueText.text = "${context.resources.getString(R.string.course)}:  ${yv}°"
-        }
-
-        lightService.gimbalControl(
-            pitchVal.toShort(), 9000, yawVal.toShort()
-        )
-
-
-//        lightService.tripodHead(
-//            mSeekPicth.progress.toShort(),
-//            mSeekRoll.progress.toShort(),
-//            mSeekYaw.progress.toShort()
-//        )
-    }
-
     private fun initView(context: Context){
         LayoutInflater.from(context).inflate(R.layout.light_weight, this, true)
 
@@ -148,24 +100,11 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         drawable.draw(canvas)
 
         val mLightLumText = findViewById<TextView>(R.id.light_lum_text)
-        val mGlobalRoundMenu = findViewById<RoundMenuView>(R.id.global_round)
         val mOpenLightBtn = findViewById<Button>(R.id.open_light_btn)
         val mSharpFlashBtn = findViewById<Button>(R.id.sharp_flash_btn)
         val mLuminanceChangeSeekbar =
             findViewById<SeekBar>(R.id.luminance_change_seekbar)
 
-
-        val mYawResetBtn = findViewById<ImageView>(R.id.yaw_reset_btn)
-        val mPitchDownBtn = findViewById<ImageView>(R.id.pitch_down_btn)
-        val mGimbalCenteringBtn = findViewById<ImageView>(R.id.gimbal_centering_btn)
-
-        mYawResetBtn.setOnClickListener { yawReset() }
-        mPitchDownBtn.setOnClickListener { pitchDown() }
-        mGimbalCenteringBtn.setOnClickListener { gimbalCentering() }
-
-        mPitchValueText = findViewById(R.id.pitch_value_text)
-        mYawValueText = findViewById(R.id.yaw_value_text)
-        openInvertedModeCheckBox = findViewById(R.id.open_inverted_mode)
         mDriveTemperatureText = findViewById(R.id.drive_temperature)
         mLampHeadTemperatureText = findViewById(R.id.lamp_head_temperature)
 
@@ -173,85 +112,6 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mLampHeadTemperatureText.text = "0℃"
         // 初始化通讯回调函数
         lightService.registMsgCallback(LightMsgCallback())
-
-        var roundMenu = RoundMenuView.RoundMenu()
-        roundMenu.selectSolidColor = R.color.gray_9999
-        roundMenu.strokeColor = R.color.gray_9999
-
-        roundMenu.icon = bitmap
-        roundMenu.onClickListener = View.OnClickListener {
-            Log.i(TAG, "click 1")
-            pitchVal -= 100
-            var minPitchVal = 0
-            // 倒装模式
-            if(openInvertedModeCheckBox.isChecked) {
-                minPitchVal = 6000
-            }
-            if (pitchVal < minPitchVal) {
-                showToast(R.string.max_pitch)
-                pitchVal = minPitchVal
-                return@OnClickListener
-            }
-            sendTripodHead()
-        }
-
-        mGlobalRoundMenu.addRoundMenu(roundMenu)
-
-        roundMenu = RoundMenuView.RoundMenu()
-        roundMenu.selectSolidColor = R.color.gray_9999
-        roundMenu.strokeColor = R.color.gray_9999
-        roundMenu.icon = bitmap
-        roundMenu.onClickListener = View.OnClickListener {
-            Log.i(TAG, "click 2")
-
-            yawVal -= 100
-            if (yawVal < 0) {
-                showToast(R.string.max_course)
-                yawVal = 0
-                return@OnClickListener
-
-            }
-            sendTripodHead()
-        }
-        mGlobalRoundMenu.addRoundMenu(roundMenu)
-
-        roundMenu = RoundMenuView.RoundMenu()
-        roundMenu.selectSolidColor = R.color.gray_9999
-        roundMenu.strokeColor = R.color.gray_9999
-        roundMenu.icon = bitmap
-        roundMenu.onClickListener = View.OnClickListener {
-            Log.i(TAG, "click 3")
-            pitchVal += 100
-            var maxPitchVal = pitchMax
-            // 倒装模式
-            if(openInvertedModeCheckBox.isChecked) {
-                maxPitchVal = 18000
-            }
-            if (pitchVal > maxPitchVal) {
-                showToast(R.string.max_pitch)
-                pitchVal = maxPitchVal
-                return@OnClickListener
-            }
-            sendTripodHead()
-        }
-        mGlobalRoundMenu.addRoundMenu(roundMenu)
-
-        roundMenu = RoundMenuView.RoundMenu()
-        roundMenu.selectSolidColor = R.color.gray_9999
-        roundMenu.strokeColor = R.color.gray_9999
-        roundMenu.icon = bitmap
-        roundMenu.onClickListener = View.OnClickListener {
-            Log.i(TAG, "click 4")
-            yawVal += 100
-            if (yawVal > yawMax) {
-                showToast(R.string.max_course)
-                yawVal = yawMax
-                return@OnClickListener
-            }
-            sendTripodHead()
-        }
-        mGlobalRoundMenu.addRoundMenu(roundMenu)
-        gimbalCentering()
 
         // 查询初始化状态
         lightService.openLight(0, true) // 开灯状态
