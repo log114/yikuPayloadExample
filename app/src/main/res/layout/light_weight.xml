@@ -146,7 +146,7 @@
                 android:maxHeight="2dp"
                 android:progressDrawable="@drawable/bg_adjust_seek_bar"
                 android:thumb="@drawable/bg_seek_bar_thumb"
-                android:max="60"
+                android:max="40"
                 android:min="0"
                 android:progress="0" />
         </LinearLayout>
