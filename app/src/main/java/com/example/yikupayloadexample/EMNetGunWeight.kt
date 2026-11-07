@@ -40,6 +40,7 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var mLaunchBtn: Button
     private var isConnecting: Boolean = false
     private var isFirstConnect: Boolean = true
+    private var isNeedInit: Boolean = false // 用于判断在首次连接成功的时候，更新一次界面状态
     private var isLaserOpened: Boolean = false
     private var isSettingPitch: Boolean = false
     private var isLaunching: Boolean = false
@@ -97,11 +98,8 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 mLaserState.setText(R.string.closed)
                 mLaserBtn.setText(R.string.laser_on)
             }
-//            if(!isSettingPitch) {
-//                mPitchSeekbar.progress = pitch
-//            }
             if(volatile > 400) {
-                mLaunchBtn.isEnabled = true
+                mLaunchBtn.isEnabled = mSafetySwitch.isChecked
                 mChargeState.setText(R.string.fully_charged)
             }
             else {
@@ -109,6 +107,10 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                 mChargeState.setText(R.string.not_charged)
             }
             mPitchState.text = context.getString(R.string.angle_value, pitch)
+            if(isNeedInit) {
+                mPitchSeekbar.progress = pitch
+                isNeedInit = false
+            }
         }
     }
 
@@ -126,11 +128,14 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         mLaunchBtn = findViewById(R.id.launchBtn)
         setConnectState()
 
+        mSafetySwitch.setOnClickListener {
+            mPitchSeekbar.isEnabled = mSafetySwitch.isChecked
+            mLaserBtn.isEnabled = mSafetySwitch.isChecked
+        }
+
         mPitchSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-//                if (seekBar != null) {
-//                    emNetGunService.setPitch(seekBar.progress)
-//                }
+
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -138,14 +143,6 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-//                mPitchSeekbar.isEnabled = false
-//                thread {
-//                    Thread.sleep(1000)
-//                    Handler(Looper.getMainLooper()).post {
-//                        mPitchSeekbar.isEnabled = true
-//                    }
-//                    isSettingPitch = false
-//                }
                 emNetGunService.setPitch(mPitchSeekbar.progress)
             }
 
@@ -246,6 +243,7 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
                         }
                         isConnecting = false
                         updateTime = Date().time
+                        isNeedInit = true
                         handler.post {
                             connectText.setText(R.string.connection_status_connected)
                             background.setColor(ContextCompat.getColor(context, R.color.green))

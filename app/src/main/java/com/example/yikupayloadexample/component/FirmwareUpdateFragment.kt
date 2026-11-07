@@ -61,9 +61,10 @@ class FirmwareUpdateFragment : Fragment() {
 
     // 设备信息数据类
     private data class DeviceInfo(
-        val identifier: String,       // 用于 SharedPreferences 的 key 后缀（如 "AllInOneHost"）
+        val ipKey: String,       // 用于 SharedPreferences 的 key （如 "AllInOneHost"）
         val defaultIp: String,
-        val port: Int
+        val portKey: String,
+        val defaultPort: Int
     )
 
     // 设备列表：资源ID -> 设备信息
@@ -80,8 +81,9 @@ class FirmwareUpdateFragment : Fragment() {
 //        R.string.waterGun to DeviceInfo("WaterGunHost", WaterGunHost, 8519),
 //        R.string.bucket to DeviceInfo("BucketHost", BucketHost, 8519),
 //        R.string.waterBranch to DeviceInfo("WaterBranchHost", WaterBranchHost, 8519),
-        R.string.all_in_one to DeviceInfo("AllInOneHost", AllInOneHost, 8529),
-        R.string.four_in_one_2 to DeviceInfo("FourInOne2Host", FourInOne2Host, 8529),
+        R.string.all_in_one to DeviceInfo("AllInOneHost", AllInOneHost, "", 8529),
+        R.string.four_in_one_2 to DeviceInfo("FourInOne2Host", FourInOne2Host, "",8529),
+        R.string.EM_net_gun to DeviceInfo("EMNetGunHost", EMNetGunHost, "EMNetGunPort", 8519),
 //        R.string.slow_descent_device_200 to DeviceInfo("SlowDescentDevice200Host", SlowDescentDevice200Host, 8519),
 //        R.string.water_gun_escape to DeviceInfo("WaterGunEscapeHost", WaterGunEscapeHost, 8519)
     )
@@ -218,8 +220,13 @@ class FirmwareUpdateFragment : Fragment() {
     private fun onDeviceSelected(resId: Int) {
         val info = deviceMap[resId] ?: return
         selectedDeviceName = getString(resId) // 用于显示
-        ip = sharedPreferences.getString(info.identifier, info.defaultIp) ?: info.defaultIp
-        port = info.port
+        ip = sharedPreferences.getString(info.ipKey, info.defaultIp) ?: info.defaultIp
+        port = if(info.portKey == "") {
+            info.defaultPort
+        }
+        else {
+            sharedPreferences.getInt(info.portKey, info.defaultPort)
+        }
     }
 
     private fun connectDevice() {
