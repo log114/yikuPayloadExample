@@ -207,6 +207,7 @@ class EMNetGunWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         val task = object : TimerTask(){
             override fun run() {
                 if(emNetGunService.getIsConnected()){
+                    emNetGunService.heartbeat()
                     if (Date().time - updateTime < 3000) {
                         handler.post {
                             connectText.setText(R.string.connection_status_connected)

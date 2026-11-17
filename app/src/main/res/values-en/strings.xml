@@ -422,4 +422,5 @@
     <string name="connection_settings">Connection</string>
     <string name="firmware_upgrade">Firmware upgrade</string>
     <string name="device_ip">Device IP</string>
+    <string name="saved_successfully">Settings have been successfully set and will take effect after restarting the app</string>
 </resources>

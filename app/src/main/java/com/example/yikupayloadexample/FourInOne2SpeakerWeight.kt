@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioFormat
 import android.media.AudioTrack
@@ -37,6 +38,8 @@ import com.example.yikupayloadexample.component.AudioListAdapter
 import com.example.yikupayloadexample.component.DurationSliderView
 import com.yiku.yikupayloadSDK.util.MsgCallback
 import com.yiku.yikupayloadSDK.util.OpusUtils
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.thread
@@ -105,6 +108,7 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
     private val channelsConfig = AudioFormat.CHANNEL_OUT_MONO  // CHANNEL_OUT_MONO 单声道 CHANNEL_OUT_STEREO双声道
     private var ttsLoopInterval = 0; // tts的循环播放时间间隔，单位：0.1秒
     private var audioLoopInterval = 0; // 音频文件的循环播放时间间隔，单位：0.1秒
+    private var isNeedInit = false // 判断是否需要根据反馈消息初始化界面状态
 
     init {
         initView(context)
@@ -709,11 +713,59 @@ class FourInOne2SpeakerWeight(context: Context, attr: AttributeSet?, defStyleAtt
         }
     }
 
+    // 音量、CPU温度、喊话器使用状态等
+    fun setCallbacks() {
+        fourInOne2Service.registMsgCallback(object : MsgCallback {
+            override fun getId(): String {
+                return "SpeakerWeightCallback"
+            }
+
+            override fun onMsg(msg: ByteArray) {
+                // 温度、音量返回
+                if (msg.size > 6 && String(msg.slice(0..3).toByteArray()) == "[99]") {
+                    if(!isNeedInit) return
+
+                    // 假设 msg 是一个 ByteArray
+                    val dataLength = msg.size - 2 - 4
+                    // 使用 Kotlin 的 sliceArray 方法提取子数组，更简洁
+                    val valueBytes = msg.sliceArray(5 until 5 + dataLength)
+                    // 将字节数组（ASCII字符）转换为字符串
+                    val jsonString = valueBytes.toString(Charsets.US_ASCII)
+                    try {
+                        // 使用 Kotlin 标准库的 JSONObject 进行解析
+                        val jsonObject = JSONObject(jsonString)
+                        // 从JSON对象中提取数据
+                        val volumeReal = jsonObject.getInt("volume_real")
+                        val temperatureCPU = jsonObject.getDouble("temperature_CPU")
+                        val reception = jsonObject.getString("reception") // 收音状态
+                        val audioPlayStation = jsonObject.getString("audioPlayStation") // 声卡播放总状态
+                        val audioPlay = jsonObject.getString("audioPlay") // 音频播放状态
+                        val realtimehouting = jsonObject.getString("realtimehouting") // 实时喊话状态
+                        val ttsPlay = jsonObject.getString("ttsPlay") // tts播放状态
+                        val alarmPlay = jsonObject.getString("alarmPlay") // 警报播放状态
+                        // 更新到主线程
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+
+                        }
+                    } catch (e: JSONException) {
+                        // 处理JSON解析错误（如键不存在、类型不匹配、格式错误等）
+                        Log.e(TAG, "JSON解析失败: ${e.message}")
+                    } catch (e: Exception) {
+                        // 处理其他潜在异常
+                        Log.e(TAG, "处理消息时发生未知错误: ${e.message}")
+                    }
+                }
+            }
+        })
+    }
+
     // 释放资源
     fun releaseResources() {
         stopForegroundService()
         fourInOne2Service.stopRealTimeShout()
         stopRadio() // 确保停止收音
         fourInOne2Service.releaseAudioResources() // 释放SDK音频资源
+        fourInOne2Service.unRegistMsgCallback("SpeakerWeightCallback")
     }
 }

@@ -539,6 +539,14 @@ class PayloadWeight : Service() {
                     PayloadPageIndex.ALL_IN_ONE_FPV -> { // 五技吊舱，FPV
                         mWindowTitle.text = "FPV"
                         mShoutViewContent.addView(allInOneFpvWeight)
+                        val urlEditText = mShoutViewContent.findViewById<EditText>(R.id.et_rtsp_url)
+                        urlEditText.setOnTouchListener { _, event ->
+                            if (event.action == MotionEvent.ACTION_DOWN) InputMethodUtils.openInputMethod(
+                                urlEditText,
+                                "yk_payload_weight_op"
+                            )
+                            false
+                        }
                         // 测量内容并决定是否旋转
                         measureAndAdjustLayout()
                     }

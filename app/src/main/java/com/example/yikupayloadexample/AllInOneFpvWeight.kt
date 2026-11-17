@@ -23,6 +23,9 @@ import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
 import android.view.TextureView.SurfaceTextureListener  // 添加这个导入
+import android.widget.Button
+import android.widget.EditText
+import androidx.core.content.edit
 
 class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr), SurfaceTextureListener {  // 实现SurfaceTextureListener接口
@@ -35,7 +38,8 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private lateinit var playerParentView: LinearLayout
     private lateinit var playerView: TextureView  // 改为TextureView
     private lateinit var rtspPlayer: RtspPlayer
-    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
+    private val defaultStreamUrl = "rtsp://192.168.144.188:554/ch01_sub"
+    private var streamUrl = ""
     private lateinit var pitchSeekBar: SeekBar
     private lateinit var pitchText: TextView
     private var isSettingPitch: Boolean = false
@@ -48,6 +52,15 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
     private var settingTimer: Timer? = null
     private var isFlipped180 = false
     private lateinit var flipBtn: ImageView
+    private lateinit var settingsContent: LinearLayout
+    private lateinit var fpvContent: LinearLayout
+    private lateinit var etRtspUrl: EditText
+    private lateinit var btnSaveUrl: Button
+    private lateinit var btnCancelUrl: Button
+    private lateinit var settingBtn: ImageView  // 声明设置按钮
+
+    // SharedPreferences 相关
+    private val spName = "fpv_config"
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         Log.i(TAG, "🎬 TextureView可用: $width x $height")
@@ -176,19 +189,76 @@ class AllInOneFpvWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int
         flipBtn.setOnClickListener {
             flipVideo180()
         }
+
+        // +++ 新增：设置按钮点击，切换到设置界面 +++
+        settingBtn.setOnClickListener {
+            fpvContent.visibility = GONE
+            settingsContent.visibility = VISIBLE
+            etRtspUrl.setText(streamUrl) // 回显当前地址
+            etRtspUrl.requestFocus()
+        }
+
+        // +++ 新增：保存按钮点击 +++
+        btnSaveUrl.setOnClickListener {
+            val newUrl = etRtspUrl.text.toString().trim()
+            if (newUrl.isEmpty()) {
+                showToast("拉流地址不能为空")
+                return@setOnClickListener
+            }
+
+            // 保存到 SharedPreferences
+            val prefs = context.getSharedPreferences(spName, Context.MODE_PRIVATE)
+            prefs.edit { putString("rtsp_url", newUrl) }
+
+            // 如果地址发生变化，重启播放器
+            if (newUrl != streamUrl) {
+                streamUrl = newUrl
+                if (isInitPlayer) {
+                    rtspPlayer.release()
+                    isInitPlayer = false
+                }
+            }
+
+            showToast(R.string.saved_successfully)
+            // 切回主界面
+            settingsContent.visibility = GONE
+            fpvContent.visibility = VISIBLE
+        }
+
+        // +++ 新增：取消按钮点击 +++
+        btnCancelUrl.setOnClickListener {
+            settingsContent.visibility = GONE
+            fpvContent.visibility = VISIBLE
+        }
     }
     private fun initView(context: Context?) {
         LayoutInflater.from(context).inflate(R.layout.all_in_one_fpv_weight, this, true)
         pageLayout = findViewById(R.id.allInOneFpvWeight)
+        fpvContent = findViewById(R.id.fpv_content)
         enlargeBtn = findViewById(R.id.enlarge_btn)
         playerParentView = findViewById(R.id.playerParentView)
         playerView = findViewById(R.id.playerView)  // 现在是TextureView
         pitchSeekBar = findViewById(R.id.pitch_seek_bar)
         pitchText = findViewById(R.id.pitch_text)
         flipBtn = findViewById(R.id.flip_btn)
+        settingBtn = findViewById(R.id.setting_btn)
+        settingsContent = findViewById(R.id.settings_content)
+        etRtspUrl = findViewById(R.id.et_rtsp_url)
+        btnSaveUrl = findViewById(R.id.btn_save_url)
+        btnCancelUrl = findViewById(R.id.btn_cancel_url)
 
         // 设置TextureView的回调
         playerView.surfaceTextureListener = this
+
+        // 从 SharedPreferences 读取保存的拉流地址
+        val prefs = context?.getSharedPreferences(spName, Context.MODE_PRIVATE)
+        val savedUrl = prefs?.getString("rtsp_url", defaultStreamUrl)
+        streamUrl = if (!savedUrl.isNullOrEmpty()) {
+            savedUrl
+        } else {
+            defaultStreamUrl
+        }
+        etRtspUrl.setText(streamUrl)
     }
 
     fun attachFloatingWindow(service: PayloadWeight) {

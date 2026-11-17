@@ -179,8 +179,10 @@ class FourInOne2LightWeight(context: Context, attr: AttributeSet?, defStyleAttr:
             Log.d(TAG, "自动更新红蓝模式")
             redAndBlueMode = msg[7].toInt()
             currentMode = modeItems[redAndBlueMode - 1]
+            isOpenRedAndBlue = true
             handler.post {
                 currentModeText.text = currentMode.name
+                redAndBlueBtn.setText(R.string.close)
             }
         }
         handler.post {
@@ -277,12 +279,14 @@ class FourInOne2LightWeight(context: Context, attr: AttributeSet?, defStyleAttr:
                             connectState.setText(R.string.connection_status_notconnected)
                             background.setColor(ContextCompat.getColor(context, R.color.red))
                         }
-                    }
-                    // 如果超过10s没收到消息，主动断开连接，等待重连
-                    if (Date().time - updateTime > 10000) {
-                        // 断连
+                        // 直接断连，等待重连，避免此时喊话界面还是显示已连接，两边显示的连接状态不一致
                         fourInOne2Service.mainDisConnect()
                     }
+//                    // 如果超过10s没收到消息，主动断开连接，等待重连
+//                    if (Date().time - updateTime > 10000) {
+//                        // 断连
+//                        fourInOne2Service.mainDisConnect()
+//                    }
                 }
             }
         }

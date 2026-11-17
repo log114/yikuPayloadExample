@@ -35,28 +35,33 @@
 
             <!-- 控制按钮区域（顶层） -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_gravity="end"
+                android:orientation="vertical"
+                android:layout_marginEnd="4dp"
                 android:visibility="visible">
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
                 <ImageView
                     android:id="@+id/flip_btn"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:contentDescription="翻转视频画面180度"
                     android:src="@drawable/fpv_flip" />
                 <ImageView
                     android:id="@+id/enlarge_btn"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:contentDescription="全屏或恢复悬浮窗状态"
                     android:src="@drawable/picture_in_picture" />
+                <ImageView
+                    android:id="@+id/setting_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="4dp"
+                    android:contentDescription="设置推流地址"
+                    android:src="@drawable/setting" />
             </LinearLayout>
         </FrameLayout>
         <View
@@ -101,6 +106,61 @@
                 android:text="0°"
                 android:textSize="13sp"
                 android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/settings_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#CC1E1E1E"
+        android:padding="20dp"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设置拉流地址"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp"/>
+
+        <EditText
+            android:id="@+id/et_rtsp_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri"
+            android:textColor="#FFFFFF"
+            android:hint="请输入RTSP地址"
+            android:textColorHint="#888888"
+            android:background="@drawable/edittext_border"
+            android:padding="10dp"
+            android:textSize="14sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_save_url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="保存"
+                android:layout_marginEnd="30dp"
+                android:textColor="@color/white"
+                android:background="@drawable/play_btn"/>
+
+            <Button
+                android:id="@+id/btn_cancel_url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消"
+                android:textColor="@color/white"
+                android:background="@drawable/cancel_btn"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
