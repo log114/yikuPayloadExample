@@ -64,9 +64,10 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
     private lateinit var thrower1FpvBtn: Button
     private lateinit var thrower2FpvBtn: Button
     private lateinit var throwerAllFpvBtn: Button
-    private var streamUrl = "rtsp://192.168.144.188:554/ch01_sub"
-//    private var streamUrl = "rtsp://192.168.144.108:554/stream=1"
+    private val defaultStreamUrl = "rtsp://192.168.144.188:554/ch01_sub"
+    private var streamUrl = ""
     private lateinit var rtspPlayer: RtspPlayer
+    private val spName = "fpv_config"
 
     private var isOpenSafetySwitch: Boolean = false
     private var isSettingDetonateHeight: Boolean = false
@@ -126,6 +127,14 @@ class AllInOneThrowerWeight(context: Context, attr: AttributeSet?, defStyleAttr:
 
     init {
         initView(context)
+        // 从 SharedPreferences 读取保存的拉流地址
+        val prefs = context.getSharedPreferences(spName, Context.MODE_PRIVATE)
+        val savedUrl = prefs?.getString("rtsp_url", defaultStreamUrl)
+        streamUrl = if (!savedUrl.isNullOrEmpty()) {
+            savedUrl
+        } else {
+            defaultStreamUrl
+        }
         fpvOpenBtn.setOnClickListener {
             throwerContent.visibility = GONE
             fpvContent.visibility = VISIBLE
