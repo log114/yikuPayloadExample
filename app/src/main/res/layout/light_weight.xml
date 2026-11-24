@@ -120,7 +120,8 @@
                 android:layout_marginStart="10dp"
                 android:background="@drawable/play_btn"
                 android:text="@string/explosive_flashing"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
