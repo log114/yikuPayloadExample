@@ -3,6 +3,7 @@ package com.example.yikupayloadexample;
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
@@ -12,10 +13,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import com.yiku.yikupayloadSDK.util.MsgCallback
+import org.json.JSONException
+import org.json.JSONObject
 
 import java.util.Timer
 import java.util.TimerTask
+import androidx.core.view.isVisible
+import com.example.yikupayloadexample.component.ModeItem
+import com.example.yikupayloadexample.component.ModeSelectionDialog
 
 class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     LinearLayout(context, attr, defStyleAttr) {
@@ -27,7 +34,32 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
     private lateinit var timerTask: TimerTask;
     private lateinit var mLuminanceText: TextView
     private lateinit var mLuminanceChangePitch: SeekBar // 舵机控制
-    private var rbModel = 0
+    private lateinit var mOnOrOffRbBtn: Button
+    private lateinit var mModeSelectorLayout: LinearLayout
+    private lateinit var mCurrentModeText: TextView
+    private val modeItems = listOf(
+        ModeItem("1", "${context.resources.getString(R.string.mode)}1"),
+        ModeItem("2", "${context.resources.getString(R.string.mode)}2"),
+        ModeItem("3", "${context.resources.getString(R.string.mode)}3"),
+        ModeItem("4", "${context.resources.getString(R.string.mode)}4"),
+        ModeItem("5", "${context.resources.getString(R.string.mode)}5"),
+        ModeItem("6", "${context.resources.getString(R.string.mode)}6"),
+        ModeItem("7", "${context.resources.getString(R.string.mode)}7"),
+        ModeItem("8", "${context.resources.getString(R.string.mode)}8"),
+        ModeItem("9", "${context.resources.getString(R.string.mode)}9"),
+        ModeItem("10", "${context.resources.getString(R.string.mode)}10"),
+        ModeItem("11", "${context.resources.getString(R.string.mode)}11"),
+        ModeItem("12", "${context.resources.getString(R.string.mode)}12"),
+        ModeItem("13", "${context.resources.getString(R.string.mode)}13"),
+        ModeItem("14", "${context.resources.getString(R.string.mode)}14"),
+        ModeItem("15", "${context.resources.getString(R.string.mode)}15"),
+        ModeItem("16", "${context.resources.getString(R.string.mode)}16")
+    )
+    private var currentMode = modeItems[0]
+    private var isOpenRedAndBlue: Boolean = false
+    private var redAndBlueMode: Int = 1
+    private var isSettingRedAndBlueMode: Boolean = false
+    private var isIntCallBack: Boolean = false
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
     constructor(context: Context) : this(context, null, 0)
@@ -49,37 +81,93 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
         }
 
         override fun onMsg(msg: ByteArray) {
-            if (msg[0] != 0x8d.toByte()) {
-                return
-            }
-            Log.i(TAG, "recv: ${msg.asList()}")
-            if (msg[2] == 0x04.toByte()) {
+            if(msg[0] == 0x8d.toByte()) {
+                if (msg[2] == 0x04.toByte()) {
 //                Log.i(TAG, "查询温度: ${msg.asList()} ")
 //                val ledLuminance = msg[3].toInt() - 50
 //                val driverLuminance = msg[4].toInt() - 50
-                if (mLuminanceText != null) {
-//                    Log.i(TAG, "修改温度...")
-                    mLightView.post(Runnable {
-                        changeLuminance(msg[4].toInt() - 50, msg[3].toInt() - 50)
-                    })
+//                    mLightView.post(Runnable {
+//                        changeLuminance(msg[4].toInt() - 50, msg[3].toInt() - 50)
+//                    })
+                }
+            }
+            else if (msg.size > 6 && String(msg.slice(0..3).toByteArray()) == "[99]") {
+                // 假设 msg 是一个 ByteArray
+                val dataLength = msg.size - 2 - 4
+                // 使用 Kotlin 的 sliceArray 方法提取子数组，更简洁
+                val valueBytes = msg.sliceArray(5 until 5 + dataLength)
+                // 将字节数组（ASCII字符）转换为字符串
+                val jsonString = valueBytes.toString(Charsets.US_ASCII)
+                try {
+                    // 使用 Kotlin 标准库的 JSONObject 进行解析
+                    val jsonObject = JSONObject(jsonString)
+                    // 从JSON对象中提取数据
+                    val mode = jsonObject.getInt("rbMode")
+                    mLightView.post {
+                        if (!isSettingRedAndBlueMode) {
+                            if (mode == 0) {
+                                // 设备关闭了红蓝
+                                isOpenRedAndBlue = false
+                                mOnOrOffRbBtn.setText(R.string.open)
+                            } else {
+                                // 设备切换了模式
+                                isOpenRedAndBlue = true
+                                redAndBlueMode = mode
+                                currentMode = modeItems[mode - 1]
+                                mCurrentModeText.text = currentMode.name
+                                mOnOrOffRbBtn.setText(R.string.close)
+                            }
+                        }
+                    }
+                } catch (e: JSONException) {
+                    // 处理JSON解析错误（如键不存在、类型不匹配、格式错误等）
+                    Log.e(TAG, "JSON解析失败: ${e.message}")
+                } catch (e: Exception) {
+                    // 处理其他潜在异常
+                    Log.e(TAG, "处理消息时发生未知错误: ${e.message}")
                 }
             }
         }
 
     }
 
-    private fun initView(context: Context?) {
+    private fun initView(context: Context) {
         LayoutInflater.from(context).inflate(R.layout.light_weight_ya3, this, true)
         mLightView = findViewById(R.id.ya3_light_view)
         val mOpenLightBtn = findViewById<Button>(R.id.open_light_btn)
         val mSharpFlashBtn = findViewById<Button>(R.id.sharp_flash_btn)
         val mLuminanceChangeSeekbar = findViewById<SeekBar>(R.id.luminance_change_seekbar)
-
-        val mCloseRbBtn: Button = findViewById(R.id.close_rb_btn)
-        val mOpenRbBtn: Button = findViewById(R.id.open_rb_btn)
-        val mRbModelText: TextView = findViewById(R.id.rb_model_text)
-
+        mOnOrOffRbBtn = findViewById(R.id.on_off_rb_btn)
+        mModeSelectorLayout = findViewById(R.id.mode_selector_layout)
+        mCurrentModeText = findViewById(R.id.current_mode_text)
+        mCurrentModeText.text = currentMode.name
         mLuminanceChangePitch = findViewById(R.id.luminance_change_pitch)
+
+        // 模式选择点击 -> 弹出 ModeSelectionDialog
+        mModeSelectorLayout.setOnClickListener {
+            isSettingRedAndBlueMode = true
+            showModeSelectionDialog()
+        }
+        // 打开/关闭红蓝按钮
+        mOnOrOffRbBtn.setOnClickListener {
+            isSettingRedAndBlueMode = true
+            if (isOpenRedAndBlue) {
+                // 已打开 -> 关闭
+                megaphoneService?.redBlueLedControl(0x00)
+                mOnOrOffRbBtn.setText(R.string.open)
+            } else {
+                // 未打开 -> 打开到当前模式
+                megaphoneService?.redBlueLedControl(redAndBlueMode.toByte())
+                mOnOrOffRbBtn.setText(R.string.close)
+            }
+            isOpenRedAndBlue = !isOpenRedAndBlue
+            // 延迟一下避免状态冲突
+            Thread {
+                Thread.sleep(2000)
+                isSettingRedAndBlueMode = false
+            }.start()
+        }
+
         mLuminanceChangePitch.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (seekBar != null) {
@@ -97,8 +185,6 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
             }
 
         })
-        // 初始化通讯回调函数
-        megaphoneService?.registMsgCallback(LightMsgCallback())
 
 
         // 查询初始化状态
@@ -162,78 +248,6 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
             }
 
         })
-        @SuppressLint("SetTextI18n")
-        fun setRbModel(vrbModel: Int) {
-//                        rbModel = 0
-            if (vrbModel == 0) {
-                megaphoneService?.redBlueLedControl(0x00)
-                mRbModelText.setText(R.string.red_and_blue_not_turned_on)
-            }
-            if (vrbModel == 1) {
-                megaphoneService?.redBlueLedControl(0x01)
-            }
-            if (vrbModel == 2) {
-                megaphoneService?.redBlueLedControl(0x02)
-            }
-            if (vrbModel == 3) {
-                megaphoneService?.redBlueLedControl(0x03)
-            }
-            if (vrbModel == 4) {
-                megaphoneService?.redBlueLedControl(0x04)
-            }
-            if (vrbModel == 5) {
-                megaphoneService?.redBlueLedControl(0x05)
-            }
-            if (vrbModel == 6) {
-                megaphoneService?.redBlueLedControl(0x06)
-            }
-            if (vrbModel == 7) {
-                megaphoneService?.redBlueLedControl(0x07)
-            }
-            if (vrbModel == 8) {
-                megaphoneService?.redBlueLedControl(0x08)
-            }
-            if (vrbModel == 9) {
-                megaphoneService?.redBlueLedControl(0x09)
-            }
-            if (vrbModel == 10) {
-                megaphoneService?.redBlueLedControl(0x0a)
-            }
-            if (vrbModel == 11) {
-                megaphoneService?.redBlueLedControl(0x0b)
-            }
-            if (vrbModel == 12) {
-                megaphoneService?.redBlueLedControl(0x0c)
-            }
-            if (vrbModel == 13) {
-                megaphoneService?.redBlueLedControl(0x0d)
-            }
-            if (vrbModel == 14) {
-                megaphoneService?.redBlueLedControl(0x0e)
-            }
-            if (vrbModel == 15) {
-                megaphoneService?.redBlueLedControl(0x0f)
-            }
-            if (vrbModel == 16) {
-                megaphoneService?.redBlueLedControl(0x10)
-            }
-            rbModel = vrbModel
-            if (rbModel > 0) {
-                mRbModelText.setText(R.string.mode)
-                mRbModelText.text = "${mRbModelText.text}${rbModel}"
-            }
-        }
-        mCloseRbBtn.setOnClickListener {
-            setRbModel(0)
-
-        }
-        mOpenRbBtn.setOnClickListener {
-            if (rbModel + 1 > 16) {
-                rbModel = 0
-            }
-            setRbModel(rbModel + 1)
-        }
-
 
         // 定时获取温度
         timerTask = object : TimerTask() {
@@ -245,6 +259,29 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
         }
         timer.schedule(timerTask, 0, 2000)
         isFocusable = true
+    }
+
+    private fun showModeSelectionDialog() {
+        val dialog = ModeSelectionDialog(
+            context = context,
+            modes = modeItems,
+            currentMode = currentMode
+        ) { selectedMode ->
+            currentMode = selectedMode
+            mCurrentModeText.text = currentMode.name
+            redAndBlueMode = currentMode.id.toInt()
+            if (isOpenRedAndBlue) {
+                megaphoneService?.redBlueLedControl(redAndBlueMode.toByte())
+                // 延迟一下避免状态冲突
+                Thread {
+                    Thread.sleep(1000)
+                    isSettingRedAndBlueMode = false
+                }.start()
+            } else {
+                isSettingRedAndBlueMode = false
+            }
+        }
+        dialog.show()
     }
 
     fun ByteArray.toHex(): String =
@@ -272,6 +309,12 @@ class UnitreeLightWeight(context: Context, attr: AttributeSet?, defStyleAttr: In
                     handler.post {
                         connectText.setText(R.string.connection_status_connected)
                         background.setColor(ContextCompat.getColor(context, R.color.green))
+                    }
+
+                    if(!isIntCallBack) {
+                        // 初始化通讯回调函数
+                        megaphoneService?.registMsgCallback(LightMsgCallback())
+                        isIntCallBack = true
                     }
                 }
                 else{

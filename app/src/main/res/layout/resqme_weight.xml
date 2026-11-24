@@ -103,6 +103,16 @@
             android:track="@drawable/switch_track_bg"
             android:thumb="@drawable/switch_thumb"
             tools:ignore="UseSwitchCompatOrMaterialXml"/>
+        <Switch
+            android:id="@+id/buzzerSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buzzer_switch"
+            android:textColor="@color/white"
+            android:switchPadding="4dp"
+            android:track="@drawable/switch_track_bg"
+            android:thumb="@drawable/switch_thumb"
+            tools:ignore="UseSwitchCompatOrMaterialXml"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

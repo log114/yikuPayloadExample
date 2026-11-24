@@ -33,6 +33,7 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
     private lateinit var statusDot: View
     private lateinit var background: GradientDrawable
     private lateinit var mSafetySwitchSwitch: Switch
+    private lateinit var mBuzzerSwitch: Switch
     private lateinit var mResqmeLaunchBtn1: Button
     private lateinit var mResqmeLaunchBtn2: Button
     private lateinit var mResqmeLaunchAllBtn: Button
@@ -134,6 +135,7 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         statusDot = findViewById(R.id.statusDot)
         background = statusDot.background as GradientDrawable
         mSafetySwitchSwitch = findViewById(R.id.safetySwitchSwitch)
+        mBuzzerSwitch = findViewById(R.id.buzzerSwitch)
         mResqmeLaunchBtn1 = findViewById(R.id.resqmeLaunchBtn1)
         mResqmeLaunchBtn2 = findViewById(R.id.resqmeLaunchBtn2)
         mResqmeLaunchAllBtn = findViewById(R.id.resqmeLaunchAllBtn)
@@ -142,6 +144,10 @@ class ResqmeWeight (context: Context, attr: AttributeSet?, defStyleAttr: Int) :
 
         mSafetySwitchSwitch.setOnClickListener {
             resqmeService.safetySwitch(mSafetySwitchSwitch.isChecked)
+            mBuzzerSwitch.isEnabled = mSafetySwitchSwitch.isChecked
+        }
+        mBuzzerSwitch.setOnClickListener {
+            resqmeService.buzzerSwitch(mBuzzerSwitch.isChecked)
         }
         mResqmeLaunchBtn1.setOnClickListener {
             try {

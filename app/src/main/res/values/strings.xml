@@ -473,4 +473,6 @@
     <string name="firmware_upgrade">固件升级</string>
     <string name="device_ip">设备IP修改</string>
     <string name="saved_successfully">设置成功，重启APP后生效</string>
+    <string name="buzzer_switch">蜂鸣器开关：</string>
+    <string name="on_or_off_red_and_blue">打开/关闭红蓝</string>
 </resources>
