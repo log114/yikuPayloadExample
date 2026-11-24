@@ -99,7 +99,6 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
         drawable.setBounds(0, 0, 50, 50)
         drawable.draw(canvas)
 
-        val mLightLumText = findViewById<TextView>(R.id.light_lum_text)
         val mOpenLightBtn = findViewById<Button>(R.id.open_light_btn)
         val mSharpFlashBtn = findViewById<Button>(R.id.sharp_flash_btn)
         val mLuminanceChangeSeekbar =
@@ -154,9 +153,6 @@ class LightWeight(context: Context, attr: AttributeSet?, defStyleAttr: Int) :
             ) {
                 if (seekBar != null) {
                     lightService.luminanceChange(seekBar.progress, false)
-                    mLightLumText.post {
-                        mLightLumText.text = "${context!!.resources.getString(R.string.brightness_adjustment)}  ${seekBar.progress}"
-                    }
                 }
             }
 
